@@ -72,6 +72,26 @@ const provideData = {
 </script>
 
 <template>
+  <header class="header">
+      <div class="header-content">
+        <div class="name-dent">
+          <img src="/src/components/icons/icons8-зуб-100.png" alt="Dental Tech"/>
+          <h1>Dental Tech</h1>
+        </div>
+        <nav class="navigation">
+          <a @click="switchView('main')" style="cursor: pointer; background-color: #ffffff15;">О нас</a>
+          <a href="">Услуги</a>
+          <a href="">Врачи</a>
+          <a @click="switchView('contacts')" style="cursor: pointer;">Контакты</a>
+        </nav>
+        <div class="account">
+            <button @click="openLogin()" class="nav-button">
+                <img src="/src/components/icons/icons8-тестовый-аккаунт-100.png" alt="Аккаунт">
+          </button>
+          <button class="btn-appointment">Записаться</button>
+        </div>
+      </div>
+    </header>
   <div id="app">
     <component 
       :is="currentComponent"
@@ -120,6 +140,96 @@ body {
   background: white;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+.header {
+  width: 100%;
+  background: #5285ff;
+}
+
+.header-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.name-dent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.name-dent img {
+  width: 60px;
+  height: 60px;
+}
+
+.name-dent h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+}
+
+.navigation {
+  display: flex;
+  gap: 25px;
+}
+
+.navigation a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #ffffff15;
+  border-radius: 30px;
+  padding: 10px 20px;
+  transition: opacity 0.3s ease;
+}
+
+.navigation a:hover {
+  opacity: 0.8;
+  background-color: #ffffff20;
+}
+
+.account .nav-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.account img {
+  width: 32px;
+  height: 32px;
+}
+
+.account {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.btn-appointment {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 250px;
+}
+
+.btn-appointment:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 #app {
