@@ -267,6 +267,7 @@ const switchToLogin = () => {
   flex-direction: column;
   background: white;
   position: relative;
+  overflow: hidden;
 }
 
 .header-actions {
@@ -301,6 +302,7 @@ const switchToLogin = () => {
   padding: 40px 40px 30px 40px;
   border-bottom: 1px solid #f1f3f4;
   background: white;
+  
 }
 
 .auth-header h2 {
@@ -477,6 +479,8 @@ const switchToLogin = () => {
   .auth-form {
     padding: 20px 20px 30px 20px;
   }
+
+  
   
   .header-actions {
     top: 15px;

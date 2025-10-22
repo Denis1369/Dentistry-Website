@@ -25,6 +25,10 @@
 </template>
 
 <style scoped>
+.main{
+    margin-top: auto;
+}
+
 .content {
   width: 100%;
   flex: 1;
@@ -161,11 +165,15 @@
     align-items: center;
 }
 
-.contact-info strong,
+
 .work-hours strong {
     color: #2c3e50;
     min-width: 160px;
     display: inline-block;
+}
+
+.contact-info strong{
+    margin-right: 7px;
 }
 
 .contact-info a {
@@ -179,7 +187,6 @@
     text-decoration: underline;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
     .main {
         padding: 40px 0;

@@ -4,10 +4,12 @@ import Registration from './views/registration.vue'
 import MainWindow from './views/mainWindow.vue'
 import LoginForm from './views/LoginForm.vue'
 import Contacts from './views/ContactsForm.vue'
+import ApointmentForm from './views/ApointmentForm.vue'
 
 const currentView = ref('main') 
 const showRegistration = ref(false)
 const showLogin = ref(false)
+const showAppointment = ref(false)
 
 const currentComponent = computed(() => {
   switch (currentView.value) {
@@ -22,6 +24,21 @@ const currentComponent = computed(() => {
 
 const switchView = (viewName) => {
   currentView.value = viewName
+}
+
+const openAppointment = () => {
+  showAppointment.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+const closeAppointment = () => {
+  showAppointment.value = false
+  document.body.style.overflow = 'auto'
+}
+
+const handleAppointmentSuccess = (appointmentData) => {
+  console.log('Запись создана:', appointmentData)
+  closeAppointment()
 }
 
 const openRegistration = () => {
@@ -67,7 +84,8 @@ const switchToLogin = () => {
 const provideData = {
   switchView,
   openRegistration,
-  openLogin
+  openLogin,
+  openAppointment
 }
 </script>
 
@@ -88,7 +106,7 @@ const provideData = {
             <button @click="openLogin()" class="nav-button">
                 <img src="/src/components/icons/icons8-тестовый-аккаунт-100.png" alt="Аккаунт">
           </button>
-          <button class="btn-appointment">Записаться</button>
+          <button @click="openAppointment" class="btn-appointment">Записаться</button>
         </div>
       </div>
     </header>
@@ -99,6 +117,15 @@ const provideData = {
       @open-registration="openRegistration"
       @open-login="openLogin"
     />
+
+    <div v-if="showAppointment" class="modal-overlay">
+      <div class="modal-content">
+        <ApointmentForm
+          @appointment-success="handleAppointmentSuccess"
+          @close="closeAppointment"
+        />
+      </div>
+    </div>
     
     <div v-if="showRegistration" class="modal-overlay">
       <div class="modal-content">
@@ -145,6 +172,7 @@ body {
 .header {
   width: 100%;
   background: #5285ff;
+  position: fixed;
 }
 
 .header-content {
