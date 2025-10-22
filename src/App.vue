@@ -5,6 +5,7 @@ import MainWindow from './views/mainWindow.vue'
 import LoginForm from './views/LoginForm.vue'
 import Contacts from './views/ContactsForm.vue'
 import ApointmentForm from './views/ApointmentForm.vue'
+import ServicesForm from './views/ServicesForm.vue'
 
 const currentView = ref('main') 
 const showRegistration = ref(false)
@@ -17,6 +18,8 @@ const currentComponent = computed(() => {
       return MainWindow
     case 'contacts':
       return Contacts
+    case 'services':
+      return ServicesForm
     default:
       return MainWindow
   }
@@ -98,7 +101,7 @@ const provideData = {
         </div>
         <nav class="navigation">
           <a @click="switchView('main')" style="cursor: pointer; background-color: #ffffff15;">О нас</a>
-          <a href="">Услуги</a>
+          <a @click="switchView('services')" style="cursor: pointer;">Услуги</a>
           <a href="">Врачи</a>
           <a @click="switchView('contacts')" style="cursor: pointer;">Контакты</a>
         </nav>
@@ -173,6 +176,7 @@ body {
   width: 100%;
   background: #5285ff;
   position: fixed;
+  z-index: 1000;
 }
 
 .header-content {

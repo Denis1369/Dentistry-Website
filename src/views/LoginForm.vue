@@ -66,27 +66,50 @@ const handleLogin = async () => {
   errors.email = ''
   errors.password = ''
   successMessage.value = ''
-  
+
   if (!validateForm()) {
     return
   }
-  
+
   loading.value = true
 
-  if (email.value === 'user@example.com' && password.value === 'password') {
-    successMessage.value = 'Успешный вход! Добро пожаловать в систему!'
-    email.value = ''
-    password.value = ''
-  } else {
-    errors.password = 'Неверный email или пароль'
-  }
-  
-  loading.value = false
+  try {
+    const response = await fetch('http://127.0.0.1:8000/login/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_email: email.value,
+        user_password: password.value,
+      }),
+    })
 
-  if (successMessage.value) {
-    setTimeout(() => {
-      successMessage.value = ''
-    }, 5000)
+    const data = await response.json()
+
+    if (response.ok) {
+      successMessage.value = 'Успешный вход! Добро пожаловать в систему!'
+      email.value = ''
+      password.value = ''
+
+      setTimeout(() => {
+        successMessage.value = '' 
+        emit('login-success', data)
+      }, 2000)
+
+    } 
+    else {
+      if (data?.message) {
+        errors.password = data.message
+      } else {
+        errors.password = 'Неверный email или пароль'
+      }
+    }
+  } catch (error) {
+    console.error('Ошибка при входе:', error)
+    errors.password = 'Произошла ошибка. Попробуйте позже.'
+  } finally {
+    loading.value = false
   }
 }
 
