@@ -1,6 +1,7 @@
 # Virtual Environment
 .venv/
 ENV/
+.idea/
 
 # Environment variables
 .env
