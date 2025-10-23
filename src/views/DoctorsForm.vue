@@ -20,12 +20,10 @@ const doctor2 = ref({
 
 const handleAppointment = (employee) => {
   console.log('Запись к:', employee)
-  // Логика записи на прием
 }
 
 const handleDetails = (employee) => {
   console.log('Подробнее о:', employee)
-  // Логика показа детальной информации
 }
 </script>
 
@@ -53,8 +51,6 @@ const handleDetails = (employee) => {
     </main>
 
 </template>
-
-
 
 <style>
 .main {

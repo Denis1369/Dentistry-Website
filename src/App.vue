@@ -1,36 +1,31 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import Registration from './views/registration.vue'
-import MainWindow from './views/mainWindow.vue'
 import LoginForm from './views/LoginForm.vue'
-import Contacts from './views/ContactsForm.vue'
 import ApointmentForm from './views/ApointmentForm.vue'
-import ServicesForm from './views/ServicesForm.vue'
-import DoctorForm from './views/DoctorsForm.vue'
 
-const currentView = ref('main') 
+const router = useRouter()
+const route = useRoute()
+
 const showRegistration = ref(false)
 const showLogin = ref(false)
 const showAppointment = ref(false)
 
+const navigateToMain = () => {
+  router.push('/')
+}
 
-const currentComponent = computed(() => {
-  switch (currentView.value) {
-    case 'main':
-      return MainWindow
-    case 'contacts':
-      return Contacts
-    case 'services':
-      return ServicesForm
-    case 'doctors':
-      return DoctorForm
-    default:
-      return MainWindow
-  }
-})
+const navigateToContacts = () => {
+  router.push('/contacts')
+}
 
-const switchView = (viewName) => {
-  currentView.value = viewName
+const navigateToServices = () => {
+  router.push('/services')
+}
+
+const navigateToDoctors = () => {
+  router.push('/doctors')
 }
 
 const openAppointment = () => {
@@ -87,44 +82,56 @@ const switchToLogin = () => {
   closeRegistration()
   openLogin()
 }
-
-const provideData = {
-  switchView,
-  openRegistration,
-  openLogin,
-  openAppointment
-}
 </script>
 
 <template>
   <header class="header">
-      <div class="header-content">
-        <div class="name-dent">
-          <img src="/src/components/icons/icons8-зуб-100.png" alt="Dental Tech"/>
-          <h1>Dental Tech</h1>
-        </div>
-        <nav class="navigation">
-          <a @click="switchView('main')" style="cursor: pointer; background-color: #ffffff15;">О нас</a>
-          <a @click="switchView('services')" style="cursor: pointer;">Услуги</a>
-          <a @click="switchView('doctors')" style="cursor: pointer;">Врачи</a>
-          <a @click="switchView('contacts')" style="cursor: pointer;">Контакты</a>
-        </nav>
-        <div class="account">
-            <button @click="openLogin()" class="nav-button">
-                <img src="/src/components/icons/icons8-тестовый-аккаунт-100.png" alt="Аккаунт">
-          </button>
-          <button @click="openAppointment" class="btn-appointment">Записаться</button>
-        </div>
+    <div class="header-content">
+      <div class="name-dent">
+        <img src="/src/components/icons/icons8-зуб-100.png" alt="Dental Tech"/>
+        <h1>Dental Tech</h1>
       </div>
-    </header>
-  <div id="app">
-    <component 
-      :is="currentComponent"
-      v-bind="provideData"
-      @open-registration="openRegistration"
-      @open-login="openLogin"
-    />
+      <nav class="navigation">
+        <a 
+          @click="navigateToMain" 
+          :class="{ active: route.path === '/' }"
+          style="cursor: pointer;"
+        >
+          О нас
+        </a>
+        <a 
+          @click="navigateToServices" 
+          :class="{ active: route.path === '/services' }"
+          style="cursor: pointer;"
+        >
+          Услуги
+        </a>
+        <a 
+          @click="navigateToDoctors" 
+          :class="{ active: route.path === '/doctors' }"
+          style="cursor: pointer;"
+        >
+          Врачи
+        </a>
+        <a 
+          @click="navigateToContacts" 
+          :class="{ active: route.path === '/contacts' }"
+          style="cursor: pointer;"
+        >
+          Контакты
+        </a>
+      </nav>
+      <div class="account">
+        <button @click="openLogin()" class="nav-button">
+          <img src="/src/components/icons/icons8-тестовый-аккаунт-100.png" alt="Аккаунт">
+        </button>
+        <button @click="openAppointment" class="btn-appointment">Записаться</button>
+      </div>
+    </div>
+  </header>
 
+  <div id="app">
+    <router-view />
     <div v-if="showAppointment" class="modal-overlay">
       <div class="modal-content">
         <ApointmentForm

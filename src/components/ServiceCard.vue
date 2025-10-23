@@ -7,7 +7,6 @@ defineProps({
 })
 
 const handleAppointment = () => {
-  // Здесь будет логика записи на услугу
   console.log('Запись на услугу')
 }
 </script>
