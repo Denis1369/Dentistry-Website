@@ -6,11 +6,13 @@ import LoginForm from './views/LoginForm.vue'
 import Contacts from './views/ContactsForm.vue'
 import ApointmentForm from './views/ApointmentForm.vue'
 import ServicesForm from './views/ServicesForm.vue'
+import DoctorForm from './views/DoctorsForm.vue'
 
 const currentView = ref('main') 
 const showRegistration = ref(false)
 const showLogin = ref(false)
 const showAppointment = ref(false)
+
 
 const currentComponent = computed(() => {
   switch (currentView.value) {
@@ -20,6 +22,8 @@ const currentComponent = computed(() => {
       return Contacts
     case 'services':
       return ServicesForm
+    case 'doctors':
+      return DoctorForm
     default:
       return MainWindow
   }
@@ -102,7 +106,7 @@ const provideData = {
         <nav class="navigation">
           <a @click="switchView('main')" style="cursor: pointer; background-color: #ffffff15;">О нас</a>
           <a @click="switchView('services')" style="cursor: pointer;">Услуги</a>
-          <a href="">Врачи</a>
+          <a @click="switchView('doctors')" style="cursor: pointer;">Врачи</a>
           <a @click="switchView('contacts')" style="cursor: pointer;">Контакты</a>
         </nav>
         <div class="account">

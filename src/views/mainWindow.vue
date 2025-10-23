@@ -19,16 +19,18 @@
           </div>
         </section>
       </div>
+      <div class="banner">
+
+      </div>
     </main>
 </template>
 
 <style scoped>
 .content {
   width: 100%;
-  flex: 1;
   display: flex;
   align-items: center;
-  min-height: calc(100vh - 80px);
+  margin-top: 10%;
 }
 
 .content-wrapper {
@@ -56,8 +58,6 @@
   padding-bottom: 5px;
   margin-bottom: 25px;
   background: #2c3e50;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 

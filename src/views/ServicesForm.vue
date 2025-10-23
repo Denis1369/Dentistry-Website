@@ -55,7 +55,7 @@ onMounted(() => {
         Широкий спектр стоматологических услуг по доступным ценам. 
         Качественное лечение и современное оборудование.
       </p>
-      
+      </div>
       <div class="services-grid">
         <ServiceCard
           v-for="service in services"
@@ -69,15 +69,16 @@ onMounted(() => {
           }"
         />
       </div>
-    </div>
+    
   </main>
 </template>
 
 <style scoped>
 .services-page {
-  padding: 120px 0 60px;
+  padding: 120px 60px 60px;
   min-height: 100vh;
   background: #f8f9fa;
+  
 }
 
 .container {
