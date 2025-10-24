@@ -75,9 +75,8 @@ onMounted(() => {
 
 <style scoped>
 .services-page {
-  padding: 120px 60px 60px;
+  padding: 0 60px;
   min-height: 100vh;
-  background: #f8f9fa;
   
 }
 

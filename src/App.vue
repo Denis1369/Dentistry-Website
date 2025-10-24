@@ -131,7 +131,7 @@ const switchToLogin = () => {
   </header>
 
   <div id="app">
-    <router-view />
+    <router-view class="content"/>
     <div v-if="showAppointment" class="modal-overlay">
       <div class="modal-content">
         <ApointmentForm
@@ -182,7 +182,9 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-
+.content{
+  margin-top: 10%;
+}
 .header {
   width: 100%;
   background: #5285ff;
@@ -278,6 +280,7 @@ body {
 #app {
   width: 100%;
   min-height: 100vh;
+  
   display: flex;
   flex-direction: column;
 }

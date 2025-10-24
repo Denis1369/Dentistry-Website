@@ -25,9 +25,6 @@
 </template>
 
 <style scoped>
-.main{
-    margin-top: auto;
-}
 
 .container {
     max-width: 800px;

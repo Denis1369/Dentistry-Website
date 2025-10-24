@@ -384,12 +384,10 @@ const togglePasswordVisibility = () => {
   border: 1px solid #9ae6b4;
 }
 
-/* Убираем скролл для формы */
 .auth-form::-webkit-scrollbar {
   width: 0px;
 }
 
-/* Адаптивность */
 @media (max-width: 480px) {
   .auth-header {
     padding: 30px 20px 20px 20px;

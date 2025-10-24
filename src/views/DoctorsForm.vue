@@ -52,10 +52,8 @@ const handleDetails = (employee) => {
 
 </template>
 
-<style>
-.main {
-    margin-top: 100px;
-}
+<style scoped>
+
 .main h1 {
 
     color: #2c3e50;
