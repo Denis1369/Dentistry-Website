@@ -1,0 +1,7 @@
+django
+python-decouple
+djangorestframework
+django-cors-headers
+djangorestframework-simplejwt
+drf-spectacular
+mysqlclient

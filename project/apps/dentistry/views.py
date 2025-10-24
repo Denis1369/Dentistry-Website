@@ -20,12 +20,8 @@ class LoginView(GenericAPIView):
 
             return Response({
                 'token': str(token),
-                'user': {
-                    'user_id': user.user_id,
-                    'user_name': user.username,
-                    'user_email': user.email,
-                }
             }, status=status.HTTP_200_OK)
+
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
