@@ -1,5 +1,6 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive} from 'vue'
+import axios from 'axios'
 
 const emit = defineEmits(['login-success', 'switch-to-registration', 'close'])
 
@@ -21,6 +22,33 @@ const errors = reactive({
   email: '',
   password: ''
 })
+
+const api = axios.create({
+  baseURL: 'http://127.0.0.1:8000/',
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+})
+
+const handleLogout = () => {
+  localStorage.removeItem('authToken')
+  localStorage.removeItem('userData')
+  delete api.defaults.headers.common['Authorization']
+  
+}
+
+
+const verifyToken = async () => {
+  try {
+    const response = await api.get('/verify-token/')
+    console.log('Токен валиден:', response.data)
+    return true
+  } catch (error) {
+    console.error('Токен невалиден:', error)
+    return false
+  }
+}
 
 const validateEmail = () => {
   errors.email = ''
@@ -74,40 +102,65 @@ const handleLogin = async () => {
   loading.value = true
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/login/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_email: email.value,
-        user_password: password.value,
-      }),
+    const response = await api.post('/login/', {
+      user_email: email.value,
+      user_password: password.value,
+
     })
 
-    const data = await response.json()
+    const data = response.data
 
-    if (response.ok) {
+    if (response.status === 200) {
       successMessage.value = 'Успешный вход! Добро пожаловать в систему!'
+      
+      if (data.token) {
+        localStorage.setItem('authToken', data.token)
+        api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
+      }
+
+      if (data.user) {
+        localStorage.setItem('userData', JSON.stringify(data.user))
+      }
+
       email.value = ''
       password.value = ''
 
       setTimeout(() => {
         successMessage.value = '' 
         emit('login-success', data)
-      }, 2000)
-
+        closeForm()
+      }, 1000)
     } 
-    else {
-      if (data?.message) {
-        errors.password = data.message
-      } else {
-        errors.password = 'Неверный email или пароль'
-      }
-    }
   } catch (error) {
     console.error('Ошибка при входе:', error)
-    errors.password = 'Произошла ошибка. Попробуйте позже.'
+    
+    if (error.response) {
+      const status = error.response.status
+      const errorData = error.response.data
+      
+      if (status === 400) {
+        if (errorData.non_field_errors) {
+          errors.password = errorData.non_field_errors[0]
+        } else if (errorData.user_email) {
+          errors.email = errorData.user_email[0]
+        } else if (errorData.user_password) {
+          errors.password = errorData.user_password[0]
+        } else {
+          errors.password = 'Неверный email или пароль'
+        }
+      } else if (status === 401) {
+        errors.password = 'Неверный email или пароль'
+      } else if (status == 404) {
+        errors.password = 'Пользователь не найден'
+      }
+      else {
+        errors.password = 'Произошла ошибка сервера'
+      }
+    } else if (error.request) {
+      errors.password = 'Не удалось подключиться к серверу'
+    } else {
+      errors.password = 'Произошла непредвиденная ошибка'
+    }
   } finally {
     loading.value = false
   }
@@ -116,6 +169,11 @@ const handleLogin = async () => {
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
+
+defineExpose({
+  handleLogout,
+  verifyToken
+})
 </script>
 
 <template>

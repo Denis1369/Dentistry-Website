@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Registration from './views/registration.vue'
 import LoginForm from './views/LoginForm.vue'
@@ -16,6 +16,16 @@ const navigateToMain = () => {
   router.push('/')
 }
 
+const authState = ref(!!localStorage.getItem('authToken'))
+
+const isAuthenticated = computed(() => {
+  return authState.value
+})
+
+const updateAuthState = () => {
+  authState.value = !!localStorage.getItem('authToken')
+}
+
 const navigateToContacts = () => {
   router.push('/contacts')
 }
@@ -26,6 +36,14 @@ const navigateToServices = () => {
 
 const navigateToDoctors = () => {
   router.push('/doctors')
+}
+
+const handleAccountClick = () => {
+  if (isAuthenticated.value) {
+    router.push('/account')
+  } else {
+    openLogin()
+  }
 }
 
 const openAppointment = () => {
@@ -70,6 +88,7 @@ const closeLogin = () => {
 
 const handleLoginSuccess = (userData) => {
   console.log('Пользователь авторизован:', userData)
+  updateAuthState()
   closeLogin()
 }
 
@@ -82,6 +101,8 @@ const switchToLogin = () => {
   closeRegistration()
   openLogin()
 }
+
+
 </script>
 
 <template>
@@ -122,8 +143,9 @@ const switchToLogin = () => {
         </a>
       </nav>
       <div class="account">
-        <button @click="openLogin()" class="nav-button">
+        <button @click="handleAccountClick" class="nav-button">
           <img src="/src/components/icons/icons8-тестовый-аккаунт-100.png" alt="Аккаунт">
+          <div v-if="isAuthenticated" class="auth-indicator"></div>
         </button>
         <button @click="openAppointment" class="btn-appointment">Записаться</button>
       </div>

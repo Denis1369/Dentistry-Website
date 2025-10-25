@@ -3,6 +3,7 @@ import MainWindow from '../views/mainWindow.vue'
 import Contacts from '../views/ContactsForm.vue'
 import services from '../views/ServicesForm.vue'
 import doctors from '../views/DoctorsForm.vue'
+import account from '../views/AccountForm.vue'
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/doctors',
     name: 'doctors',
     component: doctors
+  },
+  {
+    path: '/account',
+    name: 'account',
+    component: account
   }
 ]
 
