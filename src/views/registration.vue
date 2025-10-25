@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
+import axios from 'axios'
 
 const emit = defineEmits(['registration-success', 'switch-to-login', 'close'])
 
@@ -24,6 +25,14 @@ const showConfirmPassword = ref(false)
 const isSubmitting = ref(false)
 const message = ref('')
 const messageType = ref('')
+
+const instance = axios.create({
+  baseURL: 'http://127.0.0.1:8000',
+  
+  timeout: 10000,
+  headers: {'Content-Type': 'application/json'}
+});
+
 
 const validateField = (fieldName) => {
   const value = formData[fieldName]
@@ -122,25 +131,73 @@ const handleSubmit = async () => {
   message.value = ''
   
   try {
-    setTimeout(() => {
-      message.value = 'Регистрация прошла успешно!'
+    const response = await instance.post('/register/', {
+      username: formData.email.replace('@', '').replace('.ru', '').replace('.com',''),
+      email: formData.email.trim(),
+      password: formData.password,
+      first_name: formData.firstname.trim(),
+      last_name: formData.lastname.trim()
+      
+    })
+    const data = response.data
+    if (response.status === 200) {
+      message.value = data.message || 'Регистрация прошла успешно!'
       messageType.value = 'success'
       
-      emit('registration-success', {
-        firstname: formData.firstname,
-        lastname: formData.lastname,
-        email: formData.email
-      })
+      formData.lastname = ''
+      formData.firstname = ''
+      formData.email = ''
+      formData.password = ''
+      formData.confirmPassword = ''
+
+      setTimeout(() => {
+        emit('switch-to-login')
+      }, 2000)
       
-      isSubmitting.value = false
-    }, 1500)
-    
+    } 
   } catch (error) {
-    message.value = 'Ошибка при регистрации: ' + error.message
+    console.error('Ошибка при регистрации:', error)
+    
+    if (error.response) {
+      const status = error.response.status
+      const errorData = error.response.data
+      
+      if (status === 400) {
+        if (errorData.message) {
+          message.value = errorData.message
+        } else if (errorData.non_field_errors) {
+          message.value = errorData.non_field_errors[0]
+        } else if (errorData.user_email) {
+          errors.email = errorData.user_email[0]
+          message.value = 'Исправьте ошибки в форме'
+        } else if (errorData.user_password) {
+          errors.password = errorData.user_password[0]
+          message.value = 'Исправьте ошибки в форме'
+        } else if (errorData.email) {
+          errors.email = errorData.email[0]
+          message.value = 'Исправьте ошибки в форме'
+        } else if (errorData.password) {
+          errors.password = errorData.password[0]
+          message.value = 'Исправьте ошибки в форме'
+        } else {
+          message.value = 'Некорректные данные для регистрации'
+        }
+      } else {
+        message.value = 'Произошла ошибка при регистрации' + status
+
+      }
+    } else if (error.request) {
+      message.value = 'Не удалось подключиться к серверу'
+    } else {
+      message.value = 'Произошла непредвиденная ошибка'
+    }
+    
     messageType.value = 'error'
+  } finally {
     isSubmitting.value = false
   }
 }
+
 
 const closeForm = () => {
   emit('close')
