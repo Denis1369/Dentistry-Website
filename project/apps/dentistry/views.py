@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers.LoginSerializer import LoginSerializer
 from .serializers.RegisterSerializer import RegisterSerializer
 from .serializers.ServiceSerializer import ServiceSerializer
+from .serializers.FeedbackSerializer import FeedbackSerializer
 from .models import Services
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -68,3 +69,15 @@ class ServiceView(GenericAPIView):
         return Response({
             "error": serializer.errors
         })
+    
+class FeedbackView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FeedbackSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(feedback_user=request.user)
+            return Response({"message": "Отзыв отправлен"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
