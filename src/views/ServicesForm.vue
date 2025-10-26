@@ -4,46 +4,46 @@ import ServiceCard from '../components/ServiceCard.vue'
 
 const services = ref([])
 
-const generateMockServices = () => {
-  const serviceTitles = [
-    'Лечение кариеса и установка пломб',
-    'Имплантация зубов',
-    'Профессиональная чистка',
-    'Отбеливание зубов',
-    'Установка брекетов',
-    'Лечение десен',
-    'Удаление зубов',
-    'Детская стоматология',
-    'Протезирование',
-    'Керамические виниры'
-  ]
+const loading = ref(false)
+const error = ref(null)
 
-  const serviceDescriptions = [
-    'Качественное лечение кариеса с установкой современных пломб',
-    'Современная имплантация с гарантией результата',
-    'Комплексная чистка зубов с удалением налета и камня',
-    'Безопасное отбеливание с сохранением эмали',
-    'Коррекция прикуса современными брекет-системами',
-    'Комплексное лечение заболеваний пародонта',
-    'Безболезненное удаление зубов любой сложности',
-    'Специализированная стоматология для детей',
-    'Изготовление и установка зубных протезов',
-    'Эстетическая реставрация с помощью виниров'
-  ]
+const fetchServices = async () => {
+  loading.value = true
+  error.value = null
+  try {
+    const response = await fetch('http://localhost:8000/services/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
 
-  return serviceTitles.map((title, index) => ({
-    services_id: index + 1,
-    services_title: title,
-    services_description: serviceDescriptions[index],
-    services_price: Math.floor(Math.random() * 10000) + 2000,
-    services_img: null,
-    services_profession_id: Math.floor(Math.random() * 5) + 1,
-    services_status: 'akтивно'
-  }))
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status} ${response.body} ${response.Error}`)
+    }
+
+    const data = await response.json()
+     services.value = data.services
+     .filter(service => service.services_status == 'активно')
+     .map(service => ({
+      services_id: service.services_id,
+      services_title: service.services_title || 'Название услуги',
+      services_description: service.services_description || 'Описание недоступно',
+      services_price: service.services_price || 0,
+      services_img: service.services_img && service.services_img.trim() !== '' 
+        ? service.services_img 
+        : null
+    }))
+  } catch (err) {
+    console.error('Ошибка при загрузке услуг:', err)
+    error.value = 'Не удалось загрузить услуги. Пожалуйста, попробуйте позже.'
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
-  services.value = generateMockServices()
+  fetchServices()
 })
 </script>
 
@@ -56,6 +56,17 @@ onMounted(() => {
         Качественное лечение и современное оборудование.
       </p>
       </div>
+
+      <div v-if="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Загрузка услуг...</p>
+      </div>
+
+      <div v-else-if="error" class="error-state">
+        <p>{{ error }}</p>
+        <button @click="fetchServices" class="retry-button">Попробовать снова</button>
+      </div>
+
       <div class="services-grid">
         <ServiceCard
           v-for="service in services"
@@ -65,7 +76,7 @@ onMounted(() => {
             title: service.services_title,
             description: service.services_description,
             price: service.services_price.toLocaleString(),
-            image: null
+            image: service.services_img
           }"
         />
       </div>
@@ -108,6 +119,64 @@ onMounted(() => {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
   margin-top: 40px;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #5285ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  color: #5a6c7d;
+  font-size: 16px;
+}
+
+.error-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.error-state p {
+  color: #c53030;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.retry-button {
+  background: #5285ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #3a75ff;
 }
 
 @media (max-width: 768px) {

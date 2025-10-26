@@ -6,6 +6,10 @@ defineProps({
   }
 })
 
+const hasValidImage = (image) => {
+  return image && image.trim() !== '' && image !== 'null'
+}
+
 const handleAppointment = () => {
   console.log('Запись на услугу')
 }
@@ -14,7 +18,11 @@ const handleAppointment = () => {
 <template>
   <div class="service-card">
     <div class="card-image">
-      <img :src="service.image" :alt="service.title" v-if="service.image">
+      <img 
+        v-if="hasValidImage(service.image)" 
+        :src="service.image" 
+        :alt="service.title"
+      >
       <div class="image-placeholder" v-else>
         <span>Изображение услуги</span>
       </div>
@@ -23,7 +31,7 @@ const handleAppointment = () => {
       <h3 class="service-title">{{ service.title }}</h3>
       <p class="service-description">{{ service.description }}</p>
       <div class="card-footer">
-        <div class="service-price">{{ service.price }} ₽</div>
+        <div class="service-price">от {{ service.price }} ₽</div>
         <button class="appointment-btn" @click="handleAppointment">
           Записаться
         </button>
