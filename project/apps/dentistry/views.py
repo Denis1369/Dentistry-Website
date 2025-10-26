@@ -6,7 +6,9 @@ from .serializers.LoginSerializer import LoginSerializer
 from .serializers.RegisterSerializer import RegisterSerializer
 from .serializers.ServiceSerializer import ServiceSerializer
 from .serializers.FeedbackSerializer import FeedbackSerializer
-from .models import Services
+from .serializers.ProfessionSerializer import ProfessionSerializer
+from .serializers.WorkersSerializer import WorkersSerializer 
+from .models import Services, Profession, Workers
 from rest_framework_simplejwt.tokens import AccessToken
 
 
@@ -70,6 +72,30 @@ class ServiceView(GenericAPIView):
             "error": serializer.errors
         })
     
+class ProfessionView(GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ProfessionSerializer
+
+    def get(self, request):
+        profession = Profession.objects.all()
+        serializer = self.get_serializer(profession, many=True)
+
+        return Response({
+            "profession": serializer.data
+        })
+    
+class WorkersView(GenericAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = WorkersSerializer
+
+    def get(self, request):
+        workers = Workers.objects.all()
+        serializer = self.get_serializer(workers, many=True)
+
+        return Response({
+            "workers": serializer.data
+        })
+
 class FeedbackView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FeedbackSerializer

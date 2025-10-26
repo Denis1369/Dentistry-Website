@@ -2545,3 +2545,25 @@ Unauthorized: /feedback/
 "POST /feedback/ HTTP/1.1" 401 58
 "POST /login/ HTTP/1.1" 200 243
 "POST /feedback/ HTTP/1.1" 201 43
+Watching for file changes with StatReloader
+Not Found: /
+"GET / HTTP/1.1" 404 3522
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 3573
+"GET /docs HTTP/1.1" 301 0
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 15809
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 17400
+"GET /profession/ HTTP/1.1" 200 662
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 17400
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\urls.py changed, reloading.
+Watching for file changes with StatReloader
