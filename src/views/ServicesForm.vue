@@ -1,17 +1,18 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import ServiceCard from '../components/ServiceCard.vue'
 
 const services = ref([])
-
+const categories = ref([])
 const loading = ref(false)
 const error = ref(null)
+const selectedCategory = ref('all')
 
 const fetchServices = async () => {
   loading.value = true
   error.value = null
   try {
-    const response = await fetch('http://localhost:8000/services/', {
+    const response = await fetch('http://127.0.0.1:8000/services/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -42,8 +43,35 @@ const fetchServices = async () => {
   }
 }
 
+const fetchCategories = async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/profession/', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+
+    if (response.ok) {
+      const data = await response.json()
+      categories.value = data.profession || []
+    }
+  } catch (err) {
+    console.error('Ошибка при загрузке категорий:', err)
+  }
+}
+
+const filteredServices = computed(() => {
+  return services.value
+})
+
+const resetFilter = () => {
+  selectedCategory.value = 'all'
+}
+
 onMounted(() => {
   fetchServices()
+  fetchCategories()
 })
 </script>
 
@@ -57,6 +85,44 @@ onMounted(() => {
       </p>
       </div>
 
+      <div class="filters-section" v-if="categories.length > 0">
+        <div class="filters-header">
+          <h3>Категории услуг</h3>
+          <button 
+            v-if="selectedCategory !== 'all'" 
+            @click="resetFilter" 
+            class="reset-filter"
+          >
+            Сбросить фильтр
+          </button>
+        </div>
+        <div class="categories-filter">
+          <button
+            class="category-btn"
+            :class="{ active: selectedCategory === 'all' }"
+            @click="selectedCategory = 'all'"
+          >
+            Все услуги
+          </button>
+          <button
+            v-for="category in categories"
+            :key="category.profession_id"
+            class="category-btn"
+            :class="{ active: selectedCategory === category.profession_id.toString() }"
+            @click="selectedCategory = category.profession_id.toString()"
+          >
+            {{ category.profession_title }}
+          </button>
+        </div>
+        
+        <div v-if="selectedCategory !== 'all'" class="filter-info">
+          <span>Выбрана категория: 
+            <strong>{{ categories.find(c => c.profession_id.toString() === selectedCategory)?.profession_title }}</strong>
+          </span>
+          <span class="services-count">Найдено услуг: {{ filteredServices.length }}</span>
+        </div>
+      </div>
+
       <div v-if="loading" class="loading-state">
         <div class="spinner"></div>
         <p>Загрузка услуг...</p>
@@ -65,6 +131,16 @@ onMounted(() => {
       <div v-else-if="error" class="error-state">
         <p>{{ error }}</p>
         <button @click="fetchServices" class="retry-button">Попробовать снова</button>
+      </div>
+
+      <div v-else class="services-container">
+        <div v-if="filteredServices.length === 0" class="no-services">
+          <p v-if="selectedCategory === 'all'">Нет доступных услуг</p>
+          <p v-else>
+            В выбранной категории пока нет услуг
+            <button @click="resetFilter" class="reset-link">Показать все услуги</button>
+          </p>
+        </div>
       </div>
 
       <div class="services-grid">
@@ -112,6 +188,89 @@ onMounted(() => {
   max-width: 600px;
   margin: 0 auto 40px;
   line-height: 1.6;
+}
+
+.filters-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filters-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.reset-filter {
+  background: #718096;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.reset-filter:hover {
+  background: #4a5568;
+}
+
+.categories-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.category-btn {
+  background: white;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.category-btn:hover {
+  border-color: #5285ff;
+  color: #5285ff;
+}
+
+.category-btn.active {
+  background: #5285ff;
+  color: white;
+  border-color: #5285ff;
+}
+
+.filter-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #5285ff;
+}
+
+.services-count {
+  font-weight: 600;
+  color: #5285ff;
 }
 
 .services-grid {

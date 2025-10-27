@@ -27,7 +27,7 @@ const message = ref('')
 const messageType = ref('')
 
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: 'http://127.0.0.1:8000/user/',
   
   timeout: 10000,
   headers: {'Content-Type': 'application/json'}

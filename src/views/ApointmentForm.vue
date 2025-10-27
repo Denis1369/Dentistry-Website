@@ -160,6 +160,18 @@ const closeForm = () => {
   emit('close')
 }
 
+const getMaxBirth = () =>{
+  const max = new Date()
+  max.setMonth(max.getMonth() - 12)
+  return max.toISOString().split('T')[0]
+}
+
+const getMinBirth = () =>{
+  const max = new Date()
+  max.setFullYear(max.getFullYear() - 90)
+  return max.toISOString().split('T')[0]
+}
+
 const getTodayDate = () => {
   const today = new Date()
   return today.toISOString().split('T')[0]
@@ -167,7 +179,7 @@ const getTodayDate = () => {
 
 const getMaxDate = () => {
   const maxDate = new Date()
-  maxDate.setMonth(maxDate.getMonth() + 3)
+  maxDate.setMonth(maxDate.getMonth() + 1)
   return maxDate.toISOString().split('T')[0]
 }
 </script>
@@ -286,37 +298,22 @@ const getMaxDate = () => {
       
       <div class="form-row">
         <div class="input-group">
-          <label class="input-label">Отчество</label>
+          <label class="input-label">Дата рождения *</label>
           <input 
-            type="text" 
-            v-model="appointmentForm.middleName"
-            placeholder="Введите отчество (необязательно)"
-            @blur="validateField('middleName', appointmentForm.middleName)"
-            :class="{'error-input': appointmentErrors.middleName}"
+            type="date" 
+            v-model="appointmentForm.date"
+            :min="getMinBirth()"
+            :max="getMaxBirth()"
+            @blur="validateField('date', appointmentForm.date)"
+            :class="{'error-input': appointmentErrors.date}"
             class="form-input"
           >
-          <span v-if="appointmentErrors.middleName" class="error-message">
-            {{ appointmentErrors.middleName }}
+          <span v-if="appointmentErrors.date" class="error-message">
+            {{ appointmentErrors.date }}
           </span>
         </div>
         
         <div class="input-group">
-          <label class="input-label">Телефон *</label>
-          <input 
-            type="tel" 
-            v-model="appointmentForm.phone"
-            placeholder="+7 (XXX) XXX-XX-XX"
-            @blur="validateField('phone', appointmentForm.phone)"
-            :class="{'error-input': appointmentErrors.phone}"
-            class="form-input"
-          >
-          <span v-if="appointmentErrors.phone" class="error-message">
-            {{ appointmentErrors.phone }}
-          </span>
-        </div>
-      </div>
-      
-      <div class="input-group">
         <label class="input-label">Email *</label>
         <input 
           type="email" 
@@ -329,6 +326,7 @@ const getMaxDate = () => {
         <span v-if="appointmentErrors.email" class="error-message">
           {{ appointmentErrors.email }}
         </span>
+      </div>
       </div>
       
       <button 
