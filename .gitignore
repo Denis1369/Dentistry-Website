@@ -4,6 +4,7 @@ venv/
 ENV/
 .idea/
 
+
 # Environment variables
 .env
 .env.local
@@ -12,3 +13,6 @@ ENV/
 # IDE
 .idea/
 .vscode/
+
+# Pycache
+__pycache__/
