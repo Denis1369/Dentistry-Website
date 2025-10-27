@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import Registration from './views/registration.vue'
 import LoginForm from './views/LoginForm.vue'
 import ApointmentForm from './views/ApointmentForm.vue'
+import feedbackVue from './views/feedbackVue.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -44,6 +45,9 @@ const handleAccountClick = () => {
   } else {
     openLogin()
   }
+}
+const navigateToReviews = () => {
+  router.push('/reviews')
 }
 
 const openAppointment = () => {
@@ -141,6 +145,12 @@ const switchToLogin = () => {
         >
           Контакты
         </a>
+        <a
+        @click="navigateToReviews"
+        :class="{active: route.path === '/reviews'}"
+        style="cursor: pointer;">
+          Отзывы
+        </a>
       </nav>
       <div class="account">
         <button @click="handleAccountClick" class="nav-button">
@@ -208,10 +218,10 @@ body {
   margin-top: 10%;
 }
 .header {
-  width: 100%;
+  width: 99.2%;
   background: #5285ff;
   position: fixed;
-  z-index: 1000;
+  z-index: 800;
 }
 
 .header-content {

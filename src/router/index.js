@@ -4,6 +4,7 @@ import Contacts from '../views/ContactsForm.vue'
 import services from '../views/ServicesForm.vue'
 import doctors from '../views/DoctorsForm.vue'
 import account from '../views/AccountForm.vue'
+import review from '../views/feedbackVue.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/account',
     name: 'account',
     component: account
+  },
+  {
+    path: '/reviews',
+    name: 'reviews',
+    component: review
   }
 ]
 

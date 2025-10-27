@@ -14,10 +14,14 @@
             </p>
             <div class="hero-buttons">
               <button class="btn-service">Выбрать услугу</button>
-              <button class="btn-secondary">Смотреть цены</button>
+              <button class="btn-secondary">Смотреть врачей</button>
             </div>
           </div>
+          <div class ="banner">
+            <img src="/src/components/icons/i (1).png"></img>
+          </div>
         </section>
+        <!-- <div class="line"></div> -->
       </div>
       <div class="banner">
 
@@ -39,7 +43,7 @@
 
 .hero-section {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1.3fr 1fr;
   gap: 80px;
   align-items: center;
   width: 100%;
@@ -72,6 +76,13 @@
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+}
+.line {
+
+  margin-bottom: 30px;
+  border: 1px solid #5a81c0;
+  width: min(900px, 90%);
+
 }
 
 .btn-service {

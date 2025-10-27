@@ -129,6 +129,14 @@ const handleSubmit = async () => {
   
   isSubmitting.value = true
   message.value = ''
+  const a = {
+    username: formData.email.replace('@', '').replace('.ru', '').replace('.com',''),
+      email: formData.email.trim(),
+      password: formData.password,
+      first_name: formData.firstname.trim(),
+      last_name: formData.lastname.trim()
+  }
+  console.log(a)
   
   try {
     const response = await instance.post('/register/', {

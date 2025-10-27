@@ -1,157 +1,176 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue'
-
-const props = defineProps({
-  employee: {
+import defaultDoctorImage from '../components/icons/dricon.jpg'
+defineProps({
+  doctor: {
     type: Object,
-    required: true,
-    default: () => ({
-      name: '',
-      lastname: '',
-      position: '',
-      experience: '',
-      description:''
-    })
+    required: true
   }
 })
 
-const emit = defineEmits(['book-appointment', 'show-details'])
-
-const handleBookAppointment = () => {
-  emit('book-appointment', props.employee)
+const handleAppointment = () => {
+  console.log('Запись к врачу')
 }
 
-const handleShowDetails = () => {
-  emit('show-details', props.employee)
-}
 </script>
 
 <template>
-  <div class="employee-card">
-    <div class="employee-photo">
-      <div class="photo-placeholder">
-        <span>Фото</span>
+  <div class="doctor-card">
+    <div class="card-image">
+      <img :src= defaultDoctorImage
+      >
+      <div class="image-placeholder" v-if="!doctor.image">
+        <span>Фото врача</span>
       </div>
     </div>
-    
-    <div class="employee-info">
-      <h3 class="employee-name">{{ employee.name }} {{ employee.lastname }} </h3>
-      <p class="employee-position">{{ employee.position }}</p>
-      <p class="employee-experience">Стаж {{ employee.experience }} лет</p>
-      <p class="employee-description">{{ employee.description }}</p>
-      
-      <div class="employee-actions">
-        <button class="btn-primary" @click="handleBookAppointment">
-          Записаться →
-        </button>
-        <button class="btn-secondary" @click="handleShowDetails">
-          Подробнее
+    <div class="card-content">
+      <h3 class="doctor-name">{{ doctor.name }}</h3>
+      <p class="doctor-specialty">{{ doctor.specialty }}</p>
+      <p class="doctor-experience">Опыт работы: {{ doctor.experience }}</p>
+      <p class="doctor-description">{{ doctor.description }}</p>
+      <div class="card-footer">
+        <button class="appointment-btn" @click="handleAppointment">
+          Записаться
         </button>
       </div>
     </div>
   </div>
 </template>
 
-
-
 <style scoped>
-.employee-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 20px;
+.doctor-card {
   background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 320px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.employee-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+.doctor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(82, 133, 255, 0.15);
+  background: #f8fbff;
+  border-color: #5285ff;
 }
 
-.employee-photo {
-  margin-bottom: 16px;
-}
-
-.photo-placeholder {
-  width: 100%;
-  height: 200px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
+.card-image {
+  height: 307px;
+  background: #f5f7fa;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-placeholder {
+  color: #667eea;
   font-size: 14px;
-  border: 1px dashed #ddd;
-}
-
-.employee-info {
   text-align: center;
+  padding: 20px;
 }
 
-.employee-name {
+.card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.doctor-name {
   font-size: 18px;
   font-weight: 600;
-  margin: 0 0 8px 0;
-  color: #333;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  line-height: 1.3;
 }
 
-.employee-position {
+.doctor-specialty {
   font-size: 16px;
   font-weight: 500;
-  margin: 0 0 8px 0;
-  color: #666;
+  color: #5285ff;
+  margin-bottom: 8px;
 }
 
-.employee-experience {
+.doctor-experience {
   font-size: 14px;
-  margin: 0 0 12px 0;
-  color: #888;
+  color: #5a6c7d;
+  margin-bottom: 12px;
+  font-weight: 500;
 }
 
-.employee-description {
+.doctor-description {
   font-size: 14px;
-  line-height: 1.4;
-  margin: 0 0 20px 0;
-  color: #555;
+  color: #5a6c7d;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
-.employee-actions {
+.card-footer {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 12px;
-  justify-content: center;
+  margin-top: auto;
+  flex-shrink: 0;
 }
 
-.btn-primary {
-  background: #007bff;
+.doctor-rating {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffa726;
+  white-space: nowrap;
+}
+
+.appointment-btn {
+  background: #5285ff;
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 8px;
   font-size: 14px;
-  transition: background 0.2s ease;
-}
-
-.btn-primary:hover {
-  background: #0056b3;
-}
-
-.btn-secondary {
-  background: transparent;
-  color: #007bff;
-  border: 1px solid #007bff;
-  padding: 10px 16px;
-  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 120px;
+  flex-shrink: 0;
 }
 
-.btn-secondary:hover {
-  background: #007bff;
-  color: white;
+.appointment-btn:hover {
+  background: #3a75ff;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .appointment-btn {
+    min-width: auto;
+  }
+  
+  .card-image {
+    height: 200px;
+  }
 }
 </style>
