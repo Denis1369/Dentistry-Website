@@ -24,6 +24,12 @@ const fetchServices = async () => {
     }
 
     const data = await response.json()
+
+    const categoryMap = {}
+    categories.value.forEach(cat => {
+      categoryMap[cat.profession_id] = cat.profession_title
+    })
+
      services.value = data.services
      .filter(service => service.services_status == 'активно')
      .map(service => ({
@@ -33,7 +39,10 @@ const fetchServices = async () => {
       services_price: service.services_price || 0,
       services_img: service.services_img && service.services_img.trim() !== '' 
         ? service.services_img 
-        : null
+        : null,
+      services_category: service.services_profession ? 
+          categoryMap[service.services_profession] : 'Общая категория',
+      services_profession_id: service.services_profession
     }))
   } catch (err) {
     console.error('Ошибка при загрузке услуг:', err)
@@ -55,14 +64,23 @@ const fetchCategories = async () => {
     if (response.ok) {
       const data = await response.json()
       categories.value = data.profession || []
+      await fetchServices()
     }
   } catch (err) {
     console.error('Ошибка при загрузке категорий:', err)
+    await fetchServices()
   }
 }
 
 const filteredServices = computed(() => {
-  return services.value
+  if (selectedCategory.value === 'all') {
+    return services.value
+  }
+  
+  return services.value.filter(service => 
+    service.services_profession_id && 
+    service.services_profession_id.toString() === selectedCategory.value
+  )
 })
 
 const resetFilter = () => {
@@ -70,7 +88,6 @@ const resetFilter = () => {
 }
 
 onMounted(() => {
-  fetchServices()
   fetchCategories()
 })
 </script>
@@ -145,14 +162,15 @@ onMounted(() => {
 
       <div class="services-grid">
         <ServiceCard
-          v-for="service in services"
+          v-for="service in filteredServices"
           :key="service.services_id"
           :service="{
             id: service.services_id,
             title: service.services_title,
             description: service.services_description,
             price: service.services_price.toLocaleString(),
-            image: service.services_img
+            image: service.services_img,
+            category: service.services_category
           }"
         />
       </div>

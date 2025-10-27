@@ -28,6 +28,9 @@ const handleAppointment = () => {
       </div>
     </div>
     <div class="card-content">
+       <div v-if="service.category" class="service-category">
+        {{ service.category }}
+      </div>
       <h3 class="service-title">{{ service.title }}</h3>
       <p class="service-description">{{ service.description }}</p>
       <div class="card-footer">
@@ -89,6 +92,27 @@ const handleAppointment = () => {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  position: relative;
+}
+
+.service-category {
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: #5285ff;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(82, 133, 255, 0.3);
+  z-index: 1;
+  white-space: nowrap;
+  max-width: calc(100% - 32px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .service-title {
@@ -101,6 +125,7 @@ const handleAppointment = () => {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin-top: 8px;
 }
 
 .service-description {

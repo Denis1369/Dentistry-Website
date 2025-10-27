@@ -7,8 +7,8 @@
         <div class="container">
             <h1>Контакты</h1>
             <p>Мы всегда рады вашим вопросам и предложениям. Свяжитесь с нами удобным для вас способом.</p>
-
-            <div class="contact-info">
+            <div class="text_center">
+                <div class="contact-info">
                 <h2>Наши контакты</h2>
                 <p><strong>Телефон:</strong> <a href="tel:+74951234567">+7 (495) 123-45-67</a></p>
                 <p><strong>Электронная почта:</strong> <a href="mailto:info@example.com">info@example.com</a></p>
@@ -20,6 +20,8 @@
                 <p>Пн-Пт: с 9:00 до 18:00</p>
                 <p>Сб-Вс: выходной</p>
             </div>
+            </div>
+            
         </div>
     </main>
 </template>
@@ -30,6 +32,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 0 20px;
+    align-items: center;
 }
 
 .main h1 {
@@ -61,6 +64,7 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-bottom: 30px;
     width: 600px;
+    align-items: center;
 }
 
 .contact-info h2,
@@ -68,6 +72,14 @@
     border-bottom: 2px solid #3498db;
     padding-bottom: 10px;
     margin-bottom: 20px;
+}
+
+.text_center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    width: 100%;
 }
 
 .contact-info p,
