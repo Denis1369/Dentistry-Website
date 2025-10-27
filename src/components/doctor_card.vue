@@ -16,15 +16,12 @@ const handleAppointment = () => {
 <template>
   <div class="doctor-card">
     <div class="card-image">
-      <img :src= defaultDoctorImage
-      >
-      <div class="image-placeholder" v-if="!doctor.image">
-        <span>Фото врача</span>
-      </div>
+      <img :src="doctor.image || defaultDoctorImage">
+      
     </div>
     <div class="card-content">
       <h3 class="doctor-name">{{ doctor.name }}</h3>
-      <p class="doctor-specialty">{{ doctor.specialty }}</p>
+      <p class="doctor-specialty"> {{ doctor.category }}</p>
       <p class="doctor-experience">Опыт работы: {{ doctor.experience }}</p>
       <p class="doctor-description">{{ doctor.description }}</p>
       <div class="card-footer">
@@ -48,6 +45,7 @@ const handleAppointment = () => {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
 }
 
 .doctor-card:hover {
@@ -58,7 +56,7 @@ const handleAppointment = () => {
 }
 
 .card-image {
-  height: 307px;
+  height: 250px;
   background: #f5f7fa;
   display: flex;
   align-items: center;
@@ -69,8 +67,8 @@ const handleAppointment = () => {
 }
 
 .card-image img {
-  width: 100%;
-  height: 100%;
+  width: 300px;
+  height: 300px;
   object-fit: cover;
 }
 
@@ -121,6 +119,9 @@ const handleAppointment = () => {
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
+
+
+
 
 .card-footer {
   display: flex;

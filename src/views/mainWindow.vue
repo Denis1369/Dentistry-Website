@@ -23,9 +23,10 @@
         </section>
         <!-- <div class="line"></div> -->
       </div>
-      <div class="banner">
-
+      <div class="info-clinic">
+        <p></p>
       </div>
+      
     </main>
 </template>
 
