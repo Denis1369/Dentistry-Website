@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
+from ..models import CustomUser
+
 
 class LoginSerializer(serializers.Serializer):
     user_email = serializers.EmailField(required=True)
@@ -18,3 +20,21 @@ class LoginSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(required=True, write_only=True)
+
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(**validated_data)
+        return user
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password', 'first_name', 'last_name', )
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'username', 'email', 'user_date_birth', 'user_img']

@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from rest_framework.generics import GenericAPIView
@@ -5,14 +7,14 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .serializers.LoginSerializer import LoginSerializer
-from .serializers.RegisterSerializer import RegisterSerializer
+from yaml import serialize
+
+from .serializers.UserSerializers import LoginSerializer, RegisterSerializer, ProfileSerializer
+from .serializers.FeedbackSerializers import LeaveFeedbackSerializer, GetFeedbackSerializer
 from .serializers.ServiceSerializer import ServiceSerializer
-from .serializers.FeedbackSerializer import FeedbackSerializer
 from .serializers.ProfessionSerializer import ProfessionSerializer
-from .serializers.UserProfileSerializer import ProfileSerializer
 from .serializers.WorkersSerializer import WorkersSerializer 
-from .models import Services, Profession, Workers, CustomUser
+from .models import Services, Profession, Workers, CustomUser, Feedback
 from rest_framework_simplejwt.tokens import AccessToken
 
 
@@ -121,14 +123,35 @@ class WorkersView(GenericAPIView):
             "workers": serializer.data
         })
 
-class FeedbackView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = FeedbackSerializer
+class FeedbackViewSet(ViewSet):
 
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+    @extend_schema(
+        request=LeaveFeedbackSerializer,
+        responses={200: OpenApiResponse(description="Отзыв успешно оставлен", examples={"message": "Отзыв отправлен"})},
+        description="Оставление отзыва по JWT токену"
+    )
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def leave_feedback(self, request):
+        serializer = LeaveFeedbackSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save(feedback_user=request.user)
             return Response({"message": "Отзыв отправлен"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        responses={200: OpenApiResponse(examples={"feedbacks": [
+            {"feedback_rating":5, "feedback_text":"Очень круто", "feedback_date":datetime.datetime.now(), 'first_name':"Денис", 'last_name':"Ибрагимов"}
+        ]
+        }
+        )},
+        description="Получение отзывов"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def get_feedbacks(self, request):
+        feedbacks = Feedback.objects.select_related('feedback_user')
+        serializer = GetFeedbackSerializer(feedbacks, many=True)
+
+        return Response({
+            "feedbacks": serializer.data
+        })
