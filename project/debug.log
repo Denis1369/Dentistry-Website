@@ -4641,3 +4641,5 @@ Watching for file changes with StatReloader
 "GET /appointment/get_appointment/?date=2025-11-28&worker_id=1 HTTP/1.1" 200 1859
 C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
 Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
