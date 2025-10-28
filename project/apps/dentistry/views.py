@@ -11,7 +11,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from yaml import serialize
 
-from .serializers.UserSerializers import LoginSerializer, RegisterSerializer, ProfileSerializer
+from .serializers.UserSerializers import LoginSerializer, RegisterSerializer, ProfileSerializer, UpdateProfileSerializer
 from .serializers.FeedbackSerializers import LeaveFeedbackSerializer, GetFeedbackSerializer
 from .serializers.ServiceSerializer import ServiceSerializer
 from .serializers.ProfessionSerializer import ProfessionSerializer
@@ -111,6 +111,29 @@ class UserViewSet(ViewSet):
 
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @extend_schema(
+        summary="Изменить данные пользователя",
+        description="Изменяет введённые данные текущего авторизованного пользователя",
+        request=UpdateProfileSerializer,
+        responses={"message": OpenApiResponse(description="Изменения успешно сохранены")}
+    )
+    @action(detail=False, methods=['patch'], permission_classes=[IsAuthenticated])
+    def update_profile(self, request):
+        serializer = UpdateProfileSerializer(
+            instance=request.user,
+            data=request.data,
+            partial=True  # частичное обновление
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "message": "Изменения успешно сохранены"
+            }, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ServiceView(GenericAPIView):

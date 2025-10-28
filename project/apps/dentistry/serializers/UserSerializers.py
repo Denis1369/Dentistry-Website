@@ -38,3 +38,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'username', 'email', 'user_date_birth', 'user_img']
+
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name', 'user_date_birth']
+        extra_kwargs = {
+            'first_name': {'required': False},
+            'last_name': {'required': False},
+            'user_date_birth': {'required': False}
+        }
