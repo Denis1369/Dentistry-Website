@@ -1,16 +1,16 @@
-from datetime import datetime, time, timedelta
-from django.utils import timezone
+import datetime
 
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse, OpenApiTypes
 from rest_framework.generics import GenericAPIView
+from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from yaml import serialize
 
-from .serializers.UserSerializers import LoginSerializer, RegisterSerializer, ProfileSerializer
+from .serializers.UserSerializers import LoginSerializer, RegisterSerializer, ProfileSerializer, UpdateProfileSerializer
 from .serializers.FeedbackSerializers import LeaveFeedbackSerializer, GetFeedbackSerializer
 from .serializers.ServiceSerializer import ServiceSerializer
 from .serializers.ProfessionSerializer import ProfessionSerializer
@@ -20,6 +20,7 @@ from .serializers.AppointmentSerializer import AppointmentSerializer
 from .models import Services, Profession, Workers, CustomUser, Feedback, MedicalCard, Appointment
 from rest_framework_simplejwt.tokens import AccessToken
 
+from .utils.ObjectStorageUtil import upload_file_to_cloud
 
 class UserViewSet(ViewSet):
 
@@ -63,8 +64,8 @@ class UserViewSet(ViewSet):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @extend_schema(
-        responses={200: ProfileSerializer},
-        description="Получить профиль текущего авторизованного пользователя"
+        description="Получить профиль текущего авторизованного пользователя",
+        responses={200: ProfileSerializer}
     )
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def profile(self, request):
@@ -74,6 +75,66 @@ class UserViewSet(ViewSet):
         return Response({
             "user": serializer.data
         })
+
+    @extend_schema(
+        summary="Загрузить аватар пользователя",
+        description="Принимает изображение в формате multipart/form-data и сохраняет в облако.",
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'avatar': {
+                        'type': 'string',
+                        'format': 'binary',
+                        'description': 'Файл изображения (jpg, png и т.д.)'
+                    }
+                },
+                'required': ['avatar']
+            }
+        },
+    )
+    @action(detail=False, methods=['put'], parser_classes=[MultiPartParser], permission_classes=[IsAuthenticated])
+    def update_avatar(self, request):
+        file = request.FILES['avatar']
+
+        if not file:
+            return Response({'error': 'Файл не предоставлен'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user_id = request.user.user_id
+            file_name, file_extension = os.path.splitext(file.name)
+            upload_file_to_cloud(file, f'{user_id}{file_extension}')
+
+            request.user.user_img = f'https://dentistry.s3.cloud.ru/avatars/{user_id}{file_extension}'
+            request.user.save()
+
+            return Response({'message': 'Аватар успешно изменён'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @extend_schema(
+        summary="Изменить данные пользователя",
+        description="Изменяет введённые данные текущего авторизованного пользователя",
+        request=UpdateProfileSerializer,
+        responses={"message": OpenApiResponse(description="Изменения успешно сохранены")}
+    )
+    @action(detail=False, methods=['patch'], permission_classes=[IsAuthenticated])
+    def update_profile(self, request):
+        serializer = UpdateProfileSerializer(
+            instance=request.user,
+            data=request.data,
+            partial=True  # частичное обновление
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "message": "Изменения успешно сохранены"
+            }, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ServiceView(GenericAPIView):
