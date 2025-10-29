@@ -137,22 +137,52 @@ class UserViewSet(ViewSet):
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ServiceView(GenericAPIView):
-    permission_classes = [AllowAny]
-    serializer_class = ServiceSerializer
-
-    def get(self, request):
+    
+class ServiceSet(ViewSet):
+    @extend_schema(
+        responses={200: ServiceSerializer},
+        description="Получение списка услуг"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def get_base(self, request):
         services = Services.objects.all()
-        serializer = self.get_serializer(services, many=True)
+        serializer = ServiceSerializer(services, many=True)
+
+        return Response({
+            "services": serializer.data
+        })
+    
+    @extend_schema(
+        parameters=[
+        OpenApiParameter(
+            name='profession_title',
+            description='Название услуги',
+            required=True,
+            type=OpenApiTypes.STR,
+            location=OpenApiParameter.QUERY
+        )],
+        responses={200: ServiceSerializer},
+        description="Получение отфильтрованного списка услуг"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def get_filter(self, request):
+        title_get = request.query_params.get('profession_title')
+
+        services = Services.objects.filter(services_profession__profession_title=title_get)
+        serializer = ServiceSerializer(services, many=True)
 
         return Response({
             "services": serializer.data
         })
 
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+    @extend_schema(
+        responses={200: ServiceSerializer},
+        description="Создание услуги",
+        request=ServiceSerializer
+    )
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def creat_service(self, request):
+        serializer = ServiceSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -177,13 +207,50 @@ class ProfessionView(GenericAPIView):
             "profession": serializer.data
         })
     
-class WorkersView(GenericAPIView):
-    permission_classes = [AllowAny]
-    serializer_class = WorkersSerializer
+# class WorkersView(GenericAPIView):
+#     permission_classes = [AllowAny]
+#     serializer_class = WorkersSerializer
 
-    def get(self, request):
+#     def get(self, request):
+#         workers = Workers.objects.all()
+#         serializer = self.get_serializer(workers, many=True)
+
+#         return Response({
+#             "workers": serializer.data
+#         })
+    
+class WorkersSet(ViewSet):
+    @extend_schema(
+        responses={200: WorkersSerializer},
+        description="Получение списка врачей"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def get_base(self, request):
         workers = Workers.objects.all()
-        serializer = self.get_serializer(workers, many=True)
+        serializer = WorkersSerializer(workers, many=True)
+
+        return Response({
+            "workers": serializer.data
+        })
+    
+    @extend_schema(
+    parameters=[
+    OpenApiParameter(
+        name='profession_title',
+        description='Название услуги',
+        required=True,
+        type=OpenApiTypes.STR,
+        location=OpenApiParameter.QUERY
+    )],
+    responses={200: WorkersSerializer},
+    description="Получение отфильтрованного списка врачей"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def get_filter(self, request):
+        title_get = request.query_params.get('profession_title')
+
+        workers = Workers.objects.filter(workers_profession__profession_title=title_get)
+        serializer = WorkersSerializer(workers, many=True)
 
         return Response({
             "workers": serializer.data
@@ -282,8 +349,9 @@ class AppointmentSet(ViewSet):
                 location=OpenApiParameter.QUERY
             )
         ],
+        
         responses={
-            200: {
+            200: OpenApiResponse({
                 "type": "object",
                 "properties": {
                     "slots": {
@@ -297,8 +365,7 @@ class AppointmentSet(ViewSet):
                         }
                     }
                 }
-            },
-            400: "Bad Request"
+            }),
         }
     )
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])

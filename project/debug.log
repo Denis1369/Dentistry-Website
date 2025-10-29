@@ -4643,3 +4643,644 @@ C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, rel
 Watching for file changes with StatReloader
 C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\backends\mysql\base.py", line 256, in get_new_connection
+    connection = Database.connect(**conn_params)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\MySQLdb\__init__.py", line 121, in Connect
+    return Connection(*args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\MySQLdb\connections.py", line 200, in __init__
+    super().__init__(*args, **kwargs2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+MySQLdb.OperationalError: (2002, "Can't connect to server on '217.60.37.17' (10060)")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 84, in inner
+    with self._recreate_cm():
+         ~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\transaction.py", line 198, in __enter__
+    if not connection.get_autocommit():
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\backends\base\base.py", line 454, in get_autocommit
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\backends\mysql\base.py", line 256, in get_new_connection
+    connection = Database.connect(**conn_params)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\MySQLdb\__init__.py", line 121, in Connect
+    return Connection(*args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\MySQLdb\connections.py", line 200, in __init__
+    super().__init__(*args, **kwargs2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: (2002, "Can't connect to server on '217.60.37.17' (10060)")
+- Broken pipe from ('127.0.0.1', 63661)
+"GET /schema/ HTTP/1.1" 200 33490
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 11287
+"GET /docs/ HTTP/1.1" 200 4636
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 31486
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 31486
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 31900
+"GET /service/get_filter/?services_title=%D0%A5%D0%B8%D1%80%D1%83%D1%80%D0%B3%D0%B8%D1%8F HTTP/1.1" 200 15
+"GET /service/get_filter/?services_title=%D0%A2%D0%B5%D1%80%D0%B0%D0%BF%D0%B8%D1%8F HTTP/1.1" 200 15
+"GET /service/get_filter/?services_title=%D0%9E%D1%80%D1%82%D0%BE%D0%B4%D0%BE%D0%BD%D1%82%D0%B8%D1%8F HTTP/1.1" 200 15
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /service/get_filter/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py", line 201, in get_filter
+    services = Services.objects.filter(services_profession_profession_title=title_get)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\query.py", line 1493, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\query.py", line 1511, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\query.py", line 1518, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\sql\query.py", line 1526, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\sql\query.py", line 1333, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\db\models\sql\query.py", line 1806, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'services_profession_profession_title' into field. Choices are: appointment, medicalcard, services_description, services_id, services_img, services_price, services_profession, services_profession_id, services_status, services_title
+"GET /service/get_filter/?services_title=%D0%9E%D1%80%D1%82%D0%BE%D0%B4%D0%BE%D0%BD%D1%82%D0%B8%D1%8F HTTP/1.1" 500 151107
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /service/get_filter/?services_title=%D0%9E%D1%80%D1%82%D0%BE%D0%B4%D0%BE%D0%BD%D1%82%D0%B8%D1%8F HTTP/1.1" 200 507
+"GET /service/get_filter/?services_title=%D0%A2%D0%B5%D1%80%D0%B0%D0%BF%D0%B8%D1%8F HTTP/1.1" 200 853
+"GET / HTTP/1.1" 200 2
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 31900
+"GET /service/get_filter/?services_title=%D0%A2%D0%B5%D1%80%D0%B0%D0%BF%D0%B8%D1%8F HTTP/1.1" 200 853
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 31900
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 31897
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 31897
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 112, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1406, in _get_response_bodies
+    content_response = self._get_response_for_code(serializer, code, media_types, direction)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1520, in _get_response_for_code
+    self._get_examples(serializer, direction, media_type, status_code, examples)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1256, in _get_examples
+    if direction == 'response' and example.request_only:
+                                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'request_only'
+"GET /schema/ HTTP/1.1" 500 162868
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 112, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1406, in _get_response_bodies
+    content_response = self._get_response_for_code(serializer, code, media_types, direction)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1520, in _get_response_for_code
+    self._get_examples(serializer, direction, media_type, status_code, examples)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1256, in _get_examples
+    if direction == 'response' and example.request_only:
+                                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'request_only'
+"GET /schema/ HTTP/1.1" 500 162868
+"GET /docs/ HTTP/1.1" 200 4636
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 112, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1406, in _get_response_bodies
+    content_response = self._get_response_for_code(serializer, code, media_types, direction)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1520, in _get_response_for_code
+    self._get_examples(serializer, direction, media_type, status_code, examples)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1256, in _get_examples
+    if direction == 'response' and example.request_only:
+                                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'request_only'
+"GET /schema/ HTTP/1.1" 500 162868
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 112, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1406, in _get_response_bodies
+    content_response = self._get_response_for_code(serializer, code, media_types, direction)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1520, in _get_response_for_code
+    self._get_examples(serializer, direction, media_type, status_code, examples)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1256, in _get_examples
+    if direction == 'response' and example.request_only:
+                                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'request_only'
+"GET /schema/ HTTP/1.1" 500 162868
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 112, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1406, in _get_response_bodies
+    content_response = self._get_response_for_code(serializer, code, media_types, direction)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1520, in _get_response_for_code
+    self._get_examples(serializer, direction, media_type, status_code, examples)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1256, in _get_examples
+    if direction == 'response' and example.request_only:
+                                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'request_only'
+"GET /schema/ HTTP/1.1" 500 162967
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 112, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1406, in _get_response_bodies
+    content_response = self._get_response_for_code(serializer, code, media_types, direction)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1520, in _get_response_for_code
+    self._get_examples(serializer, direction, media_type, status_code, examples)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1256, in _get_examples
+    if direction == 'response' and example.request_only:
+                                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'request_only'
+"GET /schema/ HTTP/1.1" 500 162967
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 112, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1406, in _get_response_bodies
+    content_response = self._get_response_for_code(serializer, code, media_types, direction)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1520, in _get_response_for_code
+    self._get_examples(serializer, direction, media_type, status_code, examples)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1256, in _get_examples
+    if direction == 'response' and example.request_only:
+                                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'request_only'
+"GET /schema/ HTTP/1.1" 500 162967
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Denis\AppData\Local\Programs\Python\Python313\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+        path, path_regex, path_prefix, method, self.registry
+    )
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 112, in get_operation
+    operation['responses'] = self._get_response_bodies()
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1406, in _get_response_bodies
+    content_response = self._get_response_for_code(serializer, code, media_types, direction)
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1520, in _get_response_for_code
+    self._get_examples(serializer, direction, media_type, status_code, examples)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Django\Dentistry-Website-Backend\venv\Lib\site-packages\drf_spectacular\openapi.py", line 1256, in _get_examples
+    if direction == 'response' and example.request_only:
+                                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'request_only'
+"GET /schema/ HTTP/1.1" 500 162967
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 31395
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 33064
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /docs/ HTTP/1.1" 200 4636
+- Broken pipe from ('127.0.0.1', 49699)
+"GET /schema/ HTTP/1.1" 200 33769
+"POST /user/login/ HTTP/1.1" 200 243
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 34089
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\urls.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 35033
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 35923
+"GET /workers/get_base/ HTTP/1.1" 200 910
+"GET /workers/get_filter/?profession_title=%D0%A5%D0%B8%D1%80%D1%83%D1%80%D0%B3%D0%B8%D1%8F HTTP/1.1" 200 377
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\utils\ObjectStorageUtil.py changed, reloading.
+Watching for file changes with StatReloader
