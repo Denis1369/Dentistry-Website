@@ -207,18 +207,6 @@ class ProfessionView(GenericAPIView):
             "profession": serializer.data
         })
     
-# class WorkersView(GenericAPIView):
-#     permission_classes = [AllowAny]
-#     serializer_class = WorkersSerializer
-
-#     def get(self, request):
-#         workers = Workers.objects.all()
-#         serializer = self.get_serializer(workers, many=True)
-
-#         return Response({
-#             "workers": serializer.data
-#         })
-    
 class WorkersSet(ViewSet):
     @extend_schema(
         responses={200: WorkersSerializer},

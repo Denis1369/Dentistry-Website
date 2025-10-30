@@ -5284,3 +5284,12 @@ Watching for file changes with StatReloader
 "GET /workers/get_filter/?profession_title=%D0%A5%D0%B8%D1%80%D1%83%D1%80%D0%B3%D0%B8%D1%8F HTTP/1.1" 200 377
 C:\Django\Dentistry-Website-Backend\project\apps\dentistry\utils\ObjectStorageUtil.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 14627
+"GET / HTTP/1.1" 200 2
+"GET /docs HTTP/1.1" 301 0
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 36066
+"GET /workers/get_base/ HTTP/1.1" 200 6063

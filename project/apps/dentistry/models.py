@@ -23,6 +23,7 @@ class Workers(models.Model):
     workers_profession = models.ForeignKey(Profession, models.DO_NOTHING, blank=True, null=True)
     workers_experience = models.IntegerField(blank=True, null=True)
     workers_status = models.CharField(max_length=10, blank=True, null=True)
+    workers_img = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
