@@ -9,7 +9,6 @@ const loading = ref(false)
 const error = ref(null)
 const selectedCategory = ref('all')
 
-// Создаем computed свойство для отфильтрованных врачей
 const filteredDoctors = computed(() => {
   if (selectedCategory.value === 'all') {
     return doctors.value
@@ -27,7 +26,7 @@ const fetchDoctors = async () => {
   try {
     console.log('Загрузка врачей...')
     
-    const response = await fetch('http://127.0.0.1:8000/workers/', {
+    const response = await fetch('http://127.0.0.1:8000/workers/get_base/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +43,6 @@ const fetchDoctors = async () => {
 
     const data = await response.json()
 
-    // Создаем карту категорий для быстрого доступа
     const categoryMap = {}
     categories.value.forEach(cat => {
       categoryMap[cat.profession_id] = cat.profession_title
@@ -58,7 +56,7 @@ const fetchDoctors = async () => {
 
     doctors.value = doctorsData
       .filter(doctor => 
-        doctor.workers_status === 'активный'
+        doctor.workers_status === 'активен'
       )
       .map(doctor => {
         // Получаем название специализации из карты категорий

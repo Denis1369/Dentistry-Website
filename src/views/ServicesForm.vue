@@ -12,7 +12,7 @@ const fetchServices = async () => {
   loading.value = true
   error.value = null
   try {
-    const response = await fetch('http://127.0.0.1:8000/services/', {
+    const response = await fetch('http://127.0.0.1:8000/service/get_base/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
