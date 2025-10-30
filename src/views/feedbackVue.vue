@@ -61,6 +61,7 @@ const createAxiosInstance = () => {
 }
 
 const getUserName = (userData) => {
+  console.log(userData)
   if (!userData) return 'Анонимный пользователь'
   
   if (userData.first_name && userData.last_name) {
@@ -80,6 +81,26 @@ const getUserName = (userData) => {
   return 'Анонимный пользователь'
 }
 
+// Новая функция для получения инициалов пользователя
+const getUserInitials = (userData) => {
+  if (!userData) return 'А'
+  
+  if (userData.first_name && userData.last_name) {
+    return `${userData.first_name[0]}${userData.last_name[0]}`.toUpperCase()
+  }
+  if (userData.first_name) {
+    return userData.first_name[0].toUpperCase()
+  }
+  
+  if (userData.last_name) {
+    return userData.last_name[0].toUpperCase()
+  }
+  
+  if (userData.username) {
+    return userData.username[0].toUpperCase()
+  }
+  return 'А'
+}
 
 const fetchReviews = async () => {
   loading.value = true
@@ -89,11 +110,12 @@ const fetchReviews = async () => {
     const instance = createAxiosInstance()
     const response = await instance.get('/feedback/get_feedbacks/')
     
-      if (response.data && response.data.feedbacks && Array.isArray(response.data.feedbacks)) {
+    if (response.data && response.data.feedbacks && Array.isArray(response.data.feedbacks)) {
       reviews.value = response.data.feedbacks.map((review) => {
-        
         return {
           user_name: getUserName(review.feedback_user),
+          user_initials: getUserInitials(review.feedback_user),
+          user_img: review.feedback_user?.user_img, // Добавляем аватарку
           rating: review.feedback_rating,
           text: review.feedback_text,
           date: review.feedback_date,
@@ -289,7 +311,9 @@ onMounted(() => {
       >
         <div class="review-header">
           <div class="user-avatar">
-            {{ review.user_initials }}
+            <!-- Исправлено: используем review.user_img вместо userData?.user_img -->
+            <img v-if="review.user_img" :src="review.user_img" :alt="review.user_name">
+            <span v-else>{{ review.user_initials }}</span>
           </div>
           <div class="user-info">
             <div class="user-name">{{ review.user_name }}</div>
@@ -406,6 +430,19 @@ onMounted(() => {
   font-weight: 600;
   font-size: 16px;
   flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.user-avatar span {
+  z-index: 1;
 }
 
 .user-info {

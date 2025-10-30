@@ -1,7 +1,88 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted, watch } from 'vue'
+import axios from 'axios'
 
 const emit = defineEmits(['appointment-success', 'close'])
+
+const API_BASE_URL = 'http://127.0.0.1:8000'
+const getAuthToken = () => localStorage.getItem('authToken')
+
+const getCurrentUser = () => {
+  const userData = localStorage.getItem('userData')
+  return userData ? JSON.parse(userData) : null
+}
+
+const getUserIdFromToken = () => {
+  try {
+    const token = localStorage.getItem('authToken')
+    if (!token) return null
+    const payload = token.split('.')[1]
+    const decodedPayload = JSON.parse(atob(payload))
+    return decodedPayload.user_id || decodedPayload.sub
+  } catch (error) {
+    return null
+  }
+}
+
+const fetchUserProfile = async () => {
+  try {
+    const token = localStorage.getItem('authToken')
+    if (!token) {
+      throw new Error('Токен авторизации не найден')
+    }
+
+    const response = await fetch('http://127.0.0.1:8000/user/profile/', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`Ошибка HTTP: ${response.status}`)
+    }
+
+    const data = await response.json()
+    let userData = {}
+    
+    if (data.user) {
+      userData = data.user
+      if (!userData.user_id) {
+        const userIdFromToken = getUserIdFromToken()
+        if (userIdFromToken) {
+          userData.user_id = userIdFromToken
+        }
+      }
+    } else {
+      userData = data
+      if (!userData.user_id) {
+        const userIdFromToken = getUserIdFromToken()
+        if (userIdFromToken) {
+          userData.user_id = userIdFromToken
+        }
+      }
+    }
+
+    localStorage.setItem('userData', JSON.stringify(userData))
+    return userData
+    
+  } catch (err) {
+    const storedUserData = localStorage.getItem('userData')
+    if (storedUserData) {
+      return JSON.parse(storedUserData)
+    }
+    throw err
+  }
+}
+
+const handleLogout = () => {
+  localStorage.removeItem('authToken')
+  localStorage.removeItem('userData')
+  setTimeout(() => {
+    window.location.reload()
+  }, 100)
+}
 
 const appointmentForm = reactive({
   service: '',
@@ -10,10 +91,8 @@ const appointmentForm = reactive({
   time: '',
   lastName: '', 
   firstName: '',
-  middleName: '',
-  phone: '',
-  email: '',
-  comment: ''
+  birthDate: '',
+  email: ''
 })
 
 const appointmentErrors = reactive({
@@ -23,93 +102,288 @@ const appointmentErrors = reactive({
   time: '',
   lastName: '',
   firstName: '',
-  middleName: '', 
-  phone: '',
+  birthDate: '',
   email: ''
 })
 
 const services = ref([])
+const allServices = ref([])
 const doctors = ref([])
+const allDoctors = ref([])
+const professions = ref([])
 const availableTimes = ref([])
+const isLoading = ref(false)
+const currentUser = ref(null)
+const isAuthenticated = ref(false)
+const profileLoading = ref(false)
+
+const initializeAppointmentForm = async () => {
+  try {
+    await checkAuthentication()
+    await Promise.all([
+      loadProfessions(),
+      loadAllServices(),
+      loadAllDoctors()
+    ])
+    await autoFillUserData()
+  } catch (error) {
+    console.error('Ошибка инициализации формы:', error)
+  }
+}
+
+const checkAuthentication = async () => {
+  const token = getAuthToken()
+  
+  if (token) {
+    isAuthenticated.value = true
+    try {
+      profileLoading.value = true
+      const userProfile = await fetchUserProfile()
+      currentUser.value = userProfile
+    } catch (error) {
+      const storedUser = getCurrentUser()
+      if (storedUser) {
+        currentUser.value = storedUser
+      } else {
+        isAuthenticated.value = false
+        currentUser.value = null
+      }
+    } finally {
+      profileLoading.value = false
+    }
+  } else {
+    isAuthenticated.value = false
+    currentUser.value = null
+  }
+}
+
+const autoFillUserData = () => {
+  if (!isAuthenticated.value || !currentUser.value) return
+
+  const user = currentUser.value
+  appointmentForm.lastName = user.last_name || user.surname || user.lastName || ''
+  appointmentForm.firstName = user.first_name || user.name || user.firstName || ''
+  appointmentForm.birthDate = user.date_birth || user.birth_date || user.dateBirth || user.birthDate || ''
+  appointmentForm.email = user.email || ''
+}
+
+const loadProfessions = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/profession/`)
+    if (response.data.profession) {
+      professions.value = response.data.profession
+    } else if (Array.isArray(response.data)) {
+      professions.value = response.data
+    }
+  } catch (error) {
+    professions.value = []
+  }
+}
+
+const loadAllServices = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/service/get_base/`)
+    if (response.data.services) {
+      allServices.value = response.data.services
+      services.value = response.data.services
+    } else if (Array.isArray(response.data)) {
+      allServices.value = response.data
+      services.value = response.data
+    }
+  } catch (error) {
+    allServices.value = []
+    services.value = []
+  }
+}
+
+const loadAllDoctors = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/workers/get_base/`)
+    if (response.data.workers) {
+      allDoctors.value = response.data.workers
+      doctors.value = response.data.workers
+    } else if (Array.isArray(response.data)) {
+      allDoctors.value = response.data
+      doctors.value = response.data
+    }
+  } catch (error) {
+    allDoctors.value = []
+    doctors.value = []
+  }
+}
+
+watch(() => appointmentForm.service, async (newServiceId) => {
+  if (newServiceId) {
+    const selectedService = allServices.value.find(s => s.services_id == newServiceId)
+    if (selectedService && selectedService.services_profession) {
+      const profession = professions.value.find(p => p.profession_id == selectedService.services_profession)
+      if (profession) {
+        await loadDoctorsByProfession(profession.profession_title)
+      }
+    }
+  } else {
+    doctors.value = allDoctors.value
+  }
+  availableTimes.value = []
+})
+
+watch(() => appointmentForm.doctor, async (newDoctorId) => {
+  if (newDoctorId) {
+    const selectedDoctor = allDoctors.value.find(d => d.workers_id == newDoctorId)
+    if (selectedDoctor && selectedDoctor.workers_profession) {
+      const profession = professions.value.find(p => p.profession_id == selectedDoctor.workers_profession)
+      if (profession) {
+        await loadServicesByProfession(profession.profession_title)
+      }
+    }
+  } else {
+    services.value = allServices.value
+  }
+  availableTimes.value = []
+})
+
+watch([() => appointmentForm.service, () => appointmentForm.doctor], async ([service, doctor], [oldService, oldDoctor]) => {
+  if (service && doctor) {
+    const selectedService = allServices.value.find(s => s.services_id == service)
+    const selectedDoctor = allDoctors.value.find(d => d.workers_id == doctor)
+    
+    if (selectedService && selectedDoctor) {
+      const serviceProfession = selectedService.services_profession
+      const doctorProfession = selectedDoctor.workers_profession
+      
+      if (serviceProfession !== doctorProfession) {
+        if (service !== oldService) {
+          appointmentForm.doctor = ''
+        } else if (doctor !== oldDoctor) {
+          appointmentForm.service = ''
+        }
+      }
+    }
+  }
+})
+
+const loadDoctorsByProfession = async (professionTitle) => {
+  try {
+    isLoading.value = true
+    const response = await axios.get(`${API_BASE_URL}/workers/get_filter/`, {
+      params: { profession_title: professionTitle }
+    })
+    if (response.data.workers) {
+      doctors.value = response.data.workers
+    }
+  } catch (error) {
+    doctors.value = allDoctors.value
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const loadServicesByProfession = async (professionTitle) => {
+  try {
+    isLoading.value = true
+    const response = await axios.get(`${API_BASE_URL}/service/get_filter/`, {
+      params: { profession_title: professionTitle }
+    })
+    if (response.data.services) {
+      services.value = response.data.services
+    }
+  } catch (error) {
+    services.value = allServices.value
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const getProfessionTitle = (professionId) => {
+  const profession = professions.value.find(p => p.profession_id == professionId)
+  return profession ? profession.profession_title : 'Неизвестная специальность'
+}
+
+const getProfessionTime = (professionId) => {
+  const profession = professions.value.find(p => p.profession_id == professionId)
+  return profession ? profession.profession_time : 'Не указано'
+}
+
+watch([() => appointmentForm.doctor, () => appointmentForm.date], async ([doctorId, date]) => {
+  if (doctorId && date) {
+    await loadAvailableTimes(doctorId, date)
+  } else {
+    availableTimes.value = []
+  }
+})
+
+const loadAvailableTimes = async (workerId, date) => {
+  try {
+    isLoading.value = true
+    const token = getAuthToken()
+    const config = {
+      params: { worker_id: workerId, date: date }
+    }
+    if (token) config.headers = { 'Authorization': `Bearer ${token}` }
+    
+    const response = await axios.get(`${API_BASE_URL}/appointment/get_appointment/`, config)
+    availableTimes.value = response.data.slots.map(slot => {
+      const date = new Date(slot)
+      return date.toTimeString().slice(0, 5)
+    })
+  } catch (error) {
+    availableTimes.value = []
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const isServiceAndDoctorCompatible = computed(() => {
+  if (!appointmentForm.service || !appointmentForm.doctor) return true
+  const selectedService = allServices.value.find(s => s.services_id == appointmentForm.service)
+  const selectedDoctor = allDoctors.value.find(d => d.workers_id == appointmentForm.doctor)
+  if (!selectedService || !selectedDoctor) return true
+  return selectedService.services_profession === selectedDoctor.workers_profession
+})
 
 const validateField = (fieldName, value) => {
   switch (fieldName) {
     case 'lastName':
-      if (!value.trim()) {
-        appointmentErrors.lastName = 'Фамилия обязательна для заполнения'
-      } else if (value.length < 2) {
-        appointmentErrors.lastName = 'Фамилия должна содержать минимум 2 символа'
-      } else if (!/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/.test(value)) {
-        appointmentErrors.lastName = 'Фамилия может содержать только буквы, пробелы и дефисы'
-      } else {
-        appointmentErrors.lastName = ''
-      }
+      if (!value.trim()) appointmentErrors.lastName = 'Фамилия обязательна для заполнения'
+      else if (value.length < 2) appointmentErrors.lastName = 'Фамилия должна содержать минимум 2 символа'
+      else if (!/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/.test(value)) appointmentErrors.lastName = 'Фамилия может содержать только буквы, пробелы и дефисы'
+      else appointmentErrors.lastName = ''
       break
-      
     case 'firstName':
-      if (!value.trim()) {
-        appointmentErrors.firstName = 'Имя обязательно для заполнения'
-      } else if (value.length < 2) {
-        appointmentErrors.firstName = 'Имя должно содержать минимум 2 символа'
-      } else if (!/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/.test(value)) {
-        appointmentErrors.firstName = 'Имя может содержать только буквы, пробелы и дефисы'
-      } else {
-        appointmentErrors.firstName = ''
+      if (!value.trim()) appointmentErrors.firstName = 'Имя обязательно для заполнения'
+      else if (value.length < 2) appointmentErrors.firstName = 'Имя должно содержать минимум 2 символа'
+      else if (!/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/.test(value)) appointmentErrors.firstName = 'Имя может содержать только буквы, пробелы и дефисы'
+      else appointmentErrors.firstName = ''
+      break
+    case 'birthDate':
+      if (!value) appointmentErrors.birthDate = 'Дата рождения обязательна для заполнения'
+      else {
+        const birthDate = new Date(value)
+        const today = new Date()
+        const minDate = new Date(today.getFullYear() - 90, today.getMonth(), today.getDate())
+        const maxDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate())
+        if (birthDate < minDate) appointmentErrors.birthDate = 'Дата рождения не может быть раньше ' + minDate.toLocaleDateString('ru-RU')
+        else if (birthDate > maxDate) appointmentErrors.birthDate = 'Пациент должен быть старше 12 лет'
+        else appointmentErrors.birthDate = ''
       }
       break
-      
-    case 'middleName':
-      if (value.trim() && !/^[a-zA-Zа-яА-ЯёЁ\s\-]+$/.test(value)) {
-        appointmentErrors.middleName = 'Отчество может содержать только буквы, пробелы и дефисы'
-      } else {
-        appointmentErrors.middleName = ''
-      }
-      break
-      
-    case 'phone':
-      const phoneRegex = /^[\+]?[7-8]?[0-9\s\-\(\)]{10,15}$/
-      if (!value.trim()) {
-        appointmentErrors.phone = 'Телефон обязателен для заполнения'
-      } else if (!phoneRegex.test(value.replace(/\s/g, ''))) {
-        appointmentErrors.phone = 'Введите корректный номер телефона'
-      } else {
-        appointmentErrors.phone = ''
-      }
-      break
-      
     case 'email':
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!value.trim()) {
-        appointmentErrors.email = 'Email обязателен для заполнения'
-      } else if (!emailRegex.test(value)) {
-        appointmentErrors.email = 'Введите корректный email адрес'
-      } else {
-        appointmentErrors.email = ''
-      }
+      if (!value.trim()) appointmentErrors.email = 'Email обязателен для заполнения'
+      else if (!emailRegex.test(value)) appointmentErrors.email = 'Введите корректный email адрес'
+      else appointmentErrors.email = ''
       break
-      
     case 'service':
-      if (!value) {
-        appointmentErrors.service = 'Выберите услугу'
-      } else {
-        appointmentErrors.service = ''
-      }
+      if (!value) appointmentErrors.service = 'Выберите услугу'
+      else appointmentErrors.service = ''
       break
-      
     case 'date':
-      if (!value) {
-        appointmentErrors.date = 'Выберите дату'
-      } else {
-        appointmentErrors.date = ''
-      }
+      if (!value) appointmentErrors.date = 'Выберите дату'
+      else appointmentErrors.date = ''
       break
-      
     case 'time':
-      if (!value) {
-        appointmentErrors.time = 'Выберите время'
-      } else {
-        appointmentErrors.time = ''
-      }
+      if (!value) appointmentErrors.time = 'Выберите время'
+      else appointmentErrors.time = ''
       break
   }
 }
@@ -118,15 +392,14 @@ const isFormValid = computed(() => {
   return (
     appointmentForm.lastName &&
     appointmentForm.firstName &&
-    appointmentForm.phone &&
+    appointmentForm.birthDate &&
     appointmentForm.email &&
     appointmentForm.service &&
     appointmentForm.date &&
     appointmentForm.time &&
     !appointmentErrors.lastName &&
     !appointmentErrors.firstName &&
-    !appointmentErrors.middleName &&
-    !appointmentErrors.phone &&
+    !appointmentErrors.birthDate &&
     !appointmentErrors.email &&
     !appointmentErrors.service &&
     !appointmentErrors.date &&
@@ -135,53 +408,139 @@ const isFormValid = computed(() => {
 })
 
 const handleSubmit = async () => {
-  validateField('lastName', appointmentForm.lastName)
-  validateField('firstName', appointmentForm.firstName)
-  validateField('middleName', appointmentForm.middleName)
-  validateField('phone', appointmentForm.phone)
-  validateField('email', appointmentForm.email)
-  validateField('service', appointmentForm.service)
-  validateField('date', appointmentForm.date)
-  validateField('time', appointmentForm.time)
+  Object.keys(appointmentForm).forEach(field => {
+    if (field in appointmentErrors) {
+      validateField(field, appointmentForm[field])
+    }
+  })
   
   if (!isFormValid.value) {
+    alert('Пожалуйста, заполните все обязательные поля корректно')
     return
   }
   
-  console.log('Данные записи:', appointmentForm)
-  
-  setTimeout(() => {
-    emit('appointment-success', appointmentForm)
+  try {
+    isLoading.value = true
+    
+    const selectedDateTime = new Date(`${appointmentForm.date}T${appointmentForm.time}`)
+    const appointmentData = {
+      appointment_workers: parseInt(appointmentForm.doctor),
+      appointment_services: parseInt(appointmentForm.service),
+      appointment_date: selectedDateTime.toISOString(),
+      first_name: appointmentForm.firstName,
+      last_name: appointmentForm.lastName,
+      birth_date: appointmentForm.birthDate,
+      email: appointmentForm.email,
+      appointment_status: 'запланирован'
+    }
+    
+    if (isAuthenticated.value && currentUser.value) {
+      const userId = currentUser.value.user_id || getUserIdFromToken()
+      if (userId) {
+        appointmentData.user_id = userId
+      }
+    }
+    
+    const token = getAuthToken()
+    const config = { 
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+      } 
+    }
+    
+    await axios.post(`${API_BASE_URL}/appointment/post_appointment/`, appointmentData, config)
+    
+    emit('appointment-success', {
+      ...appointmentForm,
+      appointmentData: appointmentData
+    })
+    
     alert('Запись успешно отправлена! Мы свяжемся с вами для подтверждения.')
-  }, 1000)
+    
+    Object.keys(appointmentForm).forEach(key => { 
+      if (!isFieldLocked(key)) {
+        appointmentForm[key] = '' 
+      }
+    })
+    
+  } catch (error) {
+    if (error.response?.status === 401) {
+      alert('Ошибка авторизации. Пожалуйста, войдите в систему заново.')
+      handleLogout()
+    } else if (error.response?.status === 400) {
+      alert('Ошибка в данных: Проверьте правильность введенных данных')
+    } else {
+      alert('Произошла ошибка при создании записи. Пожалуйста, попробуйте еще раз.')
+    }
+  } finally {
+    isLoading.value = false
+  }
 }
 
-const closeForm = () => {
-  emit('close')
+const isFieldLocked = (fieldName) => {
+  if (!isAuthenticated.value) return false
+  
+  const user = currentUser.value
+  if (!user) return false
+  
+  switch (fieldName) {
+    case 'lastName':
+      return !!(user.last_name || user.surname || user.lastName)
+    case 'firstName':
+      return !!(user.first_name || user.name || user.firstName)
+    case 'email':
+      return !!user.email
+    case 'birthDate':
+      return !!(user.date_birth || user.birth_date || user.dateBirth || user.birthDate)
+    default:
+      return false
+  }
 }
 
-const getMaxBirth = () =>{
-  const max = new Date()
-  max.setMonth(max.getMonth() - 12)
-  return max.toISOString().split('T')[0]
+const getFieldTooltip = (fieldName) => {
+  if (!isFieldLocked(fieldName)) return ''
+  return 'Это поле заполнено из вашего профиля'
 }
 
-const getMinBirth = () =>{
-  const max = new Date()
-  max.setFullYear(max.getFullYear() - 90)
-  return max.toISOString().split('T')[0]
+const closeForm = () => emit('close')
+
+const getMinBirth = () => {
+  const minDate = new Date()
+  minDate.setFullYear(minDate.getFullYear() - 90)
+  return minDate.toISOString().split('T')[0]
 }
 
-const getTodayDate = () => {
-  const today = new Date()
-  return today.toISOString().split('T')[0]
+const getMaxBirth = () => {
+  const maxDate = new Date()
+  maxDate.setFullYear(maxDate.getFullYear() - 12)
+  return maxDate.toISOString().split('T')[0]
 }
+
+const getTodayDate = () => new Date().toISOString().split('T')[0]
 
 const getMaxDate = () => {
   const maxDate = new Date()
   maxDate.setMonth(maxDate.getMonth() + 1)
   return maxDate.toISOString().split('T')[0]
 }
+
+const refreshUserData = async () => {
+  try {
+    profileLoading.value = true
+    const userProfile = await fetchUserProfile()
+    currentUser.value = userProfile
+    await autoFillUserData()
+  } catch (error) {
+    alert('Не удалось обновить данные профиля')
+  } finally {
+    profileLoading.value = false
+  }
+}
+
+onMounted(() => {
+  initializeAppointmentForm()
+})
 </script>
 
 <template>
@@ -192,149 +551,237 @@ const getMaxDate = () => {
     
     <div class="appointment-header">
       <h2>Запись на прием</h2>
+      <div class="auth-status">
+        <div v-if="profileLoading" class="user-info-badge loading">
+          Загрузка данных...
+        </div>
+        <div v-else-if="isAuthenticated" class="user-info-badge authenticated">
+          <div class="user-main">
+            {{ currentUser?.first_name || currentUser?.name }} {{ currentUser?.last_name || currentUser?.surname }}
+          </div>
+          <button @click="refreshUserData" class="refresh-btn" :disabled="profileLoading">
+            Обновить
+          </button>
+        </div>
+        <div v-else class="user-info-badge guest">
+          Гостевой режим
+        </div>
+      </div>
     </div>
     
     <form @submit.prevent="handleSubmit" class="appointment-form">
-      <div class="form-row">
-        <div class="input-group">
-          <label class="input-label">Услуга *</label>
-          <select 
-            v-model="appointmentForm.service"
-            @blur="validateField('service', appointmentForm.service)"
-            :class="{'error-input': appointmentErrors.service}"
-            class="form-input"
-          >
-            <option value="">Выберите услугу</option>
-            <option v-for="service in services" :key="service" :value="service">
-              {{ service }}
-            </option>
-          </select>
-          <span v-if="appointmentErrors.service" class="error-message">
-            {{ appointmentErrors.service }}
-          </span>
-        </div>
+      <div class="form-section">
+        <h3 class="section-title">Выбор услуги и врача</h3>
         
-        <div class="input-group">
-          <label class="input-label">Врач</label>
-          <select 
-            v-model="appointmentForm.doctor" 
-            class="form-input"
-          >
-            <option value="">Любой доступный врач</option>
-            <option v-for="doctor in doctors" :key="doctor" :value="doctor">
-              {{ doctor }}
-            </option>
-          </select>
+        <div class="form-row">
+          <div class="input-group">
+            <label class="input-label">Услуга *</label>
+            <select 
+              v-model="appointmentForm.service"
+              @blur="validateField('service', appointmentForm.service)"
+              :class="{'error-input': appointmentErrors.service}"
+              class="form-input"
+              :disabled="isLoading"
+            >
+              <option value="">Выберите услугу</option>
+              <option 
+                v-for="service in services" 
+                :key="service.services_id" 
+                :value="service.services_id"
+              >
+                {{ service.services_title }}
+                <span v-if="service.services_price"> - {{ service.services_price }} ₽</span>
+              </option>
+            </select>
+            <span v-if="appointmentErrors.service" class="error-message">
+              {{ appointmentErrors.service }}
+            </span>
+          </div>
+          
+          <div class="input-group">
+            <label class="input-label">Врач *</label>
+            <select 
+              v-model="appointmentForm.doctor" 
+              @blur="validateField('doctor', appointmentForm.doctor)"
+              :class="{'error-input': appointmentErrors.doctor}"
+              class="form-input"
+              :disabled="isLoading || !appointmentForm.service"
+            >
+              <option value="">Выберите врача</option>
+              <option 
+                v-for="doctor in doctors" 
+                :key="doctor.workers_id" 
+                :value="doctor.workers_id"
+              >
+                {{ doctor.workers_last_name }} {{ doctor.workers_name }}
+                <span v-if="doctor.workers_profession">
+                  - {{ getProfessionTitle(doctor.workers_profession) }}
+                </span>
+              </option>
+            </select>
+            <span v-if="appointmentErrors.doctor" class="error-message">
+              {{ appointmentErrors.doctor }}
+            </span>
+          </div>
+        </div>
+
+        <div class="selection-info" v-if="appointmentForm.doctor && appointmentForm.service">
+          <div class="info-item">
+            <strong>Врач:</strong> 
+            {{ allDoctors.find(d => d.workers_id == appointmentForm.doctor)?.workers_last_name }} 
+            {{ allDoctors.find(d => d.workers_id == appointmentForm.doctor)?.workers_name }}
+          </div>
+          <div class="info-item">
+            <strong>Услуга:</strong> 
+            {{ allServices.find(s => s.services_id == appointmentForm.service)?.services_title }}
+          </div>
+          <div class="info-item">
+            <strong>Длительность:</strong> 
+            {{ getProfessionTime(allDoctors.find(d => d.workers_id == appointmentForm.doctor)?.workers_profession) }} минут
+          </div>
+          <div class="info-item">
+            <strong>Статус:</strong> 
+            <span class="status-planned">запланирован</span>
+          </div>
+          
+          <div v-if="!isServiceAndDoctorCompatible" class="warning-message">
+            Выбранный врач не специализируется на этой услуге
+          </div>
         </div>
       </div>
-      
-      <div class="form-row">
-        <div class="input-group">
-          <label class="input-label">Дата *</label>
-          <input 
-            type="date" 
-            v-model="appointmentForm.date"
-            :min="getTodayDate()"
-            :max="getMaxDate()"
-            @blur="validateField('date', appointmentForm.date)"
-            :class="{'error-input': appointmentErrors.date}"
-            class="form-input"
-          >
-          <span v-if="appointmentErrors.date" class="error-message">
-            {{ appointmentErrors.date }}
-          </span>
-        </div>
-        
-        <div class="input-group">
-          <label class="input-label">Время *</label>
-          <select 
-            v-model="appointmentForm.time"
-            @blur="validateField('time', appointmentForm.time)"
-            :class="{'error-input': appointmentErrors.time}"
-            class="form-input"
-          >
-            <option value="">Выберите время</option>
-            <option v-for="time in availableTimes" :key="time" :value="time">
-              {{ time }}
-            </option>
-          </select>
-          <span v-if="appointmentErrors.time" class="error-message">
-            {{ appointmentErrors.time }}
-          </span>
-        </div>
-      </div>
-      
-      <div class="form-row">
-        <div class="input-group">
-          <label class="input-label">Фамилия *</label>
-          <input 
-            type="text" 
-            v-model="appointmentForm.lastName"
-            placeholder="Введите фамилию"
-            @blur="validateField('lastName', appointmentForm.lastName)"
-            :class="{'error-input': appointmentErrors.lastName}"
-            class="form-input"
-          >
-          <span v-if="appointmentErrors.lastName" class="error-message">
-            {{ appointmentErrors.lastName }}
-          </span>
-        </div>
-        
-        <div class="input-group">
-          <label class="input-label">Имя *</label>
-          <input 
-            type="text" 
-            v-model="appointmentForm.firstName"
-            placeholder="Введите имя"
-            @blur="validateField('firstName', appointmentForm.firstName)"
-            :class="{'error-input': appointmentErrors.firstName}"
-            class="form-input"
-          >
-          <span v-if="appointmentErrors.firstName" class="error-message">
-            {{ appointmentErrors.firstName }}
-          </span>
+
+      <div class="form-section">
+        <h3 class="section-title">Выбор даты и времени</h3>
+        <div class="form-row">
+          <div class="input-group">
+            <label class="input-label">Дата приема *</label>
+            <input 
+              type="date" 
+              v-model="appointmentForm.date"
+              :min="getTodayDate()"
+              :max="getMaxDate()"
+              @blur="validateField('date', appointmentForm.date)"
+              :class="{'error-input': appointmentErrors.date}"
+              class="form-input"
+              :disabled="!appointmentForm.doctor || isLoading"
+            >
+            <span v-if="appointmentErrors.date" class="error-message">
+              {{ appointmentErrors.date }}
+            </span>
+          </div>
+          
+          <div class="input-group">
+            <label class="input-label">Время приема *</label>
+            <select 
+              v-model="appointmentForm.time"
+              @blur="validateField('time', appointmentForm.time)"
+              :class="{'error-input': appointmentErrors.time}"
+              class="form-input"
+              :disabled="!appointmentForm.date || isLoading"
+            >
+              <option value="">Выберите время</option>
+              <option v-for="time in availableTimes" :key="time" :value="time">
+                {{ time }}
+              </option>
+            </select>
+            <span v-if="appointmentErrors.time" class="error-message">
+              {{ appointmentErrors.time }}
+            </span>
+            <div v-if="isLoading && appointmentForm.date && appointmentForm.doctor" class="loading-text">
+              Загрузка доступного времени...
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div class="form-row">
-        <div class="input-group">
-          <label class="input-label">Дата рождения *</label>
-          <input 
-            type="date" 
-            v-model="appointmentForm.date"
-            :min="getMinBirth()"
-            :max="getMaxBirth()"
-            @blur="validateField('date', appointmentForm.date)"
-            :class="{'error-input': appointmentErrors.date}"
-            class="form-input"
-          >
-          <span v-if="appointmentErrors.date" class="error-message">
-            {{ appointmentErrors.date }}
-          </span>
+
+      <div class="form-section">
+        <h3 class="section-title">Личные данные</h3>
+        
+        <div class="auth-notice" v-if="isAuthenticated">
+          Некоторые поля заполнены из вашего профиля
         </div>
         
-        <div class="input-group">
-        <label class="input-label">Email *</label>
-        <input 
-          type="email" 
-          v-model="appointmentForm.email"
-          placeholder="example@email.com"
-          @blur="validateField('email', appointmentForm.email)"
-          :class="{'error-input': appointmentErrors.email}"
-          class="form-input"
-        >
-        <span v-if="appointmentErrors.email" class="error-message">
-          {{ appointmentErrors.email }}
-        </span>
-      </div>
+        <div class="form-row">
+          <div class="input-group">
+            <label class="input-label">Фамилия *</label>
+            <input 
+              type="text" 
+              v-model="appointmentForm.lastName"
+              placeholder="Введите фамилию"
+              @blur="validateField('lastName', appointmentForm.lastName)"
+              :class="{'error-input': appointmentErrors.lastName, 'locked-field': isFieldLocked('lastName')}"
+              class="form-input"
+              :disabled="isFieldLocked('lastName')"
+              :title="getFieldTooltip('lastName')"
+            >
+            <span v-if="appointmentErrors.lastName" class="error-message">
+              {{ appointmentErrors.lastName }}
+            </span>
+          </div>
+          
+          <div class="input-group">
+            <label class="input-label">Имя *</label>
+            <input 
+              type="text" 
+              v-model="appointmentForm.firstName"
+              placeholder="Введите имя"
+              @blur="validateField('firstName', appointmentForm.firstName)"
+              :class="{'error-input': appointmentErrors.firstName, 'locked-field': isFieldLocked('firstName')}"
+              class="form-input"
+              :disabled="isFieldLocked('firstName')"
+              :title="getFieldTooltip('firstName')"
+            >
+            <span v-if="appointmentErrors.firstName" class="error-message">
+              {{ appointmentErrors.firstName }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <label class="input-label">Дата рождения *</label>
+            <input 
+              type="date" 
+              v-model="appointmentForm.birthDate"
+              :min="getMinBirth()"
+              :max="getMaxBirth()"
+              @blur="validateField('birthDate', appointmentForm.birthDate)"
+              :class="{'error-input': appointmentErrors.birthDate, 'locked-field': isFieldLocked('birthDate')}"
+              class="form-input"
+              :disabled="isFieldLocked('birthDate')"
+              :title="getFieldTooltip('birthDate')"
+            >
+            <span v-if="appointmentErrors.birthDate" class="error-message">
+              {{ appointmentErrors.birthDate }}
+            </span>
+          </div>
+          
+          <div class="input-group">
+            <label class="input-label">Email *</label>
+            <input 
+              type="email" 
+              v-model="appointmentForm.email"
+              placeholder="example@email.com"
+              @blur="validateField('email', appointmentForm.email)"
+              :class="{'error-input': appointmentErrors.email, 'locked-field': isFieldLocked('email')}"
+              class="form-input"
+              :disabled="isFieldLocked('email')"
+              :title="getFieldTooltip('email')"
+            >
+            <span v-if="appointmentErrors.email" class="error-message">
+              {{ appointmentErrors.email }}
+            </span>
+          </div>
+        </div>
       </div>
       
       <button 
         type="submit" 
         class="appointment-btn"
-        :disabled="!isFormValid"
+        :disabled="!isFormValid || isLoading"
       >
-        Записаться на прием
+        <span v-if="isLoading">Отправка...</span>
+        <span v-else>Записаться на прием</span>
       </button>
       
       <div class="form-note">
@@ -384,17 +831,67 @@ const getMaxDate = () => {
 }
 
 .appointment-header {
-  padding: 40px 40px 30px 40px;
+  padding: 40px 40px 20px 40px;
   border-bottom: 1px solid #f1f3f4;
   background: white;
 }
 
 .appointment-header h2 {
   text-align: center;
-  margin: 0;
+  margin: 0 0 15px 0;
   font-size: 28px;
   font-weight: 700;
   color: #667eea;
+}
+
+.auth-status {
+  display: flex;
+  justify-content: center;
+}
+
+.user-info-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.user-info-badge.authenticated {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.user-info-badge.guest {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.user-info-badge.loading {
+  background: #f8f9fa;
+  color: #6c757d;
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #1976d2;
+  color: white;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: #1565c0;
+}
+
+.refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .appointment-form {
@@ -402,8 +899,33 @@ const getMaxDate = () => {
   flex-direction: column;
   flex: 1;
   padding: 30px 40px 40px 40px;
-  gap: 20px;
+  gap: 25px;
   overflow-y: auto;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4a5568;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f1f3f4;
+}
+
+.auth-notice {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #856404;
+  margin-bottom: 10px;
 }
 
 .form-row {
@@ -447,82 +969,104 @@ const getMaxDate = () => {
   color: #a0aec0;
 }
 
+.form-input:disabled {
+  background-color: #f7fafc;
+  color: #2d3748;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.locked-field {
+  background-color: #f8f9fa !important;
+  border-color: #e9ecef !important;
+  color: #495057 !important;
+}
+
 .error-input {
-  border-color: #e53e3e !important;
-  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1) !important;
+  border-color: #e53e3e;
 }
 
 .error-message {
   color: #e53e3e;
   font-size: 12px;
-  font-weight: 500;
   margin-top: 4px;
 }
 
 .appointment-btn {
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   color: white;
   border: none;
+  padding: 16px 32px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 10px;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .appointment-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: #5a6fd8;
+  transform: translateY(-1px);
 }
 
 .appointment-btn:disabled {
-  background: #cbd5e0;
+  background: #a0aec0;
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
 }
 
 .form-note {
   text-align: center;
-  font-size: 12px;
   color: #718096;
+  font-size: 14px;
   margin-top: 10px;
 }
 
-/* Адаптивность */
+.selection-info {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.info-item {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.status-planned {
+  color: #667eea;
+  font-weight: 600;
+  background: #e3f2fd;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+
+.warning-message {
+  color: #e53e3e;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.loading-text {
+  color: #667eea;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 @media (max-width: 768px) {
   .form-row {
     grid-template-columns: 1fr;
-    gap: 15px;
   }
-}
-
-@media (max-width: 480px) {
+  
   .appointment-header {
-    padding: 30px 20px 20px 20px;
+    padding: 20px;
   }
   
   .appointment-form {
-    padding: 20px 20px 30px 20px;
-  }
-  
-  .header-actions {
-    top: 15px;
-    right: 15px;
-  }
-  
-  .close-button {
-    width: 35px;
-    height: 35px;
-    font-size: 24px;
-  }
-  
-  .appointment-header h2 {
-    font-size: 24px;
+    padding: 20px;
   }
 }
 </style>

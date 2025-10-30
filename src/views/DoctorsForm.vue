@@ -68,7 +68,7 @@ const fetchDoctors = async () => {
           name: doctor.workers_last_name + ' ' + doctor.workers_name,
           experience: doctor.workers_experience,
           description: doctor.workers_description,
-          image: defaultDoctorImage,
+          image: doctor.workers_img,
           category: specialtyName, // Отображаем название категории
           specialty: doctor.workers_profession, // Оставляем ID для фильтрации
           specialtyName: specialtyName // Добавляем название для отображения

@@ -115,11 +115,13 @@ const handleLogin = async () => {
       
       if (data.token) {
         localStorage.setItem('authToken', data.token)
+        
         api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
       }
 
       if (data.user) {
         localStorage.setItem('userData', JSON.stringify(data.user))
+
       }
 
       email.value = ''
