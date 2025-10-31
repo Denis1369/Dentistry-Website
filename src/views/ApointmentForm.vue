@@ -763,10 +763,6 @@ onMounted(() => {
       <div class="form-section">
         <h3 class="section-title">Личные данные</h3>
         
-        <div class="auth-notice" v-if="isAuthenticated">
-          Некоторые поля заполнены из вашего профиля
-        </div>
-        
         <div class="form-row">
           <div class="input-group">
             <label class="input-label">Фамилия *</label>
