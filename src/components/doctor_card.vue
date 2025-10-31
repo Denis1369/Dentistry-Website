@@ -56,7 +56,7 @@ const handleAppointment = () => {
 }
 
 .card-image {
-  height: 250px;
+  height: auto;
   background: #f5f7fa;
   display: flex;
   align-items: center;
@@ -67,8 +67,8 @@ const handleAppointment = () => {
 }
 
 .card-image img {
-  width: 300px;
-  height: 300px;
+  width: auto;
+  height: auto;
   object-fit: cover;
 }
 

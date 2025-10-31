@@ -77,6 +77,7 @@ const fetchUserProfile = async () => {
 }
 
 const handleLogout = () => {
+  
   localStorage.removeItem('authToken')
   localStorage.removeItem('userData')
   setTimeout(() => {
@@ -161,9 +162,9 @@ const autoFillUserData = () => {
   if (!isAuthenticated.value || !currentUser.value) return
 
   const user = currentUser.value
-  appointmentForm.lastName = user.last_name || user.surname || user.lastName || ''
-  appointmentForm.firstName = user.first_name || user.name || user.firstName || ''
-  appointmentForm.birthDate = user.date_birth || user.birth_date || user.dateBirth || user.birthDate || ''
+  appointmentForm.lastName = user.last_name ||  ''
+  appointmentForm.firstName = user.first_name ||  ''
+  appointmentForm.birthDate = user.user_date_birth ||  ''
   appointmentForm.email = user.email || ''
 }
 
@@ -181,7 +182,9 @@ const loadProfessions = async () => {
 }
 
 const loadAllServices = async () => {
+  
   try {
+
     const response = await axios.get(`${API_BASE_URL}/service/get_base/`)
     if (response.data.services) {
       allServices.value = response.data.services
@@ -361,7 +364,7 @@ const validateField = (fieldName, value) => {
         const birthDate = new Date(value)
         const today = new Date()
         const minDate = new Date(today.getFullYear() - 90, today.getMonth(), today.getDate())
-        const maxDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate())
+        const maxDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())
         if (birthDate < minDate) appointmentErrors.birthDate = 'Дата рождения не может быть раньше ' + minDate.toLocaleDateString('ru-RU')
         else if (birthDate > maxDate) appointmentErrors.birthDate = 'Пациент должен быть старше 12 лет'
         else appointmentErrors.birthDate = ''
@@ -483,16 +486,15 @@ const isFieldLocked = (fieldName) => {
   
   const user = currentUser.value
   if (!user) return false
-  
   switch (fieldName) {
     case 'lastName':
-      return !!(user.last_name || user.surname || user.lastName)
+      return !!user.last_name
     case 'firstName':
-      return !!(user.first_name || user.name || user.firstName)
+      return !!user.first_name
     case 'email':
       return !!user.email
     case 'birthDate':
-      return !!(user.date_birth || user.birth_date || user.dateBirth || user.birthDate)
+      return !!user.user_date_birth
     default:
       return false
   }
@@ -513,7 +515,7 @@ const getMinBirth = () => {
 
 const getMaxBirth = () => {
   const maxDate = new Date()
-  maxDate.setFullYear(maxDate.getFullYear() - 12)
+  maxDate.setFullYear(maxDate.getFullYear() - 1)
   return maxDate.toISOString().split('T')[0]
 }
 
