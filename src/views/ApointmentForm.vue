@@ -12,6 +12,17 @@ const getCurrentUser = () => {
   return userData ? JSON.parse(userData) : null
 }
 
+const props = defineProps({
+  selectedService: {
+    type: Object,
+    default: null
+  },
+  selectedDoctor: {
+    type: Object,
+    default: null
+  }
+})
+
 const getUserIdFromToken = () => {
   try {
     const token = localStorage.getItem('authToken')
@@ -126,6 +137,33 @@ const initializeAppointmentForm = async () => {
       loadAllServices(),
       loadAllDoctors()
     ])
+    if (props.selectedService) {
+      const fullService = allServices.value.find(s => s.services_id == props.selectedService.id)
+      if (fullService) {
+        appointmentForm.service = fullService.services_id.toString()
+        if (fullService.services_profession) {
+          const profession = professions.value.find(p => p.profession_id == fullService.services_profession)
+          if (profession) {
+            await loadDoctorsByProfession(profession.profession_title)
+          }
+        }
+      }
+    }
+
+    if (props.selectedDoctor) {
+      const fullDoctor = allDoctors.value.find(d => d.workers_id == props.selectedDoctor.id)
+      if (fullDoctor) {
+        appointmentForm.doctor = fullDoctor.workers_id.toString()
+        
+        if (fullDoctor.workers_profession) {
+          const profession = professions.value.find(p => p.profession_id == fullDoctor.workers_profession)
+          if (profession) {
+            await loadServicesByProfession(profession.profession_title)
+          }
+        }
+      }
+    }
+
     await autoFillUserData()
   } catch (error) {
     console.error('Ошибка инициализации формы:', error)
@@ -264,6 +302,36 @@ watch([() => appointmentForm.service, () => appointmentForm.doctor], async ([ser
     }
   }
 })
+
+watch(() => props.selectedService, (newService) => {
+  if (newService && newService.id) {
+    const fullService = allServices.value.find(s => s.services_id == newService.id)
+    if (fullService) {
+      appointmentForm.service = fullService.services_id.toString()
+      
+      if (fullService.services_profession) {
+        const profession = professions.value.find(p => p.profession_id == fullService.services_profession)
+        if (profession) {
+          loadDoctorsByProfession(profession.profession_title)
+        }
+      }
+    }
+  }
+}, { immediate: true })
+
+watch(() => props.selectedDoctor, (newDoctor) => {
+  if (newDoctor && newDoctor.id) {
+    appointmentForm.doctor = newDoctor.id.toString()
+    
+    const selectedDoctorObj = allDoctors.value.find(d => d.workers_id == newDoctor.id)
+    if (selectedDoctorObj && selectedDoctorObj.workers_profession) {
+      const profession = professions.value.find(p => p.profession_id == selectedDoctorObj.workers_profession)
+      if (profession) {
+        loadServicesByProfession(profession.profession_title)
+      }
+    }
+  }
+}, { immediate: true })
 
 const loadDoctorsByProfession = async (professionTitle) => {
   try {
@@ -607,7 +675,7 @@ onMounted(() => {
               @blur="validateField('doctor', appointmentForm.doctor)"
               :class="{'error-input': appointmentErrors.doctor}"
               class="form-input"
-              :disabled="isLoading || !appointmentForm.service"
+              :disabled="isLoading"
             >
               <option value="">Выберите врача</option>
               <option 
@@ -640,10 +708,6 @@ onMounted(() => {
           <div class="info-item">
             <strong>Длительность:</strong> 
             {{ getProfessionTime(allDoctors.find(d => d.workers_id == appointmentForm.doctor)?.workers_profession) }} минут
-          </div>
-          <div class="info-item">
-            <strong>Статус:</strong> 
-            <span class="status-planned">запланирован</span>
           </div>
           
           <div v-if="!isServiceAndDoctorCompatible" class="warning-message">

@@ -1,14 +1,16 @@
 <script setup>
 import defaultDoctorImage from '../components/icons/dricon.jpg'
-defineProps({
+const props = defineProps({
   doctor: {
     type: Object,
     required: true
   }
 })
 
+const emit = defineEmits(['appointment'])
+
 const handleAppointment = () => {
-  console.log('Запись к врачу')
+  emit('appointment', props.doctor)
 }
 
 </script>

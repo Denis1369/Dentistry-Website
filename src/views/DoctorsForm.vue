@@ -2,12 +2,15 @@
 import { ref, onMounted, computed } from 'vue'
 import DoctorsCard from '../components/doctor_card.vue'
 import defaultDoctorImage from '../components/icons/dricon.jpg'
+import ApointmentForm from './ApointmentForm.vue'
 
 const doctors = ref([])
 const categories = ref([])
 const loading = ref(false)
 const error = ref(null)
 const selectedCategory = ref('all')
+const showAppointmentModal = ref(false)
+const selectedDoctor = ref(null)
 
 const filteredDoctors = computed(() => {
   if (selectedCategory.value === 'all') {
@@ -109,6 +112,24 @@ const resetFilter = () => {
   selectedCategory.value = 'all'
 }
 
+const handleAppointment = (doctor) => {
+  console.log(doctor)
+  selectedDoctor.value = {
+    id: doctor.id,
+    name: doctor.name
+  }
+  showAppointmentModal.value = true
+}
+
+const closeAppointmentModal = () => {
+  showAppointmentModal.value = false
+  selectedDoctor.value = null
+}
+
+const handleAppointmentSuccess = (appointmentData) => {
+  closeAppointmentModal()
+}
+
 onMounted(() => {
   fetchCategories()
 })
@@ -176,10 +197,20 @@ onMounted(() => {
           v-for="doctor in filteredDoctors"
           :key="doctor.id"
           :doctor="doctor"
+          @appointment="handleAppointment"
         />
         <div v-if="filteredDoctors.length === 0" class="no-doctors">
           <p>Врачи по выбранной специализации не найдены</p>
         </div>
+      </div>
+      <div v-if="showAppointmentModal" class="modal-overlay">
+      <div class="modal-content">
+        <ApointmentForm
+          :selected-doctor="selectedDoctor"
+          @appointment-success="handleAppointmentSuccess"
+          @close="closeAppointmentModal"
+        />
+      </div>
       </div>
     </div>
   </main>

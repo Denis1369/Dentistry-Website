@@ -2,6 +2,18 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const navigateToServices = () => {
+  router.push('/services')
+}
+
+const navigateToDoctors = () => {
+  router.push('/doctors')
+}
+
 const averageRating = ref(0)
 const totalReviews = ref(0)
 const isLoading = ref(true)
@@ -52,8 +64,8 @@ onMounted(() => {
             Без потери качества: сертифицированные материалы, врачи с опытом 10+ лет, гарантия лечения.
           </p>
           <div class="hero-buttons">
-            <button class="btn-service">Выбрать услугу</button>
-            <button class="btn-secondary">Смотреть врачей</button>
+            <button class="btn-service" @click="navigateToServices">Выбрать услугу</button>
+            <button class="btn-secondary" @click="navigateToDoctors">Смотреть врачей</button>
           </div>
           
           <!-- Блок рейтинга -->

@@ -1,12 +1,15 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import ServiceCard from '../components/ServiceCard.vue'
+import ApointmentForm from './ApointmentForm.vue'
 
 const services = ref([])
 const categories = ref([])
 const loading = ref(false)
 const error = ref(null)
 const selectedCategory = ref('all')
+const showAppointmentModal = ref(false)
+const selectedService = ref(null)
 
 const fetchServices = async () => {
   loading.value = true
@@ -87,6 +90,23 @@ const resetFilter = () => {
   selectedCategory.value = 'all'
 }
 
+const handleAppointment = (service) => {
+  selectedService.value = {
+    id: service.id,
+    title: service.title
+  }
+  showAppointmentModal.value = true
+}
+
+const closeAppointmentModal = () => {
+  showAppointmentModal.value = false
+  selectedService.value = null
+}
+
+const handleAppointmentSuccess = (appointmentData) => {
+  closeAppointmentModal()
+}
+
 onMounted(() => {
   fetchCategories()
 })
@@ -150,14 +170,8 @@ onMounted(() => {
         <button @click="fetchServices" class="retry-button">Попробовать снова</button>
       </div>
 
-      <div v-else class="services-container">
-        <div v-if="filteredServices.length === 0" class="no-services">
-          <p v-if="selectedCategory === 'all'">Нет доступных услуг</p>
-          <p v-else>
-            В выбранной категории пока нет услуг
-            <button @click="resetFilter" class="reset-link">Показать все услуги</button>
-          </p>
-        </div>
+     <div v-if="filteredServices.length === 0" class="no-doctors">
+          <p>Услуги по выбранной категории не найдены</p>
       </div>
 
       <div class="services-grid">
@@ -172,9 +186,18 @@ onMounted(() => {
             image: service.services_img,
             category: service.services_category
           }"
+          @appointment="handleAppointment"
         />
       </div>
-    
+      <div v-if="showAppointmentModal" class="modal-overlay">
+      <div class="modal-content">
+        <ApointmentForm
+          :selected-service="selectedService"
+          @appointment-success="handleAppointmentSuccess"
+          @close="closeAppointmentModal"
+        />
+      </div>
+    </div>
   </main>
 </template>
 
@@ -228,6 +251,16 @@ onMounted(() => {
   font-weight: 600;
   color: #2c3e50;
   margin: 0;
+}
+
+.no-doctors {
+  text-align: center;
+  padding: 40px;
+  color: #5a6c7d;
+  grid-column: 1 / -1;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
 }
 
 .reset-filter {

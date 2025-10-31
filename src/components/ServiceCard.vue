@@ -1,17 +1,19 @@
 <script setup>
-defineProps({
+const props = defineProps({
   service: {
     type: Object,
     required: true
   }
 })
 
+const emit = defineEmits(['appointment'])
+
 const hasValidImage = (image) => {
   return image && image.trim() !== '' && image !== 'null'
 }
 
 const handleAppointment = () => {
-  console.log('Запись на услугу')
+  emit('appointment', props.service)
 }
 </script>
 
