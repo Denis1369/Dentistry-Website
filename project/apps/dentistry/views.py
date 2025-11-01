@@ -1,5 +1,6 @@
 from datetime import datetime, time, timedelta
 from django.utils import timezone
+import pytz
 import os
 
 from rest_framework.decorators import action
@@ -404,9 +405,11 @@ class AppointmentSet(ViewSet):
 
         slot_minutes = int(profession.profession_time)
 
+        yekaterinburg_tz = pytz.timezone('Asia/Yekaterinburg')
+
         occupied = set()
         for appt in appointments:
-            appt_dn = timezone.make_naive(appt.appointment_date)
+            appt_dn = appt.appointment_date.astimezone(yekaterinburg_tz)
             appt_dn = appt_dn.replace(second=0, microsecond=0)
             occupied.add(appt_dn)
 
@@ -435,6 +438,10 @@ class AppointmentSet(ViewSet):
                 worker = serializer.validated_data['appointment_workers']
                 service = serializer.validated_data['appointment_services']
                 start_time = serializer.validated_data['appointment_date']
+
+                yekaterinburg_tz = pytz.timezone('Asia/Yekaterinburg')
+                start_time = start_time.astimezone(yekaterinburg_tz)
+
 
                 # Получаем длительность
                 duration = service.services_profession.profession_time
@@ -468,6 +475,22 @@ class AppointmentSet(ViewSet):
                 )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @extend_schema(
+            request=AppointmentSerializer,
+            responses={200: OpenApiResponse(description="Запись успешно оставлена", examples={"message": "Запись отправлена"})},
+            description="Запись по JWT токену"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def get_appointment_user(self, request):
+        list_appointment = Appointment.objects.filter(
+            appointment_user_id = request.user.user_id,
+            appointment_status__in=['запланирован',]
+            )
+        
+        serializer = AppointmentSerializer(list_appointment, many=True)
+        
+        return Response({"appointment": serializer.data})
 
 
 def is_slot_available(worker, start_time, duration_minutes):
@@ -482,7 +505,7 @@ def is_slot_available(worker, start_time, duration_minutes):
 
     overlapping = Appointment.objects.filter(
         appointment_workers=worker,
-        appointment_status__in=['confirmed', 'pending']
+        appointment_status__in=['запланирован',]
     ).select_related(
         'appointment_services__services_profession'
     ).extra(

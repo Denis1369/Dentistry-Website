@@ -5448,3 +5448,32 @@ Bad Request: /user/login/
 "GET /user/profile/ HTTP/1.1" 200 217
 "POST /user/register/ HTTP/1.1" 200 64
 "GET /service/get_base/ HTTP/1.1" 200 2369
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15451
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 36694
+Bad Request: /user/login/
+"POST /user/login/ HTTP/1.1" 400 67
+"POST /user/login/ HTTP/1.1" 200 243
+Unauthorized: /appointment/get_appointment_all/
+"GET /appointment/get_appointment_all/ HTTP/1.1" 401 107
+Unauthorized: /user/login/
+"POST /user/login/ HTTP/1.1" 401 107
+"POST /user/login/ HTTP/1.1" 200 243
+"POST /user/login/ HTTP/1.1" 200 243
+"GET /appointment/get_appointment_all/ HTTP/1.1" 200 12
+Bad Request: /appointment/post_appointment/
+"POST /appointment/post_appointment/ HTTP/1.1" 400 69
+"POST /appointment/post_appointment/ HTTP/1.1" 201 76
+"GET /appointment/get_appointment_all/ HTTP/1.1" 200 12
+"GET /appointment/get_appointment/?date=2025-11-01&worker_id=18 HTTP/1.1" 200 3707
+"GET /appointment/get_appointment_all/ HTTP/1.1" 200 199
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /appointment/post_appointment/
+"POST /appointment/post_appointment/ HTTP/1.1" 500 125
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /appointment/post_appointment/ HTTP/1.1" 201 76
