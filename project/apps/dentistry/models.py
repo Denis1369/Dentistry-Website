@@ -17,8 +17,7 @@ class Profession(models.Model):
 
 class Workers(models.Model):
     workers_id = models.AutoField(primary_key=True)
-    workers_last_name = models.CharField(max_length=45, blank=True, null=True)
-    workers_name = models.CharField(max_length=45, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     workers_description = models.CharField(max_length=100, blank=True, null=True)
     workers_profession = models.ForeignKey(Profession, models.DO_NOTHING, blank=True, null=True)
     workers_experience = models.IntegerField(blank=True, null=True)
@@ -89,6 +88,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(max_length=45, blank=True, unique=True)
     user_date_birth = models.DateField(blank=True, null=True)
     user_img = models.TextField(blank=True, null=True)
+    user_role = models.CharField(default="пользователь", max_length=50)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
