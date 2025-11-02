@@ -368,7 +368,7 @@ class MedicalCardSet(ViewSet):
             )
 
         medicalCard = MedicalCard.objects.filter(medical_card_user = user_id)
-        serializer = self.get_serializer(medicalCard, many=True)
+        serializer = MedicalCardSerializer(medicalCard, many=True)
 
         return Response({
             "medicalCard": serializer.data

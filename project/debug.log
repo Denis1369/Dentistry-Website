@@ -6302,3 +6302,115 @@ C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.p
 Watching for file changes with StatReloader
 "GET /user/profile_by_id/?user_id=1 HTTP/1.1" 200 71
 "GET /user/profile_by_id/?user_id=18 HTTP/1.1" 200 231
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 41756
+Internal Server Error: /medical_card_set/get_medicalCard/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 256, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\MySQLdb\__init__.py", line 121, in Connect
+    return Connection(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\MySQLdb\connections.py", line 200, in __init__
+    super().__init__(*args, **kwargs2)
+MySQLdb.OperationalError: (2013, "Lost connection to server at 'handshake: reading initial communication packet', system error: 0")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 80, in inner
+    with self._recreate_cm():
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\transaction.py", line 198, in __enter__
+    if not connection.get_autocommit():
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\backends\base\base.py", line 454, in get_autocommit
+    self.ensure_connection()
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\backends\base\base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\backends\base\base.py", line 279, in ensure_connection
+    self.connect()
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\backends\base\base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 256, in get_new_connection
+    connection = Database.connect(**conn_params)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\MySQLdb\__init__.py", line 121, in Connect
+    return Connection(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\MySQLdb\connections.py", line 200, in __init__
+    super().__init__(*args, **kwargs2)
+django.db.utils.OperationalError: (2013, "Lost connection to server at 'handshake: reading initial communication packet', system error: 0")
+"GET /medical_card_set/get_medicalCard/?user_id=5 HTTP/1.1" 500 195948
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 41756
+Unauthorized: /medical_card_set/get_medicalCard/
+"GET /medical_card_set/get_medicalCard/?user_id=5 HTTP/1.1" 401 58
+"POST /user/login/ HTTP/1.1" 200 244
+Internal Server Error: /medical_card_set/get_medicalCard/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py", line 371, in get_medicalCard
+    serializer = self.get_serializer(medicalCard, many=True)
+                 ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MedicalCardSet' object has no attribute 'get_serializer'
+"GET /medical_card_set/get_medicalCard/?user_id=5 HTTP/1.1" 500 102207
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /medical_card_set/get_medicalCard/?user_id=5 HTTP/1.1" 200 18
+"GET /medical_card_set/get_medicalCard/?user_id=1 HTTP/1.1" 200 18
