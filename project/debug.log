@@ -5529,3 +5529,223 @@ Watching for file changes with StatReloader
 Not Found: /workers/get_base_one/
 "GET /workers/get_base_one/?workers_id=1 HTTP/1.1" 404 38
 "GET /workers/get_base_one/?workers_id=6 HTTP/1.1" 200 340
+Unauthorized: /appointment/get_appointment/
+"GET /appointment/get_appointment/?date=2025-11-01&worker_id=14 HTTP/1.1" 401 58
+"POST /user/login/ HTTP/1.1" 200 244
+"GET /appointment/get_appointment/?date=2025-11-01&worker_id=14 HTTP/1.1" 200 1859
+"GET /appointment/get_appointment/?date=2025-11-02&worker_id=18 HTTP/1.1" 200 3707
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 39064
+Unauthorized: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/ HTTP/1.1" 401 58
+Bad Request: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/ HTTP/1.1" 400 43
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 39064
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 39450
+Internal Server Error: /appointment/get_appointment_workers/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py", line 547, in get_appointment_workers
+    list_appointment = Appointment.objects.get(workers_id=workers_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 619, in get
+    clone = self._chain() if self.query.combinator else self.filter(*args, **kwargs)
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1493, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1511, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1518, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1526, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1333, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1806, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'workers_id' into field. Choices are: appointment_date, appointment_id, appointment_services, appointment_services_id, appointment_status, appointment_user, appointment_user_id, appointment_workers, appointment_workers_id
+"GET /appointment/get_appointment_workers/?workers_id=1 HTTP/1.1" 500 23064
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 39450
+Internal Server Error: /appointment/get_appointment_workers/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py", line 547, in get_appointment_workers
+    list_appointment = Appointment.objects.filter(workers_id=workers_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1493, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1511, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1518, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1526, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1333, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1806, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'workers_id' into field. Choices are: appointment_date, appointment_id, appointment_services, appointment_services_id, appointment_status, appointment_user, appointment_user_id, appointment_workers, appointment_workers_id
+"GET /appointment/get_appointment_workers/?workers_id=1 HTTP/1.1" 500 22773
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 39462
+Internal Server Error: /appointment/get_appointment_workers/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py", line 547, in get_appointment_workers
+    list_appointment = Appointment.objects.filter(workers_id=workers_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1493, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1511, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 1518, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1526, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1333, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1806, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'workers_id' into field. Choices are: appointment_date, appointment_id, appointment_services, appointment_services_id, appointment_status, appointment_user, appointment_user_id, appointment_workers, appointment_workers_id
+"GET /appointment/get_appointment_workers/?appointment_workers_id=1 HTTP/1.1" 500 22809
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /appointment/get_appointment_workers/?appointment_workers_id=1 HTTP/1.1" 200 18
+"GET /appointment/get_appointment_workers/?appointment_workers_id=14 HTTP/1.1" 200 393
