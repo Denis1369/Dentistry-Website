@@ -5506,3 +5506,26 @@ C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\seriali
 Watching for file changes with StatReloader
 "POST /user/login/ HTTP/1.1" 200 244
 "GET /user/profile/ HTTP/1.1" 200 183
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+"GET / HTTP/1.1" 200 2
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 36836
+"POST /user/register/ HTTP/1.1" 200 64
+"POST /user/login/ HTTP/1.1" 200 244
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+"GET / HTTP/1.1" 200 2
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 36844
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 37748
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 38132
+Not Found: /workers/get_base_one/
+"GET /workers/get_base_one/?workers_id=1 HTTP/1.1" 404 38
+"GET /workers/get_base_one/?workers_id=6 HTTP/1.1" 200 340

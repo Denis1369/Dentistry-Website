@@ -1,4 +1,6 @@
 from datetime import datetime, time, timedelta
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 import pytz
 import os
@@ -214,14 +216,44 @@ class WorkersSet(ViewSet):
         description="Получение списка врачей"
     )
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
-    def get_base(self, request):
+    def get_base_many(self, request):
         workers = Workers.objects.all()
         serializer = WorkersSerializer(workers, many=True)
 
         return Response({
             "workers": serializer.data
         })
-    
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='workers_id',
+                type=int,
+                location=OpenApiParameter.QUERY,
+                description='ID врач',
+                required=True,
+            ),
+        ],
+        responses={200: WorkersSerializer},
+        description="Получение конкретного врача"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def get_base_one(self, request):
+        workers_id = request.query_params.get('workers_id')
+        if not workers_id:
+            return Response({'error': 'workers_id обязателен'}, status=400)
+
+        try:
+            worker = Workers.objects.get(workers_id=workers_id)
+        except ObjectDoesNotExist:
+            return Response({'error': 'Врач не найден'}, status=404)
+
+        serializer = WorkersSerializer(worker)
+
+        return Response({
+            "worker": serializer.data
+        })
+
     @extend_schema(
     parameters=[
     OpenApiParameter(
