@@ -6245,3 +6245,12 @@ Watching for file changes with StatReloader
 "GET /schema/ HTTP/1.1" 200 40305
 "GET /workers/get_base_many/ HTTP/1.1" 200 7139
 "GET /workers/get_base_one/?workers_id=6 HTTP/1.1" 200 353
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+"GET / HTTP/1.1" 200 2
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 41585
+Unauthorized: /user/profile_by_id/
+"GET /user/profile_by_id/?user_id=1 HTTP/1.1" 401 58
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 41585

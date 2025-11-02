@@ -82,6 +82,29 @@ class UserViewSet(ViewSet):
         })
 
     @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='user_id',
+                description='ID пользователя',
+                required=True,
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY
+            )
+        ],
+        description="Получить профиль пользователя по ID",
+        responses={200: ProfileSerializer}
+    )
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def profile_by_id(self, request):
+        user_id = request.query_params.get('user_id')
+        user = CustomUser.objects.get(user_id=user_id)
+        serializer = ProfileSerializer(user)
+
+        return Response({
+            "user": serializer.data
+        })
+
+    @extend_schema(
         summary="Загрузить аватар пользователя",
         description="Принимает изображение в формате multipart/form-data и сохраняет в облако.",
         request={
