@@ -29,7 +29,7 @@ const fetchDoctors = async () => {
   try {
     console.log('Загрузка врачей...')
     
-    const response = await fetch('http://127.0.0.1:8000/workers/get_base/', {
+    const response = await fetch('http://127.0.0.1:8000/workers/get_base_many/', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,6 @@ const fetchDoctors = async () => {
         doctor.workers_status === 'активен'
       )
       .map(doctor => {
-        // Получаем название специализации из карты категорий
         const specialtyName = doctor.workers_profession ? 
           categoryMap[doctor.workers_profession] : 'Общая категория'
         

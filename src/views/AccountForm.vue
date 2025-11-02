@@ -105,7 +105,7 @@ const fetchMedicalRecords = async () => {
     const token = localStorage.getItem('authToken')
     if (!token) return
 
-    const userId = userData.value?.user_id || userData.value?.id
+    const userId = userData.value?.user_id
     
     if (!userId) {
       return
@@ -146,21 +146,21 @@ const fetchMedicalRecords = async () => {
       const service = servicesData.find(s => s.services_id == serviceId)
       
       return {
-        id: record.medical_card_id || record.id || index,
-        user_id: record.medical_card_user || userId,
+        id: record.medical_card_id,
+        user_id: record.medical_card_user,
         doctor_id: doctorId,
         doctor_name: doctor ? 
-          `${doctor.workers_name || ''} ${doctor.workers_last_name || ''}`.trim() || 'Врач не указан' 
+          `${doctor.workers_name || ''} ${doctor.workers_lastname || ''}`.trim() || 'Врач не указан' 
           : 'Врач не найден',
         service_id: serviceId,
         service_name: service ? 
           service.services_title || 'Услуга не указана' 
           : 'Услуга не найдена',
-        appointment_date: formatDateTime(record.medical_card_date || record.date),
-        status: getStatusFromAPI(record.medical_card_status || record.status),
-        status_text: getStatusText(record.medical_card_status || record.status),
-        diagnosis: record.medical_card_diagnosis || record.diagnosis || '',
-        prescriptions: record.medical_card_purpose || record.prescriptions || '',
+        appointment_date: formatDateTime(record.medical_card_date),
+        status: getStatusFromAPI(record.medical_card_status),
+        status_text: getStatusText(record.medical_card_status),
+        diagnosis: record.medical_card_diagnosis,
+        prescriptions: record.medical_card_purpose,
         recommendations: '' 
       }
     })
@@ -174,7 +174,7 @@ const fetchMedicalRecords = async () => {
 const fetchWorkers = async () => {
   try {
     const token = localStorage.getItem('authToken')
-    const response = await fetch('http://127.0.0.1:8000/workers/get_base/', {
+    const response = await fetch('http://127.0.0.1:8000/workers/get_base_many/', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
