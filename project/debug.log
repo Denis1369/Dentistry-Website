@@ -6414,3 +6414,378 @@ C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.p
 Watching for file changes with StatReloader
 "GET /medical_card_set/get_medicalCard/?user_id=5 HTTP/1.1" 200 18
 "GET /medical_card_set/get_medicalCard/?user_id=1 HTTP/1.1" 200 18
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 41689
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /user/login/ HTTP/1.1" 200 244
+Method Not Allowed: /appointment/get_appointment_workers/
+"PUT /appointment/get_appointment_workers/ HTTP/1.1" 405 40
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\AppointmentSerializer.py changed, reloading.
+Watching for file changes with StatReloader
+Method Not Allowed: /appointment/get_appointment_workers/
+"PUT /appointment/get_appointment_workers/ HTTP/1.1" 405 40
+"GET /docs/ HTTP/1.1" 200 4636
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 100, in get_operation
+    request_body = self._get_request_body()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1321, in _get_request_body
+    schema, partial_request_body_required = self._get_request_for_media_type(serializer, direction)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1353, in _get_request_for_media_type
+    component = self.resolve_serializer(serializer, direction)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1648, in resolve_serializer
+    component.schema = self._map_serializer(serializer, direction, bypass_extensions)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 949, in _map_serializer
+    schema = self._map_basic_serializer(serializer, direction)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1042, in _map_basic_serializer
+    for field in serializer.fields.values():
+                 ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 374, in fields
+    for key, value in self.get_fields().items():
+                      ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1105, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1251, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1369, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `appointment_status_id` is not valid for model `Appointment` in `apps.dentistry.serializers.AppointmentSerializer.AppointmentStatusSerializer`.
+"GET /schema/ HTTP/1.1" 500 185555
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 100, in get_operation
+    request_body = self._get_request_body()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1321, in _get_request_body
+    schema, partial_request_body_required = self._get_request_for_media_type(serializer, direction)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1353, in _get_request_for_media_type
+    component = self.resolve_serializer(serializer, direction)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1648, in resolve_serializer
+    component.schema = self._map_serializer(serializer, direction, bypass_extensions)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 949, in _map_serializer
+    schema = self._map_basic_serializer(serializer, direction)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1042, in _map_basic_serializer
+    for field in serializer.fields.values():
+                 ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 374, in fields
+    for key, value in self.get_fields().items():
+                      ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1105, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1251, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1369, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `appointment_status_id` is not valid for model `Appointment` in `apps.dentistry.serializers.AppointmentSerializer.AppointmentStatusSerializer`.
+"GET /schema/ HTTP/1.1" 500 185555
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\AppointmentSerializer.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 43262
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 43262
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\AppointmentSerializer.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 43071
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\AppointmentSerializer.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 100, in get_operation
+    request_body = self._get_request_body()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1321, in _get_request_body
+    schema, partial_request_body_required = self._get_request_for_media_type(serializer, direction)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1353, in _get_request_for_media_type
+    component = self.resolve_serializer(serializer, direction)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1648, in resolve_serializer
+    component.schema = self._map_serializer(serializer, direction, bypass_extensions)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 949, in _map_serializer
+    schema = self._map_basic_serializer(serializer, direction)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1042, in _map_basic_serializer
+    for field in serializer.fields.values():
+                 ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 374, in fields
+    for key, value in self.get_fields().items():
+                      ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1105, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1251, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1369, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `appointment` is not valid for model `Appointment` in `apps.dentistry.serializers.AppointmentSerializer.AppointmentStatusSerializer`.
+"GET /schema/ HTTP/1.1" 500 185355
+Internal Server Error: /schema/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\views.py", line 84, in get
+    return self._get_schema_response(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\views.py", line 92, in _get_schema_response
+    data=generator.get_schema(request=request, public=self.serve_public),
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\generators.py", line 285, in get_schema
+    paths=self.parse(request, public),
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\generators.py", line 256, in parse
+    operation = view.schema.get_operation(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\utils.py", line 451, in get_operation
+    return super().get_operation(path, path_regex, path_prefix, method, registry)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 100, in get_operation
+    request_body = self._get_request_body()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1321, in _get_request_body
+    schema, partial_request_body_required = self._get_request_for_media_type(serializer, direction)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1353, in _get_request_for_media_type
+    component = self.resolve_serializer(serializer, direction)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1648, in resolve_serializer
+    component.schema = self._map_serializer(serializer, direction, bypass_extensions)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 949, in _map_serializer
+    schema = self._map_basic_serializer(serializer, direction)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\drf_spectacular\openapi.py", line 1042, in _map_basic_serializer
+    for field in serializer.fields.values():
+                 ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\utils\functional.py", line 47, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 374, in fields
+    for key, value in self.get_fields().items():
+                      ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1105, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1251, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\serializers.py", line 1369, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `appointment` is not valid for model `Appointment` in `apps.dentistry.serializers.AppointmentSerializer.AppointmentStatusSerializer`.
+"GET /schema/ HTTP/1.1" 500 185355
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\AppointmentSerializer.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 43262
+"PUT /appointment/change_appointment_status/ HTTP/1.1" 200 56
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\AppointmentSerializer.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 43421
+"PUT /appointment/change_appointment_status/?appointment_id=30 HTTP/1.1" 200 56
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\AppointmentSerializer.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\AppointmentSerializer.py changed, reloading.
+Watching for file changes with StatReloader
+Bad Request: /appointment/change_appointment_status/
+"PUT /appointment/change_appointment_status/?appointment_id=7 HTTP/1.1" 400 60
+Bad Request: /appointment/change_appointment_status/
+"PUT /appointment/change_appointment_status/?appointment_id=7 HTTP/1.1" 400 164
+Bad Request: /appointment/change_appointment_status/
+"PUT /appointment/change_appointment_status/?appointment_id=31 HTTP/1.1" 400 164
+"PUT /appointment/change_appointment_status/?appointment_id=27 HTTP/1.1" 200 56

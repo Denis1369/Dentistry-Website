@@ -21,7 +21,7 @@ from .serializers.ServiceSerializer import ServiceSerializer
 from .serializers.ProfessionSerializer import ProfessionSerializer
 from .serializers.WorkersSerializer import WorkersSerializer 
 from .serializers.MedicalCardSerializer import MedicalCardSerializer
-from .serializers.AppointmentSerializer import AppointmentSerializer
+from .serializers.AppointmentSerializer import AppointmentSerializer, AppointmentStatusSerializer
 from .models import Services, Profession, Workers, CustomUser, Feedback, MedicalCard, Appointment
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -563,11 +563,11 @@ class AppointmentSet(ViewSet):
     @extend_schema(
         parameters=[
             OpenApiParameter(
-            name="appointment_workers_id",
-            type=OpenApiTypes.INT,
-            location=OpenApiParameter.QUERY,
-            description="ID врача",
-            required=True
+                name="appointment_workers_id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="ID врача",
+                required=True
             )
         ],
         responses={
@@ -586,6 +586,48 @@ class AppointmentSet(ViewSet):
         serializer = AppointmentSerializer(list_appointment, many=True)
 
         return Response({"appointment": serializer.data})
+
+    @extend_schema(
+        request=AppointmentStatusSerializer,
+        parameters=[
+            OpenApiParameter(
+                name="appointment_id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="ID записи",
+                required=True
+            )
+        ],
+        responses={
+            200: OpenApiResponse(examples={"message": "Статус успешно изменён"})
+        },
+        description="Смена статуса записи"
+    )
+    @action(detail=False, methods=['put'], permission_classes=[IsAuthenticated])
+    def change_appointment_status(self, request):
+        appointment_id = request.query_params.get('appointment_id')
+        if not appointment_id:
+            return Response({'error': 'appointment_id обязателен'}, status=400)
+
+        try:
+            appointment = Appointment.objects.get(appointment_id=appointment_id)
+        except ObjectDoesNotExist:
+            return Response({'error': 'Запись не найдена'}, status=404)
+
+        serializer = AppointmentStatusSerializer(
+            instance=appointment,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({
+                "message": "Статус успешно изменён"
+            }, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def is_slot_available(worker, start_time, duration_minutes):

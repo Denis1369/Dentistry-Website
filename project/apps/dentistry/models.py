@@ -30,12 +30,18 @@ class Workers(models.Model):
 
 
 class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('запланирован', 'запланирован'),
+        ('отменен', 'отменен'),
+        ('завершен', 'завершен'),
+    ]
+
     appointment_id = models.AutoField(primary_key=True)
     appointment_workers = models.ForeignKey('Workers', models.DO_NOTHING, blank=True, null=True)
     appointment_user = models.ForeignKey(settings.AUTH_USER_MODEL, models.DO_NOTHING, blank=True, null=True)
     appointment_services = models.ForeignKey('Services', models.DO_NOTHING, blank=True, null=True)
     appointment_date = models.DateTimeField(blank=True, null=True)
-    appointment_status = models.CharField(max_length=12, blank=True, null=True)
+    appointment_status = models.CharField(max_length=12, blank=True, choices=STATUS_CHOICES, default='запланирован')
 
     class Meta:
         managed = True
