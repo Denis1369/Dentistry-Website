@@ -157,13 +157,13 @@ class ServiceSet(ViewSet):
     
     @extend_schema(
         parameters=[
-        OpenApiParameter(
-            name='profession_title',
-            description='Название услуги',
-            required=True,
-            type=OpenApiTypes.STR,
-            location=OpenApiParameter.QUERY
-        )],
+            OpenApiParameter(
+                name='profession_title',
+                description='Название услуги',
+                required=True,
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY
+            )],
         responses={200: ServiceSerializer},
         description="Получение отфильтрованного списка услуг"
     )
@@ -228,12 +228,11 @@ class WorkersSet(ViewSet):
         parameters=[
             OpenApiParameter(
                 name='workers_id',
-                type=int,
+                type=OpenApiTypes.INT,
                 location=OpenApiParameter.QUERY,
                 description='ID врач',
                 required=True,
-            ),
-        ],
+            )],
         responses={200: WorkersSerializer},
         description="Получение конкретного врача"
     )
@@ -510,8 +509,8 @@ class AppointmentSet(ViewSet):
     
     @extend_schema(
             request=AppointmentSerializer,
-            responses={200: OpenApiResponse(description="Запись успешно оставлена", examples={"message": "Запись отправлена"})},
-            description="Запись по JWT токену"
+            responses={200: OpenApiResponse(examples={"appointment": {...}})},
+            description="Получение записей пользователя"
     )
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def get_appointment_user(self, request):
@@ -522,6 +521,33 @@ class AppointmentSet(ViewSet):
         
         serializer = AppointmentSerializer(list_appointment, many=True)
         
+        return Response({"appointment": serializer.data})
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+            name="appointment_workers_id",
+            type=OpenApiTypes.INT,
+            location=OpenApiParameter.QUERY,
+            description="ID врача",
+            required=True
+            )
+        ],
+        responses={
+            200: OpenApiResponse(AppointmentSerializer)
+        },
+        description="Получение записей к определённому врачу"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def get_appointment_workers(self, request):
+        workers_id = request.query_params.get('appointment_workers_id')
+        if not workers_id:
+            return Response({'error': 'appointment_workers_id обязателен'}, status=400)
+
+        list_appointment = Appointment.objects.filter(appointment_workers_id=workers_id)
+
+        serializer = AppointmentSerializer(list_appointment, many=True)
+
         return Response({"appointment": serializer.data})
 
 
