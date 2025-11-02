@@ -41,11 +41,19 @@ const navigateToDoctors = () => {
 
 const handleAccountClick = () => {
   if (isAuthenticated.value) {
-    router.push('/account')
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}')
+    const userRole = userData.user_role
+    
+    if (userRole === 'врач') {
+      router.push('/doctor-account')
+    } else {
+      router.push('/account')
+    }
   } else {
     openLogin()
   }
 }
+
 const navigateToReviews = () => {
   router.push('/reviews')
 }
@@ -100,6 +108,18 @@ const handleLoginSuccess = (userData) => {
   console.log('Пользователь авторизован:', userData)
   updateAuthState()
   closeLogin()
+  
+  const storedUserData = JSON.parse(localStorage.getItem('userData') || '{}')
+  const userRole = storedUserData.user_role || storedUserData.role
+  
+  if (userRole === 'врач' || userRole === 'doctor' || userRole === 'доктор') {
+    router.push('/doctor-account')
+  }
+}
+
+const handleDoctorFormOpen = () => {
+  closeLogin()
+  router.push('/doctor-account')
 }
 
 const switchToRegistration = () => {
@@ -111,8 +131,6 @@ const switchToLogin = () => {
   closeRegistration()
   openLogin()
 }
-
-
 </script>
 
 <template>
@@ -170,6 +188,7 @@ const switchToLogin = () => {
 
   <div id="app">
     <router-view class="content"/>
+    
     <div v-if="showAppointment" class="modal-overlay">
       <div class="modal-content">
         <ApointmentForm
@@ -194,6 +213,7 @@ const switchToLogin = () => {
         <LoginForm 
           @login-success="handleLoginSuccess"
           @switch-to-registration="switchToRegistration"
+          @open-doctor-form="handleDoctorFormOpen"
           @close="closeLogin"
         />
       </div>

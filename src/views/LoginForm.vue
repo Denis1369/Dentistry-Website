@@ -2,7 +2,7 @@
 import { ref, reactive} from 'vue'
 import axios from 'axios'
 
-const emit = defineEmits(['login-success', 'switch-to-registration', 'close'])
+const emit = defineEmits(['login-success', 'switch-to-registration', 'close', 'open-doctor-form'])
 
 const closeForm = () => {
   emit('close')
@@ -10,6 +10,10 @@ const closeForm = () => {
 
 const switchToRegistration = () => {
   emit('switch-to-registration')
+}
+
+const openDoctorForm = () => {
+  emit('open-doctor-form')
 }
 
 const email = ref('')
@@ -35,9 +39,7 @@ const handleLogout = () => {
   localStorage.removeItem('authToken')
   localStorage.removeItem('userData')
   delete api.defaults.headers.common['Authorization']
-  
 }
-
 
 const verifyToken = async () => {
   try {
@@ -47,6 +49,21 @@ const verifyToken = async () => {
   } catch (error) {
     console.error('Токен невалиден:', error)
     return false
+  }
+}
+
+const getFullUserProfile = async (token) => {
+  try {
+    const response = await api.get('/profile/', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    console.log('Полный профиль пользователя:', response.data)
+    return response.data
+  } catch (error) {
+    console.error('Ошибка при получении профиля:', error)
+    throw error
   }
 }
 
@@ -105,36 +122,50 @@ const handleLogin = async () => {
     const response = await api.post('/login/', {
       user_email: email.value,
       user_password: password.value,
-
     })
 
     const data = response.data
 
     if (response.status === 200) {
-      successMessage.value = 'Успешный вход! Добро пожаловать в систему!'
-      
       if (data.token) {
         localStorage.setItem('authToken', data.token)
-        
         api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
+        
+        const profileData = await getFullUserProfile(data.token)
+        
+        if (profileData && profileData.user) {
+          const userData = profileData.user
+          
+          localStorage.setItem('userData', JSON.stringify(userData))
+          
+          successMessage.value = 'Успешный вход! Добро пожаловать в систему!'
+          email.value = ''
+          password.value = ''
+
+          setTimeout(() => {
+            successMessage.value = '' 
+            
+            const userRole = userData.user_role
+            
+            if (userRole === 'врач') {
+              emit('open-doctor-form')
+            } else {
+              emit('login-success', { token: data.token, user: userData })
+              closeForm()
+            }
+          }, 1000)
+        } else {
+          throw new Error('Не удалось получить данные профиля')
+        }
+      } else {
+        errors.password = 'Токен не получен'
       }
-
-      if (data.user) {
-        localStorage.setItem('userData', JSON.stringify(data.user))
-
-      }
-
-      email.value = ''
-      password.value = ''
-
-      setTimeout(() => {
-        successMessage.value = '' 
-        emit('login-success', data)
-        closeForm()
-      }, 1000)
     } 
   } catch (error) {
     console.error('Ошибка при входе:', error)
+    
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('userData')
     
     if (error.response) {
       const status = error.response.status
@@ -154,14 +185,15 @@ const handleLogin = async () => {
         errors.password = 'Неверный email или пароль'
       } else if (status == 404) {
         errors.password = 'Пользователь не найден'
-      }
-      else {
+      } else if (status === 403) {
+        errors.password = 'Доступ запрещен'
+      } else {
         errors.password = 'Произошла ошибка сервера'
       }
     } else if (error.request) {
       errors.password = 'Не удалось подключиться к серверу'
     } else {
-      errors.password = 'Произошла непредвиденная ошибка'
+      errors.password = 'Произошла непредвиденная ошибка: ' + error.message
     }
   } finally {
     loading.value = false
@@ -240,6 +272,7 @@ defineExpose({
 </template>
 
 <style scoped>
+/* Стили остаются без изменений */
 .auth-container {
   padding: 0;
   width: 100%;

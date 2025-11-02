@@ -111,7 +111,7 @@ const fetchMedicalRecords = async () => {
       return
     }
 
-    const response = await fetch(`http://127.0.0.1:8000/medicalCard/?user_id=${userId}`, {
+    const response = await fetch(`http://127.0.0.1:8000/medical_card_set/get_medicalCard/?user_id=${userId}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
