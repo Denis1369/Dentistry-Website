@@ -18,6 +18,7 @@ class LoginSerializer(serializers.Serializer):
         if not user:
             raise  serializers.ValidationError("Неверный email или пароль")
 
+        print(user)
         data['user'] = user
         return data
 
@@ -37,7 +38,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'username', 'email', 'user_date_birth', 'user_img']
+        fields = ['first_name', 'last_name', 'username', 'email', 'user_date_birth', 'user_img', 'user_role']
 
 class UpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:

@@ -5477,3 +5477,32 @@ Internal Server Error: /appointment/post_appointment/
 C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
 Watching for file changes with StatReloader
 "POST /appointment/post_appointment/ HTTP/1.1" 201 76
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 15455
+"GET /docs HTTP/1.1" 301 0
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 36696
+Bad Request: /user/login/
+"POST /user/login/ HTTP/1.1" 400 67
+Bad Request: /user/login/
+"POST /user/login/ HTTP/1.1" 400 67
+Bad Request: /user/login/
+"POST /user/login/ HTTP/1.1" 400 67
+Bad Request: /user/login/
+"POST /user/login/ HTTP/1.1" 400 67
+Bad Request: /user/login/
+"POST /user/login/ HTTP/1.1" 400 67
+Bad Request: /user/login/
+"POST /user/login/ HTTP/1.1" 400 67
+"POST /user/login/ HTTP/1.1" 200 244
+"POST /user/login/ HTTP/1.1" 200 244
+"GET /feedback/get_feedbacks/ HTTP/1.1" 200 6206
+"OPTIONS /user/login/ HTTP/1.1" 200 0
+"POST /user/login/ HTTP/1.1" 200 244
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\UserSerializers.py changed, reloading.
+Watching for file changes with StatReloader
+"POST /user/login/ HTTP/1.1" 200 244
+"GET /user/profile/ HTTP/1.1" 200 183
