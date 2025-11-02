@@ -6254,3 +6254,51 @@ Unauthorized: /user/profile_by_id/
 "GET /user/profile_by_id/?user_id=1 HTTP/1.1" 401 58
 "GET /docs/ HTTP/1.1" 200 4636
 "GET /schema/ HTTP/1.1" 200 41585
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\serializers\UserSerializers.py changed, reloading.
+Watching for file changes with StatReloader
+Bad Request: /user/login/
+"POST /user/login/ HTTP/1.1" 400 67
+"POST /user/login/ HTTP/1.1" 200 244
+Internal Server Error: /user/profile_by_id/
+Traceback (most recent call last):
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 81, in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\viewsets.py", line 125, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py", line 100, in profile_by_id
+    user = CustomUser.objects.get(user_id=user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Sergey\PycharmProjects\Dentistry-Website\.venv\Lib\site-packages\django\db\models\query.py", line 633, in get
+    raise self.model.DoesNotExist(
+apps.dentistry.models.CustomUser.DoesNotExist: CustomUser matching query does not exist.
+"GET /user/profile_by_id/?user_id=1 HTTP/1.1" 500 20417
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /user/profile_by_id/?user_id=1 HTTP/1.1" 200 71
+"GET /user/profile_by_id/?user_id=18 HTTP/1.1" 200 231

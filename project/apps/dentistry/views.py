@@ -97,8 +97,10 @@ class UserViewSet(ViewSet):
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def profile_by_id(self, request):
         user_id = request.query_params.get('user_id')
-        user = CustomUser.objects.get(user_id=user_id)
-        if not user:
+
+        try:
+            user = CustomUser.objects.get(user_id=user_id)
+        except ObjectDoesNotExist:
             return Response({"error": "Пользователь с таким ID не найден"})
 
         serializer = ProfileSerializer(user)
