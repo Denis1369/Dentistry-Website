@@ -308,11 +308,8 @@ class FeedbackViewSet(ViewSet):
         return Response({
             "feedbacks": serializer.data
         })
-
-class MedicalCardView(GenericAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = MedicalCardSerializer
-
+    
+class MedicalCardSet(ViewSet):
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -324,10 +321,9 @@ class MedicalCardView(GenericAPIView):
             )
         ]
     )
-
-    def get(self, request):
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def get_medicalCard(self, request):
         user_id = request.query_params.get('user_id')
-
         if user_id is None:
             return Response({
                 "error": "Параметр 'user_id' обязателен"},
@@ -349,6 +345,19 @@ class MedicalCardView(GenericAPIView):
         return Response({
             "medicalCard": serializer.data
         })
+    @extend_schema(
+            request=MedicalCardSerializer
+            )
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def post_medicalCard(self, request):
+        medical_card_workers_ = Workers.objects.get(user_id=request.user.user_id)
+        serializer = MedicalCardSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(medical_card_workers=medical_card_workers_)
+            return Response({"message": "Медкарта создана"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 class AppointmentSet(ViewSet):
 
