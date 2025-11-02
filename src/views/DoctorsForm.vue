@@ -68,7 +68,7 @@ const fetchDoctors = async () => {
         
         return {
           id: doctor.workers_id,
-          name: doctor.workers_last_name + ' ' + doctor.workers_name,
+          name: doctor.workers_lastname + ' ' + doctor.workers_name,
           experience: doctor.workers_experience,
           description: doctor.workers_description,
           image: doctor.workers_img,

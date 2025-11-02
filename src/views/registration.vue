@@ -144,7 +144,8 @@ const handleSubmit = async () => {
       email: formData.email.trim(),
       password: formData.password,
       first_name: formData.firstname.trim(),
-      last_name: formData.lastname.trim()
+      last_name: formData.lastname.trim(),
+      user_role: 'пользователь'
       
     })
     const data = response.data

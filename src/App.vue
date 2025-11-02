@@ -51,6 +51,12 @@ const navigateToReviews = () => {
 }
 
 const openAppointment = () => {
+  if (!isAuthenticated.value) {
+    // Если не авторизован, открываем окно авторизации с сообщением
+    alert('Для записи на прием необходимо авторизоваться')
+    openLogin()
+    return
+  }
   showAppointment.value = true
   document.body.style.overflow = 'hidden'
 }

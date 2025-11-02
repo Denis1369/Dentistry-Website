@@ -87,15 +87,6 @@ const fetchUserProfile = async () => {
   }
 }
 
-const handleLogout = () => {
-  
-  localStorage.removeItem('authToken')
-  localStorage.removeItem('userData')
-  setTimeout(() => {
-    window.location.reload()
-  }, 100)
-}
-
 const appointmentForm = reactive({
   service: '',
   doctor: '',
@@ -132,11 +123,17 @@ const profileLoading = ref(false)
 const initializeAppointmentForm = async () => {
   try {
     await checkAuthentication()
+    
+    if (!isAuthenticated.value) {
+      return
+    }
+    
     await Promise.all([
       loadProfessions(),
       loadAllServices(),
       loadAllDoctors()
     ])
+    
     if (props.selectedService) {
       const fullService = allServices.value.find(s => s.services_id == props.selectedService.id)
       if (fullService) {
@@ -200,9 +197,9 @@ const autoFillUserData = () => {
   if (!isAuthenticated.value || !currentUser.value) return
 
   const user = currentUser.value
-  appointmentForm.lastName = user.last_name ||  ''
-  appointmentForm.firstName = user.first_name ||  ''
-  appointmentForm.birthDate = user.user_date_birth ||  ''
+  appointmentForm.lastName = user.last_name || ''
+  appointmentForm.firstName = user.first_name || ''
+  appointmentForm.birthDate = user.user_date_birth || ''
   appointmentForm.email = user.email || ''
 }
 
@@ -220,9 +217,7 @@ const loadProfessions = async () => {
 }
 
 const loadAllServices = async () => {
-  
   try {
-
     const response = await axios.get(`${API_BASE_URL}/service/get_base/`)
     if (response.data.services) {
       allServices.value = response.data.services
@@ -254,6 +249,8 @@ const loadAllDoctors = async () => {
 }
 
 watch(() => appointmentForm.service, async (newServiceId) => {
+  if (!isAuthenticated.value) return
+  
   if (newServiceId) {
     const selectedService = allServices.value.find(s => s.services_id == newServiceId)
     if (selectedService && selectedService.services_profession) {
@@ -269,6 +266,8 @@ watch(() => appointmentForm.service, async (newServiceId) => {
 })
 
 watch(() => appointmentForm.doctor, async (newDoctorId) => {
+  if (!isAuthenticated.value) return
+  
   if (newDoctorId) {
     const selectedDoctor = allDoctors.value.find(d => d.workers_id == newDoctorId)
     if (selectedDoctor && selectedDoctor.workers_profession) {
@@ -284,6 +283,8 @@ watch(() => appointmentForm.doctor, async (newDoctorId) => {
 })
 
 watch([() => appointmentForm.service, () => appointmentForm.doctor], async ([service, doctor], [oldService, oldDoctor]) => {
+  if (!isAuthenticated.value) return
+  
   if (service && doctor) {
     const selectedService = allServices.value.find(s => s.services_id == service)
     const selectedDoctor = allDoctors.value.find(d => d.workers_id == doctor)
@@ -304,6 +305,8 @@ watch([() => appointmentForm.service, () => appointmentForm.doctor], async ([ser
 })
 
 watch(() => props.selectedService, (newService) => {
+  if (!isAuthenticated.value) return
+  
   if (newService && newService.id) {
     const fullService = allServices.value.find(s => s.services_id == newService.id)
     if (fullService) {
@@ -320,6 +323,8 @@ watch(() => props.selectedService, (newService) => {
 }, { immediate: true })
 
 watch(() => props.selectedDoctor, (newDoctor) => {
+  if (!isAuthenticated.value) return
+  
   if (newDoctor && newDoctor.id) {
     appointmentForm.doctor = newDoctor.id.toString()
     
@@ -372,10 +377,12 @@ const getProfessionTitle = (professionId) => {
 
 const getProfessionTime = (professionId) => {
   const profession = professions.value.find(p => p.profession_id == professionId)
-  return profession ? profession.profession_time : 'Не указано'
+  return profession ? profession.profession_time : 30
 }
 
 watch([() => appointmentForm.doctor, () => appointmentForm.date], async ([doctorId, date]) => {
+  if (!isAuthenticated.value) return
+  
   if (doctorId && date) {
     await loadAvailableTimes(doctorId, date)
   } else {
@@ -386,22 +393,124 @@ watch([() => appointmentForm.doctor, () => appointmentForm.date], async ([doctor
 const loadAvailableTimes = async (workerId, date) => {
   try {
     isLoading.value = true
-    const token = getAuthToken()
-    const config = {
-      params: { worker_id: workerId, date: date }
-    }
-    if (token) config.headers = { 'Authorization': `Bearer ${token}` }
     
-    const response = await axios.get(`${API_BASE_URL}/appointment/get_appointment/`, config)
-    availableTimes.value = response.data.slots.map(slot => {
-      const date = new Date(slot)
-      return date.toTimeString().slice(0, 5)
-    })
+    const selectedDoctor = allDoctors.value.find(d => d.workers_id == workerId)
+    if (!selectedDoctor) {
+      availableTimes.value = []
+      return
+    }
+    const profession = professions.value.find(p => p.profession_id == selectedDoctor.workers_profession)
+    const timeInterval = profession?.profession_time || 30
+    
+    const baseSlots = generateBaseTimeSlots(timeInterval)
+    
+    try {
+      const token = getAuthToken()
+      const config = {
+        params: { 
+          worker_id: workerId, 
+          date: date 
+        }
+      }
+      if (token) config.headers = { 'Authorization': `Bearer ${token}` }
+      
+      const response = await axios.get(`${API_BASE_URL}/appointment/get_appointment/`, config)
+      
+      let bookedTimes = []
+      
+      console.log('Ответ от сервера для врача', workerId, 'и даты', date, ':', response.data)
+      
+      if (response.data && Array.isArray(response.data)) {
+        const appointmentsForDoctorAndDate = response.data.filter(appointment => {
+          const isSameWorker = appointment.appointment_workers_id == workerId
+          
+          if (appointment.appointment_date) {
+            try {
+              const appointmentDate = new Date(appointment.appointment_date)
+              
+              const appointmentLocalDate = new Date(
+                appointmentDate.getFullYear(),
+                appointmentDate.getMonth(),
+                appointmentDate.getDate()
+              )
+              const selectedDate = new Date(date)
+              
+              const isSameDate = 
+                appointmentLocalDate.getFullYear() === selectedDate.getFullYear() &&
+                appointmentLocalDate.getMonth() === selectedDate.getMonth() &&
+                appointmentLocalDate.getDate() === selectedDate.getDate()
+              
+              return isSameWorker && isSameDate
+            } catch (e) {
+              console.warn('Ошибка преобразования даты:', appointment.appointment_date)
+              return false
+            }
+          }
+          return false
+        })
+        
+        bookedTimes = appointmentsForDoctorAndDate.map(appointment => {
+          try {
+            const appointmentDate = new Date(appointment.appointment_date)
+            
+            const hours = appointmentDate.getHours().toString().padStart(2, '0')
+            const minutes = appointmentDate.getMinutes().toString().padStart(2, '0')
+            return `${hours}:${minutes}`
+          } catch (e) {
+            console.warn('Ошибка преобразования времени записи:', appointment.appointment_date)
+            return null
+          }
+        }).filter(time => time !== null)
+        
+      } else {
+        console.warn('Неожиданный формат ответа от сервера:', response.data)
+        bookedTimes = []
+      }
+      
+      console.log('Базовые слоты:', baseSlots)
+      console.log('Занятые времена для врача', workerId, 'и даты', date, ':', bookedTimes)
+      
+      availableTimes.value = baseSlots.filter(slot => !bookedTimes.includes(slot))
+      
+      console.log('Доступные времена:', availableTimes.value)
+      
+    } catch (apiError) {
+      console.warn('Ошибка при получении занятых времен, показываем все доступные:', apiError)
+      availableTimes.value = baseSlots
+    }
+    
   } catch (error) {
-    availableTimes.value = []
+    console.error('Ошибка загрузки времени:', error)
+    availableTimes.value = generateBaseTimeSlots()
   } finally {
     isLoading.value = false
   }
+}
+const createLocalDateTime = (dateStr, timeStr) => {
+  const [year, month, day] = dateStr.split('-');
+  const [hours, minutes] = timeStr.split(':');
+
+  const localDate = new Date(year, month - 1, day, hours, minutes);
+  
+  const timezoneOffset = localDate.getTimezoneOffset() * 60000;
+  const localISOTime = new Date(localDate - timezoneOffset).toISOString().slice(0, 16);
+  
+  return localISOTime + ':00Z';
+};
+
+const generateBaseTimeSlots = (interval = 30) => {
+  const startHour = 9
+  const endHour = 18
+  const slots = []
+  
+  for (let hour = startHour; hour < endHour; hour++) {
+    for (let minute = 0; minute < 60; minute += interval) {
+      const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
+      slots.push(timeString)
+    }
+  }
+  
+  return slots
 }
 
 const isServiceAndDoctorCompatible = computed(() => {
@@ -460,7 +569,7 @@ const validateField = (fieldName, value) => {
 }
 
 const isFormValid = computed(() => {
-  return (
+  return isAuthenticated.value && (
     appointmentForm.lastName &&
     appointmentForm.firstName &&
     appointmentForm.birthDate &&
@@ -478,7 +587,15 @@ const isFormValid = computed(() => {
   )
 })
 
+
+
 const handleSubmit = async () => {
+  // Проверяем авторизацию
+  if (!isAuthenticated.value) {
+    alert('Для записи на прием необходимо авторизоваться')
+    return
+  }
+  
   Object.keys(appointmentForm).forEach(field => {
     if (field in appointmentErrors) {
       validateField(field, appointmentForm[field])
@@ -490,14 +607,57 @@ const handleSubmit = async () => {
     return
   }
   
+  const selectedTime = appointmentForm.time
+  if (availableTimes.value && !availableTimes.value.includes(selectedTime)) {
+    alert('Выбранное время уже занято. Пожалуйста, выберите другое время.')
+    return
+  }
+  
   try {
     isLoading.value = true
     
-    const selectedDateTime = new Date(`${appointmentForm.date}T${appointmentForm.time}`)
+    const appointmentDateTime = createLocalDateTime(appointmentForm.date, appointmentForm.time)
+    
+    const token = getAuthToken()
+    const checkConfig = {
+      headers: { 
+        'Authorization': `Bearer ${token}`
+      } 
+    }
+    
+    const checkResponse = await axios.get(`${API_BASE_URL}/appointment/get_appointment/`, {
+      ...checkConfig,
+      params: { 
+        worker_id: appointmentForm.doctor, 
+        date: appointmentForm.date 
+      }
+    })
+    
+    if (checkResponse.data && Array.isArray(checkResponse.data)) {
+      const existingAppointment = checkResponse.data.find(appointment => {
+        if (appointment.appointment_workers_id == appointmentForm.doctor && 
+            appointment.appointment_date) {
+          try {
+            const appointmentDate = new Date(appointment.appointment_date)
+            const appointmentTime = `${appointmentDate.getHours().toString().padStart(2, '0')}:${appointmentDate.getMinutes().toString().padStart(2, '0')}`
+            return appointmentTime === appointmentForm.time
+          } catch (e) {
+            return false
+          }
+        }
+        return false
+      })
+      
+      if (existingAppointment) {
+        alert('Вы уже записаны на это время к данному врачу!')
+        isLoading.value = false
+        return
+      }
+    }
     const appointmentData = {
       appointment_workers: parseInt(appointmentForm.doctor),
       appointment_services: parseInt(appointmentForm.service),
-      appointment_date: selectedDateTime.toISOString(),
+      appointment_date: appointmentDateTime,
       first_name: appointmentForm.firstName,
       last_name: appointmentForm.lastName,
       birth_date: appointmentForm.birthDate,
@@ -512,38 +672,47 @@ const handleSubmit = async () => {
       }
     }
     
-    const token = getAuthToken()
     const config = { 
       headers: { 
         'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
+        'Authorization': `Bearer ${token}`
       } 
     }
     
-    await axios.post(`${API_BASE_URL}/appointment/post_appointment/`, appointmentData, config)
+    console.log('Отправляемые данные записи:', appointmentData)
+    
+    const response = await axios.post(`${API_BASE_URL}/appointment/post_appointment/`, appointmentData, config)
+    
+    await loadAvailableTimes(appointmentForm.doctor, appointmentForm.date)
     
     emit('appointment-success', {
       ...appointmentForm,
       appointmentData: appointmentData
     })
     
-    alert('Запись успешно отправлена! Мы свяжемся с вами для подтверждения.')
+    alert('Запись успешно создана!')
     
     Object.keys(appointmentForm).forEach(key => { 
-      if (!isFieldLocked(key)) {
-        appointmentForm[key] = '' 
+      if (key !== 'lastName' && key !== 'firstName' && key !== 'birthDate' && key !== 'email') {
+        appointmentForm[key] = ''
       }
     })
     
   } catch (error) {
     if (error.response?.status === 401) {
       alert('Ошибка авторизации. Пожалуйста, войдите в систему заново.')
-      handleLogout()
     } else if (error.response?.status === 400) {
-      alert('Ошибка в данных: Проверьте правильность введенных данных')
+      if (error.response.data && error.response.data.detail) {
+        alert(`Ошибка: ${error.response.data.detail}`)
+      } else {
+        alert('Ошибка в данных: Проверьте правильность введенных данных')
+      }
+    } else if (error.response?.status === 409) {
+      alert('Это время уже занято. Пожалуйста, выберите друмое время.')
     } else {
       alert('Произошла ошибка при создании записи. Пожалуйста, попробуйте еще раз.')
     }
+    console.error('Ошибка при создании записи:', error)
   } finally {
     isLoading.value = false
   }
@@ -607,6 +776,7 @@ const refreshUserData = async () => {
     profileLoading.value = false
   }
 }
+
 
 onMounted(() => {
   initializeAppointmentForm()
