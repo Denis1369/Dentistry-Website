@@ -6237,3 +6237,11 @@ Watching for file changes with StatReloader
 "POST /medical_card_set/post_medicalCard/ HTTP/1.1" 201 43
 C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+"GET / HTTP/1.1" 200 2
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 40305
+"GET /workers/get_base_many/ HTTP/1.1" 200 7139
+"GET /workers/get_base_one/?workers_id=6 HTTP/1.1" 200 353

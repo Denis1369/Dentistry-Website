@@ -11,4 +11,4 @@ class WorkersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Workers
         fields = ['workers_id', 'workers_description', 'workers_experience', 'workers_status',
-                  'workers_img', 'workers_name', 'workers_lastname', 'workers_profession']
+                  'workers_img', 'workers_name', 'workers_lastname', 'workers_profession', 'user_id']
