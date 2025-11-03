@@ -234,7 +234,7 @@ const loadAllServices = async () => {
 
 const loadAllDoctors = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/workers/get_base/`)
+    const response = await axios.get(`${API_BASE_URL}/workers/get_base_many/`)
     if (response.data.workers) {
       allDoctors.value = response.data.workers
       doctors.value = response.data.workers
@@ -394,98 +394,60 @@ const loadAvailableTimes = async (workerId, date) => {
   try {
     isLoading.value = true
     
-    const selectedDoctor = allDoctors.value.find(d => d.workers_id == workerId)
-    if (!selectedDoctor) {
-      availableTimes.value = []
-      return
+    const token = getAuthToken()
+    const config = {
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {}
     }
-    const profession = professions.value.find(p => p.profession_id == selectedDoctor.workers_profession)
-    const timeInterval = profession?.profession_time || 30
     
-    const baseSlots = generateBaseTimeSlots(timeInterval)
-    
-    try {
-      const token = getAuthToken()
-      const config = {
-        params: { 
-          worker_id: workerId, 
-          date: date 
-        }
+    const response = await axios.get(`${API_BASE_URL}/appointment/get_appointment/`, {
+      ...config,
+      params: { 
+        worker_id: workerId, 
+        date: date 
       }
-      if (token) config.headers = { 'Authorization': `Bearer ${token}` }
-      
-      const response = await axios.get(`${API_BASE_URL}/appointment/get_appointment/`, config)
-      
-      let bookedTimes = []
-      
-      console.log('Ответ от сервера для врача', workerId, 'и даты', date, ':', response.data)
-      
-      if (response.data && Array.isArray(response.data)) {
-        const appointmentsForDoctorAndDate = response.data.filter(appointment => {
-          const isSameWorker = appointment.appointment_workers_id == workerId
+    })
+    
+    console.log('Ответ от API для доступных слотов:', response.data)
+    
+    if (response.data && response.data.slots && Array.isArray(response.data.slots)) {
+      // Преобразуем даты в формат времени HH:MM и сортируем
+      availableTimes.value = response.data.slots.map(slot => {
+        try {
+          let slotDate;
+          if (typeof slot === 'string') {
+            slotDate = new Date(slot);
+          } else {
+            slotDate = slot;
+          }
           
-          if (appointment.appointment_date) {
-            try {
-              const appointmentDate = new Date(appointment.appointment_date)
-              
-              const appointmentLocalDate = new Date(
-                appointmentDate.getFullYear(),
-                appointmentDate.getMonth(),
-                appointmentDate.getDate()
-              )
-              const selectedDate = new Date(date)
-              
-              const isSameDate = 
-                appointmentLocalDate.getFullYear() === selectedDate.getFullYear() &&
-                appointmentLocalDate.getMonth() === selectedDate.getMonth() &&
-                appointmentLocalDate.getDate() === selectedDate.getDate()
-              
-              return isSameWorker && isSameDate
-            } catch (e) {
-              console.warn('Ошибка преобразования даты:', appointment.appointment_date)
-              return false
-            }
-          }
-          return false
-        })
-        
-        bookedTimes = appointmentsForDoctorAndDate.map(appointment => {
-          try {
-            const appointmentDate = new Date(appointment.appointment_date)
-            
-            const hours = appointmentDate.getHours().toString().padStart(2, '0')
-            const minutes = appointmentDate.getMinutes().toString().padStart(2, '0')
-            return `${hours}:${minutes}`
-          } catch (e) {
-            console.warn('Ошибка преобразования времени записи:', appointment.appointment_date)
-            return null
-          }
-        }).filter(time => time !== null)
-        
-      } else {
-        console.warn('Неожиданный формат ответа от сервера:', response.data)
-        bookedTimes = []
-      }
-      
-      console.log('Базовые слоты:', baseSlots)
-      console.log('Занятые времена для врача', workerId, 'и даты', date, ':', bookedTimes)
-      
-      availableTimes.value = baseSlots.filter(slot => !bookedTimes.includes(slot))
+          const hours = slotDate.getHours().toString().padStart(2, '0')
+          const minutes = slotDate.getMinutes().toString().padStart(2, '0')
+          return `${hours}:${minutes}`
+        } catch (e) {
+          console.warn('Ошибка преобразования слота:', slot, e)
+          return null
+        }
+      })
+      .filter(time => time !== null)
+      .sort((a, b) => a.localeCompare(b)) // Сортируем по времени
       
       console.log('Доступные времена:', availableTimes.value)
-      
-    } catch (apiError) {
-      console.warn('Ошибка при получении занятых времен, показываем все доступные:', apiError)
-      availableTimes.value = baseSlots
+    } else {
+      console.warn('Неожиданный формат ответа от сервера:', response.data)
+      availableTimes.value = []
     }
     
   } catch (error) {
-    console.error('Ошибка загрузки времени:', error)
-    availableTimes.value = generateBaseTimeSlots()
+    console.error('Ошибка загрузки доступных времен:', error)
+    if (error.response?.status === 400) {
+      console.error('Ошибка валидации:', error.response.data)
+    }
+    availableTimes.value = []
   } finally {
     isLoading.value = false
   }
 }
+
 const createLocalDateTime = (dateStr, timeStr) => {
   const [year, month, day] = dateStr.split('-');
   const [hours, minutes] = timeStr.split(':');
@@ -497,21 +459,6 @@ const createLocalDateTime = (dateStr, timeStr) => {
   
   return localISOTime + ':00Z';
 };
-
-const generateBaseTimeSlots = (interval = 30) => {
-  const startHour = 9
-  const endHour = 18
-  const slots = []
-  
-  for (let hour = startHour; hour < endHour; hour++) {
-    for (let minute = 0; minute < 60; minute += interval) {
-      const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`
-      slots.push(timeString)
-    }
-  }
-  
-  return slots
-}
 
 const isServiceAndDoctorCompatible = computed(() => {
   if (!appointmentForm.service || !appointmentForm.doctor) return true
@@ -587,8 +534,6 @@ const isFormValid = computed(() => {
   )
 })
 
-
-
 const handleSubmit = async () => {
   // Проверяем авторизацию
   if (!isAuthenticated.value) {
@@ -618,42 +563,6 @@ const handleSubmit = async () => {
     
     const appointmentDateTime = createLocalDateTime(appointmentForm.date, appointmentForm.time)
     
-    const token = getAuthToken()
-    const checkConfig = {
-      headers: { 
-        'Authorization': `Bearer ${token}`
-      } 
-    }
-    
-    const checkResponse = await axios.get(`${API_BASE_URL}/appointment/get_appointment/`, {
-      ...checkConfig,
-      params: { 
-        worker_id: appointmentForm.doctor, 
-        date: appointmentForm.date 
-      }
-    })
-    
-    if (checkResponse.data && Array.isArray(checkResponse.data)) {
-      const existingAppointment = checkResponse.data.find(appointment => {
-        if (appointment.appointment_workers_id == appointmentForm.doctor && 
-            appointment.appointment_date) {
-          try {
-            const appointmentDate = new Date(appointment.appointment_date)
-            const appointmentTime = `${appointmentDate.getHours().toString().padStart(2, '0')}:${appointmentDate.getMinutes().toString().padStart(2, '0')}`
-            return appointmentTime === appointmentForm.time
-          } catch (e) {
-            return false
-          }
-        }
-        return false
-      })
-      
-      if (existingAppointment) {
-        alert('Вы уже записаны на это время к данному врачу!')
-        isLoading.value = false
-        return
-      }
-    }
     const appointmentData = {
       appointment_workers: parseInt(appointmentForm.doctor),
       appointment_services: parseInt(appointmentForm.service),
@@ -672,6 +581,7 @@ const handleSubmit = async () => {
       }
     }
     
+    const token = getAuthToken()
     const config = { 
       headers: { 
         'Content-Type': 'application/json',
@@ -708,7 +618,7 @@ const handleSubmit = async () => {
         alert('Ошибка в данных: Проверьте правильность введенных данных')
       }
     } else if (error.response?.status === 409) {
-      alert('Это время уже занято. Пожалуйста, выберите друмое время.')
+      alert('Это время уже занято. Пожалуйста, выберите другое время.')
     } else {
       alert('Произошла ошибка при создании записи. Пожалуйста, попробуйте еще раз.')
     }
@@ -756,7 +666,11 @@ const getMaxBirth = () => {
   return maxDate.toISOString().split('T')[0]
 }
 
-const getTodayDate = () => new Date().toISOString().split('T')[0]
+const getTodayDate = () => {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  return tomorrow.toISOString().split('T')[0]
+}
 
 const getMaxDate = () => {
   const maxDate = new Date()
@@ -776,7 +690,6 @@ const refreshUserData = async () => {
     profileLoading.value = false
   }
 }
-
 
 onMounted(() => {
   initializeAppointmentForm()
@@ -913,7 +826,7 @@ onMounted(() => {
               @blur="validateField('time', appointmentForm.time)"
               :class="{'error-input': appointmentErrors.time}"
               class="form-input"
-              :disabled="!appointmentForm.date || isLoading"
+              :disabled="!appointmentForm.date || isLoading || availableTimes.length === 0"
             >
               <option value="">Выберите время</option>
               <option v-for="time in availableTimes" :key="time" :value="time">
@@ -925,6 +838,9 @@ onMounted(() => {
             </span>
             <div v-if="isLoading && appointmentForm.date && appointmentForm.doctor" class="loading-text">
               Загрузка доступного времени...
+            </div>
+            <div v-if="!isLoading && appointmentForm.date && appointmentForm.doctor && availableTimes.length === 0" class="no-slots-text">
+              Нет доступных слотов для записи на выбранную дату
             </div>
           </div>
         </div>
@@ -1286,6 +1202,13 @@ onMounted(() => {
   color: #667eea;
   font-size: 12px;
   margin-top: 4px;
+}
+
+.no-slots-text {
+  color: #e53e3e;
+  font-size: 12px;
+  margin-top: 4px;
+  font-style: italic;
 }
 
 @media (max-width: 768px) {
