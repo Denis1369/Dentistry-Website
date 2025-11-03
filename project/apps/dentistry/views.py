@@ -406,18 +406,21 @@ class AppointmentSet(ViewSet):
                 location=OpenApiParameter.QUERY
             )
         ],
-        
         responses={
             200: OpenApiResponse({
-                "type": "object",
-                "properties": {
-                    "slots": {
-                        "type": "array",
-                        "items": {
+                "description": "Список доступных слотов",
+                "content": {
+                    "application/json": {
+                        "schema": {
                             "type": "object",
                             "properties": {
-                                "start": {"type": "string", "format": "date-time"},
-                                "end": {"type": "string", "format": "date-time"}
+                                "slots": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                }
                             }
                         }
                     }
@@ -452,7 +455,6 @@ class AppointmentSet(ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Получаем длительность приёма из профессии
         profession = worker.workers_profession
         if not profession or not profession.profession_time:
             return Response(
@@ -460,42 +462,52 @@ class AppointmentSet(ViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Рабочее время клиники: 7:00–21:00
-        work_start = datetime.combine(target_date, time(7, 0))
-        work_end = datetime.combine(target_date, time(21, 0))
+        yekaterinburg_tz = pytz.timezone('Asia/Yekaterinburg')
+        
+        work_start = yekaterinburg_tz.localize(datetime.combine(target_date, time(9, 0)))
+        work_end = yekaterinburg_tz.localize(datetime.combine(target_date, time(18, 0)))
 
-        # Все записи врача на эту дату
         appointments = Appointment.objects.filter(
             appointment_workers=worker,
             appointment_date__date=target_date,
-            appointment_status__in=['confirmed', 'pending', 'string']
+            appointment_status__in=['запланирован']
         ).order_by('appointment_date')
 
         slot_minutes = int(profession.profession_time)
 
-        yekaterinburg_tz = pytz.timezone('Asia/Yekaterinburg')
-
-        occupied = set()
+        occupied_intervals = []
         for appt in appointments:
-            appt_dn = appt.appointment_date.astimezone(yekaterinburg_tz)
-            appt_dn = appt_dn.replace(second=0, microsecond=0)
-            occupied.add(appt_dn)
+            appt_time = appt.appointment_date.astimezone(yekaterinburg_tz)
+            appt_duration = appt.appointment_services.services_profession.profession_time
+            if not appt_duration:
+                appt_duration = slot_minutes
+            
+            appt_end = appt_time + timedelta(minutes=int(appt_duration))
+            occupied_intervals.append((appt_time, appt_end))
 
         free_slots = []
-
         current = work_start
+        
         while current < work_end:
-            slot_start = current.replace(second=0, microsecond=0)
-            if slot_start not in occupied:
-                free_slots.append(slot_start)
+            slot_end = current + timedelta(minutes=slot_minutes)
+            
+            is_available = True
+            for occupied_start, occupied_end in occupied_intervals:
+                if (current < occupied_end) and (slot_end > occupied_start):
+                    is_available = False
+                    break
+            
+            if is_available and slot_end <= work_end:
+                free_slots.append(current.isoformat())
+            
             current += timedelta(minutes=slot_minutes)
 
         return Response({"slots": free_slots})
     
     @extend_schema(
-            request=AppointmentSerializer,
-            responses={200: OpenApiResponse(description="Запись успешно оставлена", examples={"message": "Запись отправлена"})},
-            description="Запись по JWT токену"
+        request=AppointmentSerializer,
+        responses={200: OpenApiResponse(description="Запись успешно оставлена")},
+        description="Запись по JWT токену"
     )
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def post_appointment(self, request):
@@ -508,10 +520,13 @@ class AppointmentSet(ViewSet):
                 start_time = serializer.validated_data['appointment_date']
 
                 yekaterinburg_tz = pytz.timezone('Asia/Yekaterinburg')
-                start_time = start_time.astimezone(yekaterinburg_tz)
+                
+                if start_time.tzinfo is None:
+                    start_time = yekaterinburg_tz.localize(start_time)
+                else:
+                    start_time = start_time.astimezone(yekaterinburg_tz)
 
-
-                # Получаем длительность
+                # Получаем длительность из услуги
                 duration = service.services_profession.profession_time
                 if not duration:
                     return Response(
@@ -519,14 +534,37 @@ class AppointmentSet(ViewSet):
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
-                # Повторная проверка доступности (на случай гонки)
-                if not is_slot_available(worker, start_time, duration):
+                duration_minutes = int(duration)
+                
+                # Проверяем, что время попадает в рабочие часы
+                slot_date = start_time.date()
+                work_start = yekaterinburg_tz.localize(datetime.combine(slot_date, time(9, 0)))
+                work_end = yekaterinburg_tz.localize(datetime.combine(slot_date, time(18, 0)))
+                
+                if start_time < work_start or start_time >= work_end:
                     return Response(
-                        {"error": "Время уже занято. Обновите список свободных слотов."},
+                        {"error": "Время приёма должно быть в рабочее время (9:00-18:00)"},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
-                # Сохраняем
+                end_time = start_time + timedelta(minutes=duration_minutes)
+                
+                # Ищем пересекающиеся записи - только те, которые реально пересекаются по времени
+                overlapping_appointments = Appointment.objects.filter(
+                    appointment_workers=worker,
+                    appointment_status__in=['запланирован']
+                ).filter(
+                    appointment_date__lt=end_time,
+                    appointment_date__gte=start_time - timedelta(minutes=1)
+                ).exists()
+
+                if overlapping_appointments:
+                    return Response(
+                        {"error": "Это время уже занято. Пожалуйста, выберите другое время."},
+                        status=status.HTTP_409_CONFLICT
+                    )
+
+                # Сохраняем запись
                 appointment = serializer.save(
                     appointment_user=request.user,
                 )
@@ -538,97 +576,11 @@ class AppointmentSet(ViewSet):
 
             except Exception as e:
                 return Response(
-                    {"error": "Ошибка при создании записи: " + str(e)},
+                    {"error": f"Ошибка при создании записи: {str(e)}"},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    @extend_schema(
-            request=AppointmentSerializer,
-            responses={200: OpenApiResponse(examples={"appointment": {...}})},
-            description="Получение записей пользователя"
-    )
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
-    def get_appointment_user(self, request):
-        list_appointment = Appointment.objects.filter(
-            appointment_user_id = request.user.user_id,
-            appointment_status__in=['запланирован',]
-            )
-        
-        serializer = AppointmentSerializer(list_appointment, many=True)
-        
-        return Response({"appointment": serializer.data})
-
-    @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="appointment_workers_id",
-                type=OpenApiTypes.INT,
-                location=OpenApiParameter.QUERY,
-                description="ID врача",
-                required=True
-            )
-        ],
-        responses={
-            200: OpenApiResponse(AppointmentSerializer)
-        },
-        description="Получение записей к определённому врачу"
-    )
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
-    def get_appointment_workers(self, request):
-        workers_id = request.query_params.get('appointment_workers_id')
-        if not workers_id:
-            return Response({'error': 'appointment_workers_id обязателен'}, status=400)
-
-        list_appointment = Appointment.objects.filter(appointment_workers_id=workers_id)
-
-        serializer = AppointmentSerializer(list_appointment, many=True)
-
-        return Response({"appointment": serializer.data})
-
-    @extend_schema(
-        request=AppointmentStatusSerializer,
-        parameters=[
-            OpenApiParameter(
-                name="appointment_id",
-                type=OpenApiTypes.INT,
-                location=OpenApiParameter.QUERY,
-                description="ID записи",
-                required=True
-            )
-        ],
-        responses={
-            200: OpenApiResponse(examples={"message": "Статус успешно изменён"})
-        },
-        description="Смена статуса записи"
-    )
-    @action(detail=False, methods=['put'], permission_classes=[IsAuthenticated])
-    def change_appointment_status(self, request):
-        appointment_id = request.query_params.get('appointment_id')
-        if not appointment_id:
-            return Response({'error': 'appointment_id обязателен'}, status=400)
-
-        try:
-            appointment = Appointment.objects.get(appointment_id=appointment_id)
-        except ObjectDoesNotExist:
-            return Response({'error': 'Запись не найдена'}, status=404)
-
-        serializer = AppointmentStatusSerializer(
-            instance=appointment,
-            data=request.data,
-            partial=True
-        )
-
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response({
-                "message": "Статус успешно изменён"
-            }, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 def is_slot_available(worker, start_time, duration_minutes):
     """
