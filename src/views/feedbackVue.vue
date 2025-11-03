@@ -81,7 +81,6 @@ const getUserName = (userData) => {
   return 'Анонимный пользователь'
 }
 
-// Новая функция для получения инициалов пользователя
 const getUserInitials = (userData) => {
   if (!userData) return 'А'
   
@@ -115,13 +114,13 @@ const fetchReviews = async () => {
         return {
           user_name: getUserName(review.feedback_user),
           user_initials: getUserInitials(review.feedback_user),
-          user_img: review.feedback_user?.user_img, // Добавляем аватарку
+          user_img: review.feedback_user?.user_img, 
           rating: review.feedback_rating,
           text: review.feedback_text,
           date: review.feedback_date,
           user_data: review.feedback_user
         }
-      })
+      }).sort((a, b) => new Date(b.date) - new Date(a.date))
     } else {
       reviews.value = []
     }
@@ -311,7 +310,6 @@ onMounted(() => {
       >
         <div class="review-header">
           <div class="user-avatar">
-            <!-- Исправлено: используем review.user_img вместо userData?.user_img -->
             <img v-if="review.user_img" :src="review.user_img" :alt="review.user_name">
             <span v-else>{{ review.user_initials }}</span>
           </div>
