@@ -212,13 +212,6 @@ const loadSchedule = async () => {
   }
 }
 
-const filteredMedicalCards = computed(() => {
-  if (!patientSearch.value) return medicalCards.value
-  return medicalCards.value.filter(card => {
-    const patientName = getPatientName(card.medical_card_user_id).toLowerCase()
-    return patientName.includes(patientSearch.value.toLowerCase())
-  })
-})
 
 const doctorSpecialization = computed(() => {
   const profession = professions.value.find(p => p.profession_id ===doctorData.value.workers_profession)
@@ -244,7 +237,7 @@ const scheduleDays = computed(() => {
     
     const dayAppointments = appointments.value.filter(apt => {
       const aptDate = new Date(apt.appointment_date).toISOString().split('T')[0]
-      return aptDate === dateStr
+      return aptDate == dateStr && apt.appointment_status == 'запланирован'
     })
     
     days.push({
@@ -419,21 +412,71 @@ const getPatientName = (userId) => {
   return patient ? `${patient.first_name} ${patient.last_name}` : 'Пациент не найден'
 }
 
+const filteredMedicalCards = computed(() => {
+  if (!patientSearch.value) return medicalCards.value
+  
+  return medicalCards.value.filter(card => {
+    // Используем правильное поле - medical_card_user
+    const patientName = getPatientName(card.medical_card_user).toLowerCase()
+    return patientName.includes(patientSearch.value.toLowerCase())
+  })
+})
+
 const getServiceName = (serviceId) => {
   const service = doctorServices.value.find(s => s.services_id === serviceId)
   return service ? service.services_title : `Услуга #${serviceId}`
 }
 
 const formatDateTime = (dateString) => {
-  return new Date(dateString).toLocaleString('ru-RU')
+  if (!dateString) return 'Дата не указана'
+  
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return dateString
+    
+    return date.toLocaleString('ru-RU', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC' // используем UTC для корректного отображения
+    })
+  } catch {
+    return dateString
+  }
 }
 
 const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('ru-RU')
+  if (!dateString) return 'Дата не указана'
+  
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return dateString
+    
+    return date.toLocaleDateString('ru-RU', {
+      timeZone: 'UTC'
+    })
+  } catch {
+    return dateString
+  }
 }
 
 const formatTime = (dateString) => {
-  return new Date(dateString).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+  if (!dateString) return 'Время не указано'
+  
+  try {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return dateString
+    
+    return date.toLocaleTimeString('ru-RU', { 
+      timeZone: 'UTC',
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+  } catch {
+    return dateString
+  }
 }
 
 const getAppointmentStatusClass = (status) => {
@@ -480,7 +523,10 @@ const handleLogout = () => {
   localStorage.removeItem('authToken')
   localStorage.removeItem('userData')
   router.push('/')
-  closeForm()
+  
+  setTimeout(() => {
+    window.location.reload()
+  }, 100)
 }
 </script>
 
@@ -493,7 +539,9 @@ const handleLogout = () => {
     <div class="doctor-content">
       <div class="doctor-profile">
         <div class="profile-header">
-          <img :src="doctorData.user_img || '/default-avatar.png'" alt="Фото врача" class="doctor-avatar">
+          <img v-if="doctorData?.workers_img" 
+                      :src="doctorData.workers_img" 
+                      alt="Фото врача" class="doctor-avatar">
           <div class="profile-info">
             <h3>Добро пожаловать, доктор {{ doctorData.first_name }} {{ doctorData.last_name }}!</h3>
             <p class="specialization">{{ doctorSpecialization }}</p>
@@ -518,9 +566,6 @@ const handleLogout = () => {
       <div v-if="activeTab === 'appointments'" class="tab-content">
         <div class="section-header">
           <h4>Мои приемы</h4>
-          <div class="date-filter">
-            <input type="date" v-model="selectedDate" @change="loadAppointments">
-          </div>
         </div>
         
         <div class="appointments-list">
@@ -564,10 +609,6 @@ const handleLogout = () => {
                         class="btn-danger" 
                         v-if="appointment.appointment_status !== 'отменен' && appointment.appointment_status !== 'завершен'">
                   Отменить
-                </button>
-                <button @click="openMedicalCard(appointment.appointment_user)" 
-                        class="btn-info">
-                  Карта пациента
                 </button>
               </div>
             </div>
@@ -851,7 +892,7 @@ const handleLogout = () => {
 }
 
 .doctor-profile {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #667eea;
   color: white;
   padding: 25px;
   border-radius: 12px;
@@ -1132,22 +1173,6 @@ const handleLogout = () => {
 
 .btn-success:hover {
   background: #38a169;
-}
-
-.btn-info {
-  background: #4299e1;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.btn-info:hover {
-  background: #3182ce;
 }
 
 .btn-danger {
