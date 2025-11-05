@@ -34,6 +34,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('username', 'email', 'password', 'first_name', 'last_name', )
 
+class RegisterLastStepSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('email', 'code', )
+
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:

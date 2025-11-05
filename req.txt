@@ -7,4 +7,7 @@ drf-spectacular
 mysqlclient
 boto3
 pillow
-celery redis django-celery-beat
+celery
+redis
+django-celery-beat
+django_celery_results

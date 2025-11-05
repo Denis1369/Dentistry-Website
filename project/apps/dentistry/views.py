@@ -1,7 +1,11 @@
+import random
 from datetime import datetime, time, timedelta
 
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils import timezone
+from django.core.mail import send_mail
+from django.conf import settings
+
 import pytz
 import os
 
@@ -15,7 +19,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from yaml import serialize
 
-from .serializers.UserSerializers import LoginSerializer, RegisterSerializer, ProfileSerializer, UpdateProfileSerializer
+from .serializers.UserSerializers import LoginSerializer, RegisterSerializer, ProfileSerializer, \
+    UpdateProfileSerializer, RegisterLastStepSerializer
 from .serializers.FeedbackSerializers import LeaveFeedbackSerializer, GetFeedbackSerializer
 from .serializers.ServiceSerializer import ServiceSerializer
 from .serializers.ProfessionSerializer import ProfessionSerializer
@@ -52,21 +57,80 @@ class UserViewSet(ViewSet):
 
     @extend_schema(
         request=RegisterSerializer,
-        responses={200: OpenApiResponse(description="Успешная регистрация")},
+        responses={200: OpenApiResponse(description="Код для подтверждения email был выслан вам на почту")},
+        description="Первый шаг регистрации с высыланием кода подтверждения"
+    )
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def register_first_step(self, request):
+        serializer = RegisterSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        register_data = serializer.validated_data
+        email = register_data['email']
+
+        code = str(random.randint(100000, 999999))
+
+        cache_key = f"register_{email}"
+        cache.set(cache_key, {
+            'register_data': register_data,
+            'code': code
+        }, timeout=600)  # 600 сек
+
+        send_mail(
+            subject='Код подтверждения регистрации',
+            message=f'Ваш код: {code}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+        )
+
+        return Response({"detail": "Код для подтверждения email был выслан вам на почту"}, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        request={
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'email': {'type': 'string', 'format': 'email'},
+                    'code': {'type': 'string', 'pattern': '^[0-9]{6}$'},
+                },
+                'required': ['email', 'code'],
+            }
+        },
+        responses={201: OpenApiResponse(description="Регистрация завершена")},
         description="Регистрация нового пользователя"
     )
     @action(detail=False, methods=['post'], permission_classes=[AllowAny])
-    def register(self, request):
-        serializer = RegisterSerializer(data=request.data)
+    def register_last_step(self, request):
+        email = request.data.get('email')
+        code = request.data.get('code')
 
-        if serializer.is_valid():
-            serializer.save()
+        if not email or not code:
+            return Response({"error": "Email и код обязательны"}, status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({
-                "message": "Регистрация прошла успешно"
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        cache_key = f"register_{email}"
+        cached_data = cache.get(cache_key)
+
+        if not cached_data:
+            return Response({"error": "Данные устарели или не найдены"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if cached_data['code'] != code:
+            return Response({"error": "Неверный код"}, status=status.HTTP_400_BAD_REQUEST)
+
+        register_data = cached_data['register_data']
+
+        user = CustomUser.objects.create_user(
+            email=register_data['email'],
+            password=register_data['password'],
+            username=register_data['email'],
+            first_name=register_data['first_name'],
+            last_name=register_data['last_name'],
+        )
+
+        cache.delete(cache_key)
+
+        return Response({"detail": "Регистрация завершена"}, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         description="Получить профиль текущего авторизованного пользователя",
