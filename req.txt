@@ -7,3 +7,4 @@ drf-spectacular
 mysqlclient
 boto3
 pillow
+celery redis django-celery-beat

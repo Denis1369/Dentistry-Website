@@ -46,6 +46,8 @@ THIRD_PATY_APPS = [
     'rest_framework',
     'corsheaders',
     'drf_spectacular',
+    'django_celery_beat',      # Для хранения расписания в БД
+    'django_celery_results',   # Для хранения результатов задач
 ]
 
 # Список локальных приложений
@@ -94,19 +96,35 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# Указываем MySQL как брокера (через SQLAlchemy)
+# settings.py
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('NAME'),  # Название вашей БД
-        'USER': config('USER'), # Логин MySQL
-        'PASSWORD': config('PASSWORD'),   # Пароль MySQL
-        'HOST': config('HOST'),           # или IP сервера MySQL
-        'PORT': config('PORT'),                # Порт MySQL
+        'NAME': config('NAME'),
+        'USER': config('USER'),
+        'PASSWORD': config('PASSWORD'),
+        'HOST': config('HOST'),
+        'PORT': config('PORT'),
         'ATOMIC_REQUESTS': True,
     }
 }
 
+# CELERY
+CELERY_BROKER_URL = f"sqla+mysql://{config('USER')}:{config('PASSWORD')}@{config('HOST')}:{config('PORT')}/{config('NAME')}"
+CELERY_RESULT_BACKEND = f"db+mysql://{config('USER')}:{config('PASSWORD')}@{config('HOST')}:{config('PORT')}/{config('NAME')}"
+CELERY_TIMEZONE = 'Asia/Yekaterinburg'
+CELERY_ENABLE_UTC = True
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'cancel-expired-appointments': {
+        'task': 'myproject.celery.cancel_expired_appointments',
+        'schedule': 300.0,  # каждые 5 минут
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

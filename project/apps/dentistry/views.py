@@ -519,12 +519,7 @@ class AppointmentSet(ViewSet):
                 service = serializer.validated_data['appointment_services']
                 start_time = serializer.validated_data['appointment_date']
 
-                yekaterinburg_tz = pytz.timezone('Asia/Yekaterinburg')
-                
-                if start_time.tzinfo is None:
-                    start_time = yekaterinburg_tz.localize(start_time)
-                else:
-                    start_time = start_time.astimezone(yekaterinburg_tz)
+                start_time = start_time.replace(tzinfo=None)
 
                 # Получаем длительность из услуги
                 duration = service.services_profession.profession_time
@@ -538,8 +533,8 @@ class AppointmentSet(ViewSet):
                 
                 # Проверяем, что время попадает в рабочие часы
                 slot_date = start_time.date()
-                work_start = yekaterinburg_tz.localize(datetime.combine(slot_date, time(9, 0)))
-                work_end = yekaterinburg_tz.localize(datetime.combine(slot_date, time(18, 0)))
+                work_start = datetime.combine(slot_date, time(9, 0))
+                work_end = datetime.combine(slot_date, time(18, 0))
                 
                 if start_time < work_start or start_time >= work_end:
                     return Response(
