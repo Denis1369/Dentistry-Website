@@ -628,6 +628,13 @@ class AppointmentSet(ViewSet):
                     appointment_user=request.user,
                 )
 
+                send_mail(
+                    subject='Запись на приём',
+                    message=f'Вы записаны на приём на {appointment.appointment_date}\nУслуга: {appointment.appointment_services.services_title}',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[request.user.email],
+                )
+
                 return Response(
                     {"message": "Запись успешно создана", "appointment_id": appointment.appointment_id},
                     status=status.HTTP_201_CREATED

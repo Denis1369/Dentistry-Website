@@ -7393,3 +7393,28 @@ Bad Request: /user/register_last_step/
 "POST /user/register_last_step/ HTTP/1.1" 201 54
 C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\myproject\settings.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 18430
+"GET / HTTP/1.1" 200 2
+"GET /docs HTTP/1.1" 301 0
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 42198
+"POST /user/login/ HTTP/1.1" 200 244
+"GET /appointment/get_appointment/?date=2025-11-07&worker_id=6 HTTP/1.1" 200 1523
+Bad Request: /appointment/post_appointment/
+"POST /appointment/post_appointment/ HTTP/1.1" 400 99
+Internal Server Error: /appointment/post_appointment/
+"POST /appointment/post_appointment/ HTTP/1.1" 500 122
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+Conflict: /appointment/post_appointment/
+"POST /appointment/post_appointment/ HTTP/1.1" 409 114
+Internal Server Error: /appointment/post_appointment/
+"POST /appointment/post_appointment/ HTTP/1.1" 500 114
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+Conflict: /appointment/post_appointment/
+"POST /appointment/post_appointment/ HTTP/1.1" 409 114
+"POST /appointment/post_appointment/ HTTP/1.1" 201 76
