@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import Registration from './views/registration.vue'
 import LoginForm from './views/LoginForm.vue'
 import ApointmentForm from './views/ApointmentForm.vue'
-import feedbackVue from './views/feedbackVue.vue'
+import VerificationForm from './views/VerificationForm.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -12,6 +12,8 @@ const route = useRoute()
 const showRegistration = ref(false)
 const showLogin = ref(false)
 const showAppointment = ref(false)
+const showVerification = ref(false)
+const pendingEmail = ref('')
 
 const navigateToMain = () => {
   router.push('/')
@@ -104,6 +106,29 @@ const closeLogin = () => {
   document.body.style.overflow = 'auto'
 }
 
+const openVerification = (email) => {
+  pendingEmail.value = email
+  showVerification.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+const closeVerification = () => {
+  showVerification.value = false
+  document.body.style.overflow = 'auto'
+  pendingEmail.value = ''
+}
+
+const handleSwitchToVerification = (email) => {
+  closeRegistration()
+  openVerification(email)
+}
+
+const handleVerificationSuccess = (email) => {
+  console.log('Email подтвержден:', email)
+  closeVerification()
+  openLoginWithEmail(email)
+}
+
 const handleLoginSuccess = (userData) => {
   console.log('Пользователь авторизован:', userData)
   updateAuthState()
@@ -129,6 +154,21 @@ const switchToRegistration = () => {
 
 const switchToLogin = () => {
   closeRegistration()
+  openLogin()
+}
+
+const switchToLoginFromVerification = () => {
+  closeVerification()
+  openLogin()
+}
+
+const switchToRegistrationFromVerification = () => {
+  closeVerification()
+  openRegistration()
+}
+
+const openLoginWithEmail = (email) => {
+  pendingEmail.value = email
   openLogin()
 }
 </script>
@@ -170,9 +210,10 @@ const switchToLogin = () => {
           Контакты
         </a>
         <a
-        @click="navigateToReviews"
-        :class="{active: route.path === '/reviews'}"
-        style="cursor: pointer;">
+          @click="navigateToReviews"
+          :class="{active: route.path === '/reviews'}"
+          style="cursor: pointer;"
+        >
           Отзывы
         </a>
       </nav>
@@ -198,12 +239,26 @@ const switchToLogin = () => {
       </div>
     </div>
     
+    <!-- Модальное окно регистрации -->
     <div v-if="showRegistration" class="modal-overlay">
       <div class="modal-content">
         <Registration 
           @registration-success="handleRegistrationSuccess"
           @switch-to-login="switchToLogin"
+          @switch-to-verification="handleSwitchToVerification"
           @close="closeRegistration"
+        />
+      </div>
+    </div>
+    
+    <div v-if="showVerification" class="modal-overlay">
+      <div class="modal-content">
+        <VerificationForm 
+          :email="pendingEmail"
+          @verification-success="handleVerificationSuccess"
+          @switch-to-login="switchToLoginFromVerification"
+          @switch-to-registration="switchToRegistrationFromVerification"
+          @close="closeVerification"
         />
       </div>
     </div>
@@ -211,6 +266,7 @@ const switchToLogin = () => {
     <div v-if="showLogin" class="modal-overlay">
       <div class="modal-content">
         <LoginForm 
+          :initial-email="pendingEmail"
           @login-success="handleLoginSuccess"
           @switch-to-registration="switchToRegistration"
           @open-doctor-form="handleDoctorFormOpen"
@@ -240,9 +296,11 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-.content{
+
+.content {
   margin-top: 10%;
 }
+
 .header {
   width: 99.2%;
   background: #5285ff;
@@ -303,6 +361,7 @@ body {
   padding: 8px;
   border-radius: 50%;
   transition: background-color 0.3s ease;
+  position: relative;
 }
 
 .account img {
@@ -315,9 +374,21 @@ body {
   flex-direction: row;
   gap: 20px;
 }
+
+.auth-indicator {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  background: #4CAF50;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
 .btn-appointment {
   background: white;
-  color: #667eea;
+  color: #5285ff;
   border: none;
   padding: 10px 30px;
   border-radius: 30px;
@@ -338,7 +409,6 @@ body {
 #app {
   width: 100%;
   min-height: 100vh;
-  
   display: flex;
   flex-direction: column;
 }
@@ -405,5 +475,30 @@ body {
 .page-leave-to {
   opacity: 0;
   transform: translateX(-30px);
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+  
+  .header-content {
+    padding: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .navigation {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .navigation a {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
 }
 </style>

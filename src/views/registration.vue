@@ -2,7 +2,7 @@
 import { ref, reactive, computed } from 'vue'
 import axios from 'axios'
 
-const emit = defineEmits(['registration-success', 'switch-to-login', 'close'])
+const emit = defineEmits(['registration-success', 'switch-to-login', 'close', 'switch-to-verification'])
 
 const formData = reactive({
   lastname: '',
@@ -27,12 +27,10 @@ const message = ref('')
 const messageType = ref('')
 
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:8000/user/',
-  
+  baseURL: 'http://127.0.0.1:8000/user',
   timeout: 10000,
   headers: {'Content-Type': 'application/json'}
-});
-
+})
 
 const validateField = (fieldName) => {
   const value = formData[fieldName]
@@ -129,39 +127,24 @@ const handleSubmit = async () => {
   
   isSubmitting.value = true
   message.value = ''
-  const a = {
-    username: formData.email.replace('@', '').replace('.ru', '').replace('.com',''),
-      email: formData.email.trim(),
-      password: formData.password,
-      first_name: formData.firstname.trim(),
-      last_name: formData.lastname.trim()
-  }
-  console.log(a)
   
   try {
-    const response = await instance.post('/register/', {
+    const response = await instance.post('/register_first_step/', {
       username: formData.email.replace('@', '').replace('.ru', '').replace('.com',''),
       email: formData.email.trim(),
       password: formData.password,
       first_name: formData.firstname.trim(),
       last_name: formData.lastname.trim(),
       user_role: 'пользователь'
-      
     })
-    const data = response.data
+    
     if (response.status === 200) {
-      message.value = data.message || 'Регистрация прошла успешно!'
+      message.value = 'Код подтверждения отправлен на вашу почту!'
       messageType.value = 'success'
       
-      formData.lastname = ''
-      formData.firstname = ''
-      formData.email = ''
-      formData.password = ''
-      formData.confirmPassword = ''
-
       setTimeout(() => {
-        emit('switch-to-login')
-      }, 2000)
+        emit('switch-to-verification', formData.email)
+      }, 1500)
       
     } 
   } catch (error) {
@@ -193,7 +176,6 @@ const handleSubmit = async () => {
         }
       } else {
         message.value = 'Произошла ошибка при регистрации' + status
-
       }
     } else if (error.request) {
       message.value = 'Не удалось подключиться к серверу'
@@ -206,7 +188,6 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
-
 
 const closeForm = () => {
   emit('close')
@@ -325,6 +306,7 @@ const switchToLogin = () => {
 </template>
 
 <style scoped>
+/* Стили остаются такими же */
 .auth-container {
   padding: 0;
   width: 100%;
@@ -368,7 +350,6 @@ const switchToLogin = () => {
   padding: 40px 40px 30px 40px;
   border-bottom: 1px solid #f1f3f4;
   background: white;
-  
 }
 
 .auth-header h2 {
@@ -531,12 +512,10 @@ const switchToLogin = () => {
   border: 1px solid #9ae6b4;
 }
 
-/* Убираем скролл для формы */
 .auth-form::-webkit-scrollbar {
   width: 0px;
 }
 
-/* Адаптивность */
 @media (max-width: 480px) {
   .auth-header {
     padding: 30px 20px 20px 20px;
@@ -546,8 +525,6 @@ const switchToLogin = () => {
     padding: 20px 20px 30px 20px;
   }
 
-  
-  
   .header-actions {
     top: 15px;
     right: 15px;
