@@ -472,19 +472,15 @@ class AppointmentSet(ViewSet):
         ],
         responses={
             200: OpenApiResponse({
-                "description": "Список доступных слотов",
-                "content": {
-                    "application/json": {
-                        "schema": {
+                "type": "object",
+                "properties": {
+                    "slots": {
+                        "type": "array",
+                        "items": {
                             "type": "object",
                             "properties": {
-                                "slots": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "format": "date-time"
-                                    }
-                                }
+                                "start": {"type": "string", "format": "date-time"},
+                                "end": {"type": "string", "format": "date-time"}
                             }
                         }
                     }
@@ -645,6 +641,100 @@ class AppointmentSet(ViewSet):
                     {"error": f"Ошибка при создании записи: {str(e)}"},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @extend_schema(
+        request=AppointmentSerializer,
+        responses={200: OpenApiResponse(examples={"appointment": {...}})},
+        description="Получение записей пользователя"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def get_appointment_user(self, request):
+        list_appointment = Appointment.objects.filter(
+            appointment_user_id=request.user.user_id,
+            appointment_status__in=['запланирован', ]
+        )
+
+        serializer = AppointmentSerializer(list_appointment, many=True)
+
+        return Response({"appointment": serializer.data})
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="appointment_workers_id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="ID врача",
+                required=True
+            )
+        ],
+        responses={
+            200: OpenApiResponse(AppointmentSerializer)
+        },
+        description="Получение записей к определённому врачу"
+    )
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def get_appointment_workers(self, request):
+        workers_id = request.query_params.get('appointment_workers_id')
+        if not workers_id:
+            return Response({'error': 'appointment_workers_id обязателен'}, status=400)
+
+        list_appointment = Appointment.objects.filter(appointment_workers_id=workers_id)
+
+        serializer = AppointmentSerializer(list_appointment, many=True)
+
+        return Response({"appointment": serializer.data})
+
+    @extend_schema(
+        request=AppointmentStatusSerializer,
+        parameters=[
+            OpenApiParameter(
+                name="appointment_id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description="ID записи",
+                required=True
+            )
+        ],
+        responses={
+            200: OpenApiResponse(examples={"message": "Статус успешно изменён"})
+        },
+        description="Смена статуса записи"
+    )
+    @action(detail=False, methods=['put'], permission_classes=[IsAuthenticated])
+    def change_appointment_status(self, request):
+        appointment_id = request.query_params.get('appointment_id')
+        if not appointment_id:
+            return Response({'error': 'appointment_id обязателен'}, status=400)
+
+        try:
+            appointment = Appointment.objects.get(appointment_id=appointment_id)
+        except ObjectDoesNotExist:
+            return Response({'error': 'Запись не найдена'}, status=404)
+
+        serializer = AppointmentStatusSerializer(
+            instance=appointment,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+            serializer.save()
+
+            send_mail(
+                subject='Смена статуса записи на приём',
+                message=f'Запись на приём от {appointment.appointment_date}'
+                        f'\nУслуга: {appointment.appointment_services.services_title}'
+                        f'\nИзменён статус на: {serializer.data["appointment_status"]}',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[appointment.appointment_user.email],
+            )
+
+            return Response({
+                "message": "Статус успешно изменён"
+            }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

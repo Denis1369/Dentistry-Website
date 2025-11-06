@@ -7418,3 +7418,100 @@ Watching for file changes with StatReloader
 Conflict: /appointment/post_appointment/
 "POST /appointment/post_appointment/ HTTP/1.1" 409 114
 "POST /appointment/post_appointment/ HTTP/1.1" 201 76
+"GET /feedback/get_feedbacks/ HTTP/1.1" 200 7284
+"OPTIONS /user/profile/ HTTP/1.1" 200 0
+Unauthorized: /user/profile/
+"GET /user/profile/ HTTP/1.1" 401 172
+"OPTIONS /medical_card_set/get_medicalCard/?user_id=38 HTTP/1.1" 200 0
+Unauthorized: /medical_card_set/get_medicalCard/
+"GET /medical_card_set/get_medicalCard/?user_id=38 HTTP/1.1" 401 172
+- Broken pipe from ('127.0.0.1', 54280)
+"GET /feedback/get_feedbacks/ HTTP/1.1" 200 7284
+"OPTIONS /user/login/ HTTP/1.1" 200 0
+"POST /user/login/ HTTP/1.1" 200 244
+"GET /user/profile/ HTTP/1.1" 200 231
+"OPTIONS /workers/get_base_many/ HTTP/1.1" 200 0
+"OPTIONS /profession/ HTTP/1.1" 200 0
+"GET /profession/ HTTP/1.1" 200 725
+"GET /workers/get_base_many/ HTTP/1.1" 200 7139
+"OPTIONS /service/get_filter/?profession_title=%D0%A5%D0%B8%D1%80%D1%83%D1%80%D0%B3%D0%B8%D1%8F HTTP/1.1" 200 0
+"GET /service/get_filter/?profession_title=%D0%A5%D0%B8%D1%80%D1%83%D1%80%D0%B3%D0%B8%D1%8F HTTP/1.1" 200 993
+"OPTIONS /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 200 0
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+"GET /feedback/get_feedbacks/ HTTP/1.1" 200 7284
+"GET /profession/ HTTP/1.1" 200 725
+"GET /workers/get_base_many/ HTTP/1.1" 200 7139
+"OPTIONS /feedback/get_feedbacks/ HTTP/1.1" 200 0
+"GET /feedback/get_feedbacks/ HTTP/1.1" 200 7284
+"POST /user/login/ HTTP/1.1" 200 244
+"GET /user/profile/ HTTP/1.1" 200 231
+"GET /profession/ HTTP/1.1" 200 725
+"GET /workers/get_base_many/ HTTP/1.1" 200 7139
+"GET /service/get_filter/?profession_title=%D0%A5%D0%B8%D1%80%D1%83%D1%80%D0%B3%D0%B8%D1%8F HTTP/1.1" 200 993
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+"GET /appointment/get_appointment/?date=2025-11-07&worker_id=6 HTTP/1.1" 200 1523
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Not Found: /appointment/get_appointment_workers/
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 404 18530
+Watching for file changes with StatReloader
+"GET /feedback/get_feedbacks/ HTTP/1.1" 200 7284
+"GET /profession/ HTTP/1.1" 200 725
+"GET /workers/get_base_many/ HTTP/1.1" 200 7139
+"GET /service/get_filter/?profession_title=%D0%A5%D0%B8%D1%80%D1%83%D1%80%D0%B3%D0%B8%D1%8F HTTP/1.1" 200 993
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 200 1699
+"OPTIONS /medical_card_set/get_medicalCard/?user_id=3 HTTP/1.1" 200 0
+"GET /medical_card_set/get_medicalCard/?user_id=3 HTTP/1.1" 200 343
+"GET /medical_card_set/get_medicalCard/?user_id=38 HTTP/1.1" 200 18
+"OPTIONS /medical_card_set/get_medicalCard/?user_id=41 HTTP/1.1" 200 0
+"GET /medical_card_set/get_medicalCard/?user_id=41 HTTP/1.1" 200 18
+"OPTIONS /user/profile_by_id/?user_id=3 HTTP/1.1" 200 0
+"GET /user/profile_by_id/?user_id=3 HTTP/1.1" 200 259
+"OPTIONS /user/profile_by_id/?user_id=38 HTTP/1.1" 200 0
+"GET /user/profile_by_id/?user_id=38 HTTP/1.1" 200 234
+"OPTIONS /user/profile_by_id/?user_id=41 HTTP/1.1" 200 0
+"GET /user/profile_by_id/?user_id=41 HTTP/1.1" 200 221
+"GET /medical_card_set/get_medicalCard/?user_id=3 HTTP/1.1" 200 343
+"GET /medical_card_set/get_medicalCard/?user_id=38 HTTP/1.1" 200 18
+"GET /medical_card_set/get_medicalCard/?user_id=41 HTTP/1.1" 200 18
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 200 1699
+"GET /medical_card_set/get_medicalCard/?user_id=3 HTTP/1.1" 200 343
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 200 1699
+"GET /medical_card_set/get_medicalCard/?user_id=38 HTTP/1.1" 200 18
+"GET /medical_card_set/get_medicalCard/?user_id=3 HTTP/1.1" 200 343
+"GET /medical_card_set/get_medicalCard/?user_id=41 HTTP/1.1" 200 18
+"GET /medical_card_set/get_medicalCard/?user_id=38 HTTP/1.1" 200 18
+"GET /appointment/get_appointment_workers/?appointment_workers_id=6 HTTP/1.1" 200 1699
+"GET /medical_card_set/get_medicalCard/?user_id=41 HTTP/1.1" 200 18
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"OPTIONS /appointment/change_appointment_status/?appointment_id=54 HTTP/1.1" 200 0
+"PUT /appointment/change_appointment_status/?appointment_id=54 HTTP/1.1" 200 56
+C:\Users\Sergey\PycharmProjects\Dentistry-Website\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
