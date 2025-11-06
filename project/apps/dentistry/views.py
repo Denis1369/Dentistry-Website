@@ -579,7 +579,7 @@ class AppointmentSet(ViewSet):
                 service = serializer.validated_data['appointment_services']
                 start_time = serializer.validated_data['appointment_date']
 
-                start_time = start_time.replace(tzinfo=None)
+                start_time = start_time.astimezone(pytz.utc).replace(tzinfo=None)
 
                 # Получаем длительность из услуги
                 duration = service.services_profession.profession_time
@@ -626,7 +626,7 @@ class AppointmentSet(ViewSet):
 
                 send_mail(
                     subject='Запись на приём',
-                    message=f'Вы записаны на приём на {appointment.appointment_date}\nУслуга: {appointment.appointment_services.services_title}',
+                    message=f'Вы записаны на приём на {start_time}\nУслуга: {appointment.appointment_services.services_title}',
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[request.user.email],
                 )
