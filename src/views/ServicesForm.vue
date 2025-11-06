@@ -10,6 +10,7 @@ const error = ref(null)
 const selectedCategory = ref('all')
 const showAppointmentModal = ref(false)
 const selectedService = ref(null)
+const authState = ref(!!localStorage.getItem('authToken'))
 
 const fetchServices = async () => {
   loading.value = true
@@ -90,7 +91,17 @@ const resetFilter = () => {
   selectedCategory.value = 'all'
 }
 
+const isAuthenticated = computed(() => {
+  return authState.value
+})
+
 const handleAppointment = (service) => {
+  if (!isAuthenticated.value) {
+    
+    alert('Для записи на прием необходимо авторизоваться')
+    openLogin()
+    return
+  }
   selectedService.value = {
     id: service.id,
     title: service.title

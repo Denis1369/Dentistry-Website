@@ -275,11 +275,25 @@ const showSchedule = () => {
 }
 
 const canCompleteAppointment = (appointmentDate) => {
-  const appointmentTime = new Date(appointmentDate)
-  const now = new Date()
-  const timeDiff = now.getTime() - appointmentTime.getTime()
-  const minutesDiff = timeDiff / (1000 * 60)
-  return minutesDiff >= 0 && minutesDiff <= 30
+  try {
+    const appointmentTime = new Date(appointmentDate)
+    const correctedAppointmentTime = new Date(appointmentTime.getTime() - (5 * 60 * 60 * 1000))
+    
+    const now = new Date()
+    
+    const timeDiff = now.getTime() - correctedAppointmentTime.getTime()
+    const minutesDiff = timeDiff / (1000 * 60)
+    
+    console.log('Время приема (корректное):', correctedAppointmentTime.toLocaleString('ru-RU'))
+    console.log('Текущее время:', now.toLocaleString('ru-RU'))
+    console.log('Разница:', minutesDiff.toFixed(1), 'минут')
+    
+    return minutesDiff >= 0 && minutesDiff <= 30
+    
+  } catch (error) {
+    console.error('Ошибка:', error)
+    return false
+  }
 }
 
 const updateAppointmentStatus = async (appointment, newStatus) => {
@@ -416,7 +430,6 @@ const filteredMedicalCards = computed(() => {
   if (!patientSearch.value) return medicalCards.value
   
   return medicalCards.value.filter(card => {
-    // Используем правильное поле - medical_card_user
     const patientName = getPatientName(card.medical_card_user).toLowerCase()
     return patientName.includes(patientSearch.value.toLowerCase())
   })
@@ -440,7 +453,7 @@ const formatDateTime = (dateString) => {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'UTC' // используем UTC для корректного отображения
+      timeZone: 'UTC' 
     })
   } catch {
     return dateString

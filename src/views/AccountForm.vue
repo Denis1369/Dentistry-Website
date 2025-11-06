@@ -67,6 +67,9 @@ const fetchUserProfile = async () => {
     const data = await response.json()
     
     if (data.user) {
+      if (data.user.user_img) {
+        data.user.user_img = `${data.user.user_img}?t=${Date.now()}`
+      }
       userData.value = data.user
       
       if (!userData.value.user_id) {

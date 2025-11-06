@@ -11,6 +11,7 @@ const error = ref(null)
 const selectedCategory = ref('all')
 const showAppointmentModal = ref(false)
 const selectedDoctor = ref(null)
+const authState = ref(!!localStorage.getItem('authToken'))
 
 const filteredDoctors = computed(() => {
   if (selectedCategory.value === 'all') {
@@ -111,7 +112,17 @@ const resetFilter = () => {
   selectedCategory.value = 'all'
 }
 
+const isAuthenticated = computed(() => {
+  return authState.value
+})
+
 const handleAppointment = (doctor) => {
+  if (!isAuthenticated.value) {
+    
+    alert('Для записи на прием необходимо авторизоваться')
+    openLogin()
+    return
+  }
   console.log(doctor)
   selectedDoctor.value = {
     id: doctor.id,

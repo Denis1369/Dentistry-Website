@@ -79,7 +79,7 @@ const validateField = (fieldName) => {
       } else if (value.length > 12) {
         errors.password = 'Пароль должен содержать не более 12 символов'
       } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
-        errors.password = 'Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву и одну цифру'
+        errors.password = 'Пароль должен содержать хотя бы одну латинскую заглавную букву, одну латинскую строчную букву и одну цифру'
       } else {
         errors.password = ''
       }
