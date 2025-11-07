@@ -306,7 +306,6 @@ const switchToLogin = () => {
 </template>
 
 <style scoped>
-/* Стили остаются такими же */
 .auth-container {
   padding: 0;
   width: 100%;

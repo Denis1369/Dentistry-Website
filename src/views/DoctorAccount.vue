@@ -276,9 +276,20 @@ const showSchedule = () => {
 
 const canCompleteAppointment = (appointmentDate) => {
   const appointmentTime = new Date(appointmentDate)
+  
   const now = new Date()
-  const timeDiff = now.getTime() - appointmentTime.getTime()
+  const nowPlus5Hours = new Date(now.getTime() + (5 * 60 * 60 * 1000))
+  
+  const appointmentTimeLocal = new Date(appointmentTime.getTime() + appointmentTime.getTimezoneOffset() * 60000)
+  const nowLocal = new Date(nowPlus5Hours.getTime() + nowPlus5Hours.getTimezoneOffset() * 60000)
+  
+  const timeDiff = nowLocal.getTime() - appointmentTimeLocal.getTime()
   const minutesDiff = timeDiff / (1000 * 60)
+  
+  console.log('Время записи (локальное):', appointmentTimeLocal)
+  console.log('Текущее время +5 часов (локальное):', nowLocal)
+  console.log('Разница в минутах:', minutesDiff)
+  
   return minutesDiff >= 0 && minutesDiff <= 30
 }
 
