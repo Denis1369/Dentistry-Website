@@ -7655,3 +7655,49 @@ Watching for file changes with StatReloader
 "GET /appointment/get_appointment/?worker_id=6&date=2025-11-08 HTTP/1.1" 200 1523
 C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 21758
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 47963
+"POST /user/login/ HTTP/1.1" 200 244
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 48026
+"GET /service/get_base/ HTTP/1.1" 200 32652
+Internal Server Error: /service/update_service_photo/
+"PUT /service/update_service_photo/ HTTP/1.1" 500 240
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /service/get_base/ HTTP/1.1" 200 32652
+Internal Server Error: /service/update_service_photo/
+"PUT /service/update_service_photo/ HTTP/1.1" 500 51
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /service/update_service_photo/
+"PUT /service/update_service_photo/ HTTP/1.1" 500 51
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /service/update_service_photo/
+"PUT /service/update_service_photo/ HTTP/1.1" 500 51
+"GET /workers/get_filter/?profession_title=hhngf HTTP/1.1" 200 14
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Django\Dentistry-Website-Backend\project\apps\dentistry\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 47980
+"GET /docs/ HTTP/1.1" 200 4636
+"GET /schema/ HTTP/1.1" 200 47980
+"PUT /service/update_service_photo/?service_id=1 HTTP/1.1" 200 45
+"GET /service/get_base/ HTTP/1.1" 200 32660

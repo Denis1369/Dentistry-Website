@@ -290,6 +290,53 @@ class ServiceSet(ViewSet):
             "error": serializer.errors
         })
     
+    @extend_schema(
+        summary="Загрузить фото для услуги",
+        description="Принимает изображение в формате multipart/form-data и сохраняет в облако.",
+        request={
+            'multipart/form-data': {
+                'type': 'object',
+                'properties': {
+                    'photo': {
+                        'type': 'string',
+                        'format': 'binary',
+                        'description': 'Файл изображения (jpg, png и т.д.)'
+                    }
+                },
+                'required': ['photo']
+            }
+        },
+        parameters=[
+            OpenApiParameter(
+                name='service_id',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY
+            )
+        ],
+    )
+    @action(detail=False, methods=['put'], parser_classes=[MultiPartParser], permission_classes=[IsAuthenticated])
+    def update_service_photo(self, request):
+        file = request.FILES['photo']
+        service_id = request.query_params.get('service_id')
+
+        if not file:
+            return Response({'error': 'Файл не предоставлен'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            print(service_id)
+            service = Services.objects.get(services_id=service_id)
+            print(service.services_img)
+            file_name, file_extension = os.path.splitext(file.name)
+            upload_file_to_cloud(file, f'{service_id}{file_extension}', 'services_photos')
+
+            service.services_img = f'https://dentistry.s3.cloud.ru/services_photos/{service_id}{file_extension}'
+            service.save()
+
+            return Response({'message': 'Фото установлено'}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
 class ProfessionView(GenericAPIView):
     permission_classes = [AllowAny]
     serializer_class = ProfessionSerializer
