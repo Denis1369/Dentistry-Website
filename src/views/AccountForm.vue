@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 
 const router = useRouter()
 
@@ -18,6 +18,12 @@ const editForm = ref({
   first_name: '',
   last_name: '',
   user_date_birth: ''
+})
+
+const isFormValid = computed(() => {
+  return editForm.value.first_name?.trim() && 
+         editForm.value.last_name?.trim() && 
+         editForm.value.user_date_birth
 })
 
 const getUserIdFromToken = () => {
@@ -263,6 +269,57 @@ const getStatusText = (status) => {
   return statusTextMap[status] || 'Неизвестно'
 }
 
+const validateField = (value, fieldName) => {
+  if (!value) {
+    return `${fieldName} обязателен для заполнения`
+  }
+  
+  if (fieldName === 'Дата рождения') {
+    const birthDate = new Date(value)
+    const today = new Date()
+    const minDate = new Date(today.getFullYear() - 90, today.getMonth(), today.getDate())
+    const maxDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate())
+    
+    if (birthDate < minDate) {
+      return 'Дата рождения не может быть раньше ' + minDate.toLocaleDateString('ru-RU')
+    } else if (birthDate > maxDate) {
+      return 'Пациент должен быть старше 12 лет'
+    }
+  }
+  
+  return ''
+}
+
+const validateForm = () => {
+  const errors = []
+  
+  if (!editForm.value.first_name?.trim()) {
+    errors.push('Имя обязательно для заполнения')
+  }
+  
+  if (!editForm.value.last_name?.trim()) {
+    errors.push('Фамилия обязательна для заполнения')
+  }
+  
+  if (!editForm.value.user_date_birth) {
+    errors.push('Дата рождения обязательна для заполнения')
+  } else {
+    const birthDate = new Date(editForm.value.user_date_birth)
+    const today = new Date()
+    const minDate = new Date(today.getFullYear() - 90, today.getMonth(), today.getDate())
+    const maxDate = new Date(today.getFullYear() - 12, today.getMonth(), today.getDate())
+    
+    if (birthDate < minDate) {
+      errors.push('Дата рождения не может быть раньше ' + minDate.toLocaleDateString('ru-RU'))
+    } else if (birthDate > maxDate) {
+      errors.push('Пациент должен быть старше 12 лет')
+    }
+  }
+  
+  return errors
+}
+
+
 const getMaxBirth = () => {
   const max = new Date()
   max.setMonth(max.getMonth() - 12)
@@ -388,8 +445,10 @@ const closeEditProfileModal = () => {
 }
 
 const saveProfile = async () => {
-  if (!editForm.value.first_name && !editForm.value.last_name && !editForm.value.user_date_birth) {
-    alert('Пожалуйста, заполните хотя бы одно поле')
+  const errors = validateForm()
+  
+  if (errors.length > 0) {
+    alert(errors.join('\n'))
     return
   }
 
@@ -682,8 +741,10 @@ const handleLogout = () => {
                   type="text" 
                   v-model="editForm.first_name"
                   class="form-input"
-                  placeholder="Введите ваше имя"
+                  placeholder="Введите ваше имя" required
+                  :class="{ 'input-error': !editForm.first_name?.trim() }"
                 >
+                <p v-if="!editForm.first_name?.trim()" class="error-text">Имя обязательно для заполнения</p>
               </div>
               
               <div class="form-group">
@@ -692,8 +753,10 @@ const handleLogout = () => {
                   type="text" 
                   v-model="editForm.last_name"
                   class="form-input"
-                  placeholder="Введите вашу фамилию"
+                  placeholder="Введите вашу фамилию" required
+                  :class="{ 'input-error': !editForm.last_name?.trim() }"
                 >
+                <p v-if="!editForm.last_name?.trim()" class="error-text">Фамилия обязательна для заполнения</p>
               </div>
             </div>
 
@@ -707,8 +770,11 @@ const handleLogout = () => {
                   v-model="editForm.user_date_birth"
                   :min="getMinBirth()"
                   :max="getMaxBirth()"
-                  class="form-input"
+                  @blur="validateField(editForm.user_date_birth)"
+                  class="form-input" required
+                  :class="{ 'input-error': !editForm.user_date_birth }"
                 >
+                <p v-if="!editForm.user_date_birth" class="error-text">Дата рождения обязательна для заполнения</p>
                 <p class="form-hint">Возраст должен быть от 1 до 90 лет</p>
               </div>
             </div>
@@ -736,7 +802,8 @@ const handleLogout = () => {
           <button 
             @click="saveProfile" 
             class="btn-primary" 
-            :disabled="savingProfile"
+            :disabled="savingProfile || !isFormValid"
+            :class="{ 'btn-disabled': !isFormValid }"
           >
             <span v-if="savingProfile" class="loading-spinner"></span>
             {{ savingProfile ? 'Сохранение...' : 'Сохранить изменения' }}
