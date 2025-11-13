@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import Registration from './views/registration.vue'
 import LoginForm from './views/LoginForm.vue'
@@ -15,38 +15,104 @@ const showAppointment = ref(false)
 const showVerification = ref(false)
 const pendingEmail = ref('')
 
+const userData = ref(JSON.parse(localStorage.getItem('userData') || '{}'))
+
 const navigateToMain = () => {
+  if (shouldDisableNavigation.value) return
   router.push('/')
 }
 
 const authState = ref(!!localStorage.getItem('authToken'))
 
 const isAuthenticated = computed(() => {
-  return authState.value
+  return authState.value && Object.keys(userData.value).length > 0
+})
+
+const userRole = computed(() => {
+  if (!isAuthenticated.value) return null
+  return userData.value.user_role || userData.value.role || null
+})
+
+const isDoctor = computed(() => {
+  return userRole.value === 'врач'
+})
+
+const shouldShowAppointmentButton = computed(() => {
+  if (!isAuthenticated.value) return true
+  if (!isDoctor.value) return true
+  return false
+})
+
+const shouldDisableNavigation = computed(() => {
+  return isAuthenticated.value && isDoctor.value
 })
 
 const updateAuthState = () => {
-  authState.value = !!localStorage.getItem('authToken')
+  const token = localStorage.getItem('authToken')
+  const storedUserData = localStorage.getItem('userData')
+  
+  authState.value = !!token
+  
+  if (storedUserData) {
+    try {
+      userData.value = JSON.parse(storedUserData)
+    } catch (error) {
+      console.error('Error parsing userData:', error)
+      userData.value = {}
+    }
+  } else {
+    userData.value = {}
+  }
+  
+  console.log('Auth updated:', {
+    isAuthenticated: isAuthenticated.value,
+    userRole: userRole.value,
+    isDoctor: isDoctor.value,
+    shouldShowAppointment: shouldShowAppointmentButton.value,
+    shouldDisableNavigation: shouldDisableNavigation.value
+  })
 }
 
+watch(() => localStorage.getItem('userData'), (newValue) => {
+  if (newValue) {
+    try {
+      userData.value = JSON.parse(newValue)
+    } catch (error) {
+      console.error('Error parsing userData:', error)
+      userData.value = {}
+    }
+  } else {
+    userData.value = {}
+  }
+  
+  console.log('UserData changed:', {
+    userData: userData.value,
+    isDoctor: isDoctor.value
+  })
+})
+
+watch(() => localStorage.getItem('authToken'), (newValue) => {
+  authState.value = !!newValue
+})
+
 const navigateToContacts = () => {
+  if (shouldDisableNavigation.value) return
   router.push('/contacts')
 }
 
 const navigateToServices = () => {
+  if (shouldDisableNavigation.value) return
   router.push('/services')
 }
 
 const navigateToDoctors = () => {
+  if (shouldDisableNavigation.value) return
   router.push('/doctors')
 }
 
 const handleAccountClick = () => {
   if (isAuthenticated.value) {
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}')
-    const userRole = userData.user_role
-    
-    if (userRole === 'врач') {
+    if (isDoctor.value) {
       router.push('/doctor-account')
     } else {
       router.push('/account')
@@ -57,12 +123,12 @@ const handleAccountClick = () => {
 }
 
 const navigateToReviews = () => {
+  if (shouldDisableNavigation.value) return
   router.push('/reviews')
 }
 
 const openAppointment = () => {
   if (!isAuthenticated.value) {
-    // Если не авторизован, открываем окно авторизации с сообщением
     alert('Для записи на прием необходимо авторизоваться')
     openLogin()
     return
@@ -129,15 +195,12 @@ const handleVerificationSuccess = (email) => {
   openLoginWithEmail(email)
 }
 
-const handleLoginSuccess = (userData) => {
-  console.log('Пользователь авторизован:', userData)
+const handleLoginSuccess = (loginData) => {
+  console.log('Пользователь авторизован:', loginData)
   updateAuthState()
   closeLogin()
   
-  const storedUserData = JSON.parse(localStorage.getItem('userData') || '{}')
-  const userRole = storedUserData.user_role || storedUserData.role
-  
-  if (userRole === 'врач' || userRole === 'doctor' || userRole === 'доктор') {
+  if (isDoctor.value) {
     router.push('/doctor-account')
   }
 }
@@ -171,6 +234,16 @@ const openLoginWithEmail = (email) => {
   pendingEmail.value = email
   openLogin()
 }
+
+onMounted(() => {
+  updateAuthState()
+})
+
+watch(() => route.path, () => {
+  updateAuthState()
+})
+
+updateAuthState()
 </script>
 
 <template>
@@ -183,36 +256,66 @@ const openLoginWithEmail = (email) => {
       <nav class="navigation">
         <a 
           @click="navigateToMain" 
-          :class="{ active: route.path === '/' }"
-          style="cursor: pointer;"
+          :class="{ 
+            active: route.path === '/', 
+            disabled: shouldDisableNavigation 
+          }"
+          :style="{
+            cursor: shouldDisableNavigation ? 'not-allowed' : 'pointer',
+            opacity: shouldDisableNavigation ? 0.5 : 1
+          }"
         >
           О нас
         </a>
         <a 
           @click="navigateToServices" 
-          :class="{ active: route.path === '/services' }"
-          style="cursor: pointer;"
+          :class="{ 
+            active: route.path === '/services', 
+            disabled: shouldDisableNavigation 
+          }"
+          :style="{
+            cursor: shouldDisableNavigation ? 'not-allowed' : 'pointer',
+            opacity: shouldDisableNavigation ? 0.5 : 1
+          }"
         >
           Услуги
         </a>
         <a 
           @click="navigateToDoctors" 
-          :class="{ active: route.path === '/doctors' }"
-          style="cursor: pointer;"
+          :class="{ 
+            active: route.path === '/doctors', 
+            disabled: shouldDisableNavigation 
+          }"
+          :style="{
+            cursor: shouldDisableNavigation ? 'not-allowed' : 'pointer',
+            opacity: shouldDisableNavigation ? 0.5 : 1
+          }"
         >
           Врачи
         </a>
         <a 
           @click="navigateToContacts" 
-          :class="{ active: route.path === '/contacts' }"
-          style="cursor: pointer;"
+          :class="{ 
+            active: route.path === '/contacts', 
+            disabled: shouldDisableNavigation 
+          }"
+          :style="{
+            cursor: shouldDisableNavigation ? 'not-allowed' : 'pointer',
+            opacity: shouldDisableNavigation ? 0.5 : 1
+          }"
         >
           Контакты
         </a>
         <a
           @click="navigateToReviews"
-          :class="{active: route.path === '/reviews'}"
-          style="cursor: pointer;"
+          :class="{
+            active: route.path === '/reviews',
+            disabled: shouldDisableNavigation
+          }"
+          :style="{
+            cursor: shouldDisableNavigation ? 'not-allowed' : 'pointer',
+            opacity: shouldDisableNavigation ? 0.5 : 1
+          }"
         >
           Отзывы
         </a>
@@ -222,7 +325,13 @@ const openLoginWithEmail = (email) => {
           <img src="/src/components/icons/icons8-тестовый-аккаунт-100.png" alt="Аккаунт">
           <div v-if="isAuthenticated" class="auth-indicator"></div>
         </button>
-        <button @click="openAppointment" class="btn-appointment">Записаться</button>
+        <button 
+          v-if="shouldShowAppointmentButton" 
+          @click="openAppointment" 
+          class="btn-appointment"
+        >
+          Записаться
+        </button>
       </div>
     </div>
   </header>
@@ -239,7 +348,6 @@ const openLoginWithEmail = (email) => {
       </div>
     </div>
     
-    <!-- Модальное окно регистрации -->
     <div v-if="showRegistration" class="modal-overlay">
       <div class="modal-content">
         <Registration 
@@ -346,12 +454,22 @@ body {
   background-color: #ffffff15;
   border-radius: 30px;
   padding: 10px 20px;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.navigation a:hover {
+.navigation a:hover:not(.disabled) {
   opacity: 0.8;
   background-color: #ffffff20;
+}
+
+.navigation a.disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+}
+
+.navigation a.disabled:hover {
+  background-color: #ffffff15 !important;
+  opacity: 0.5 !important;
 }
 
 .account .nav-button {
