@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import axios from 'axios'
 
 const emit = defineEmits(['registration-success', 'switch-to-login', 'close', 'switch-to-verification'])
@@ -30,6 +30,13 @@ const instance = axios.create({
   baseURL: 'http://127.0.0.1:8000/user',
   timeout: 10000,
   headers: {'Content-Type': 'application/json'}
+})
+
+// Добавляем watcher для отслеживания изменений пароля и подтверждения пароля
+watch([() => formData.password, () => formData.confirmPassword], () => {
+  if (formData.confirmPassword && formData.password) {
+    validateField('confirmPassword')
+  }
 })
 
 const validateField = (fieldName) => {
@@ -82,6 +89,10 @@ const validateField = (fieldName) => {
         errors.password = 'Пароль должен содержать хотя бы одну латинскую заглавную букву, одну латинскую строчную букву и одну цифру'
       } else {
         errors.password = ''
+        // При изменении пароля также проверяем подтверждение
+        if (formData.confirmPassword) {
+          validateField('confirmPassword')
+        }
       }
       break
       
@@ -217,6 +228,7 @@ const switchToLogin = () => {
           placeholder="Введите фамилию"
           :class="{'error-input': errors.lastname}"
           @blur="validateField('lastname')"
+          @input="validateField('lastname')"
           class="form-input"
         >
         <span v-if="errors.lastname" class="error-message">{{ errors.lastname }}</span>
@@ -230,6 +242,7 @@ const switchToLogin = () => {
           placeholder="Введите имя"
           :class="{'error-input': errors.firstname}"
           @blur="validateField('firstname')"
+          @input="validateField('firstname')"
           class="form-input"
         >
         <span v-if="errors.firstname" class="error-message">{{ errors.firstname }}</span>
@@ -243,6 +256,7 @@ const switchToLogin = () => {
           placeholder="example@email.com"
           :class="{'error-input': errors.email}"
           @blur="validateField('email')"
+          @input="validateField('email')"
           class="form-input"
         >
         <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
@@ -257,6 +271,7 @@ const switchToLogin = () => {
             placeholder="Введите пароль"
             :class="{'error-input': errors.password}"
             @blur="validateField('password')"
+            @input="validateField('password')"
             class="form-input password-input"
           >
           <span class="password-toggle" @click="showPassword = !showPassword">
@@ -275,6 +290,7 @@ const switchToLogin = () => {
             placeholder="Повторите пароль"
             :class="{'error-input': errors.confirmPassword}"
             @blur="validateField('confirmPassword')"
+            @input="validateField('confirmPassword')"
             class="form-input password-input"
           >
           <span class="password-toggle" @click="showConfirmPassword = !showConfirmPassword">
@@ -306,6 +322,7 @@ const switchToLogin = () => {
 </template>
 
 <style scoped>
+/* Стили остаются без изменений */
 .auth-container {
   padding: 0;
   width: 100%;
