@@ -627,8 +627,10 @@ class AppointmentSet(ViewSet):
                 start_time = serializer.validated_data['appointment_date']
 
                 start_time = start_time.astimezone(pytz.utc).replace(tzinfo=None)
+                print(start_time)
+                print(service.services_id)
+                print(worker.workers_id)
 
-                # Получаем длительность из услуги
                 duration = service.services_profession.profession_time
                 if not duration:
                     return Response(
@@ -637,8 +639,9 @@ class AppointmentSet(ViewSet):
                     )
 
                 duration_minutes = int(duration)
+
+                print("1")
                 
-                # Проверяем, что время попадает в рабочие часы
                 slot_date = start_time.date()
                 work_start = datetime.combine(slot_date, time(9, 0))
                 work_end = datetime.combine(slot_date, time(18, 0))
@@ -651,32 +654,31 @@ class AppointmentSet(ViewSet):
 
                 end_time = start_time + timedelta(minutes=duration_minutes)
                 
-                # Ищем пересекающиеся записи - только те, которые реально пересекаются по времени
-                overlapping_appointments = Appointment.objects.filter(
-                    appointment_workers=worker,
-                    appointment_status__in=['запланирован']
-                ).filter(
-                    appointment_date__lt=end_time,
-                    appointment_date__gte=start_time - timedelta(minutes=1)
-                ).exists()
+                print("2")
 
-                if overlapping_appointments:
+                if not is_slot_available(worker, start_time, duration_minutes):
                     return Response(
                         {"error": "Это время уже занято. Пожалуйста, выберите другое время."},
                         status=status.HTTP_409_CONFLICT
                     )
+                
+                print("3")
 
-                # Сохраняем запись
+
                 appointment = serializer.save(
                     appointment_user=request.user,
                 )
 
-                send_mail(
-                    subject='Запись на приём',
-                    message=f'Вы записаны на приём на {start_time}\nУслуга: {appointment.appointment_services.services_title}',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[request.user.email],
-                )
+                print("4")
+
+                # send_mail(
+                #     subject='Запись на приём',
+                #     message=f'Вы записаны на приём на {start_time}\nУслуга: {appointment.appointment_services.services_title}',
+                #     from_email=settings.DEFAULT_FROM_EMAIL,
+                #     recipient_list=[request.user.email],
+                # )
+
+                print("5")
 
                 return Response(
                     {"message": "Запись успешно создана", "appointment_id": appointment.appointment_id},
@@ -684,6 +686,7 @@ class AppointmentSet(ViewSet):
                 )
 
             except Exception as e:
+                print(str(e))
                 return Response(
                     {"error": f"Ошибка при создании записи: {str(e)}"},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -770,14 +773,14 @@ class AppointmentSet(ViewSet):
         if serializer.is_valid():
             serializer.save()
 
-            send_mail(
-                subject='Смена статуса записи на приём',
-                message=f'Запись на приём от {appointment.appointment_date}'
-                        f'\nУслуга: {appointment.appointment_services.services_title}'
-                        f'\nИзменён статус на: {serializer.data["appointment_status"]}',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[appointment.appointment_user.email],
-            )
+            # send_mail(
+            #     subject='Смена статуса записи на приём',
+            #     message=f'Запись на приём от {appointment.appointment_date}'
+            #             f'\nУслуга: {appointment.appointment_services.services_title}'
+            #             f'\nИзменён статус на: {serializer.data["appointment_status"]}',
+            #     from_email=settings.DEFAULT_FROM_EMAIL,
+            #     recipient_list=[appointment.appointment_user.email],
+            # )
 
             return Response({
                 "message": "Статус успешно изменён"
@@ -785,37 +788,48 @@ class AppointmentSet(ViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 def is_slot_available(worker, start_time, duration_minutes):
     """
     Проверяет, свободен ли слот для врача.
-    Использует JOIN, чтобы получить profession_time из связанной профессии.
+    Учитывает длительность существующих записей при проверке пересечений.
     """
     from datetime import timedelta
-    start_time = start_time.replace(second=0, microsecond=0)
+    import pytz
     
-    end_time = start_time + timedelta(minutes=duration_minutes)
+    if start_time.tzinfo is None:
+        start_time = pytz.UTC.localize(start_time)
+    else:
+        start_time = start_time.astimezone(pytz.UTC)
 
-    overlapping = Appointment.objects.filter(
+    print(start_time)
+    
+    new_end_time = start_time + timedelta(minutes=duration_minutes)
+
+    existing_appointments = Appointment.objects.filter(
         appointment_workers=worker,
-        appointment_status__in=['запланирован',]
+        appointment_status__in=['запланирован']
     ).select_related(
         'appointment_services__services_profession'
-    ).extra(
-        where=[
-            """
-            (%s < DATE_ADD(appointment_date, INTERVAL COALESCE(
-                (SELECT profession_time FROM profession 
-                 WHERE profession.profession_id = (
-                     SELECT services_profession_id FROM services 
-                     WHERE services.services_id = appointment.appointment_services_id
-                 )
-                ), %s
-            ) MINUTE))
-            AND
-            (%s > appointment_date)
-            """
-        ],
-        params=[end_time, duration_minutes, start_time]
-    ).exists()
+    )
 
-    return not overlapping
+    for existing_appointment in existing_appointments:
+        existing_service = existing_appointment.appointment_services
+        existing_profession = existing_service.services_profession
+        
+        existing_duration = existing_profession.profession_time
+        if not existing_duration:
+            existing_duration = duration_minutes
+        
+        existing_start = existing_appointment.appointment_date
+        if existing_start.tzinfo is None:
+            existing_start = pytz.UTC.localize(existing_start)
+        else:
+            existing_start = existing_start.astimezone(pytz.UTC)
+        
+        existing_end = existing_start + timedelta(minutes=int(existing_duration))
+        
+        if start_time < existing_end and existing_start < new_end_time:
+            return False 
+
+    return True  
